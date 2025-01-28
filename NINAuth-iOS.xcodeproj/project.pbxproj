@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
+		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
+		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NINAuth-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */,
+				CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */,
+				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = "NINAuth-iOS";
 			packageProductDependencies = (
+				CF6FE76D2D48F03000DF9470 /* Realm */,
+				CF6FE76F2D48F03000DF9470 /* RealmSwift */,
+				CF6FE7722D48F0F300DF9470 /* SwiftyJSON */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -107,6 +119,10 @@
 			);
 			mainGroup = 7AC075032D46D83200ECC913;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
 			projectDirPath = "";
@@ -269,17 +285,19 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.lima.NINAuth-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -299,17 +317,19 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.lima.NINAuth-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -339,6 +359,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 10.49.2;
+			};
+		};
+		CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CF6FE76D2D48F03000DF9470 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		CF6FE76F2D48F03000DF9470 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+		CF6FE7722D48F0F300DF9470 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7AC075042D46D83200ECC913 /* Project object */;
 }
