@@ -23,21 +23,21 @@ class User: Object, ObjectKeyIdentifiable {
     @Persisted var created_at: String? = ""
     @Persisted var updated_at: String? = ""
     
-    convenience init(value: JSON){
+    convenience init(value: JSON?){
         self.init()
         
-        self.id = value["id"].string
-        self.nin = value["nin"].string
-        self.first_name = value["first_name"].string
-        self.last_name = value["last_name"].string
-        self.gender = value["gender"].string
-        self.phone_number = value["phone_number"].string
-        self.date_of_birth = value["date_of_birth"].string
-        self.address = value["address"].string
-        self.image = value["image"].string
-        self.FaceAuthCompleted = value["FaceAuthCompleted"].string
-        self.created_at = value["created_at"].string
-        self.updated_at = value["updated_at"].string
+        self.id = value?["id"].string
+        self.nin = value?["nin"].string
+        self.first_name = value?["first_name"].string
+        self.last_name = value?["last_name"].string
+        self.gender = value?["gender"].string
+        self.phone_number = value?["phone_number"].string
+        self.date_of_birth = value?["date_of_birth"].string
+        self.address = value?["address"].string
+        self.image = value?["image"].string
+        self.FaceAuthCompleted = value?["FaceAuthCompleted"].string
+        self.created_at = value?["created_at"].string
+        self.updated_at = value?["updated_at"].string
     
     }
 }

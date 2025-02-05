@@ -14,11 +14,11 @@ class Token: Object, ObjectKeyIdentifiable {
     @Persisted var refresh: String? = ""
     @Persisted var requestCode: String? = ""
     
-    convenience init(value: JSON){
+    convenience init(value: JSON?){
         self.init()
         
-        self.access = value["access"].string
-        self.refresh = value["refresh"].string
-        self.requestCode = value["requestCode"].string
+        self.access = value?["access"].string
+        self.refresh = value?["refresh"].string
+        self.requestCode = value?["requestCode"].string
     }
 }
