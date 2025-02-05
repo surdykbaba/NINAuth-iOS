@@ -9,7 +9,7 @@ import Foundation
 
 struct DeviceService: DeviceProtocol {
     
-    func giveDevices() async -> Result<[Device], ErrorBag> {
+    func getDevices() async -> Result<[Device], ErrorBag> {
         let networkResponse = await Service.init().get(URLs.DEVICES)
         switch networkResponse.isSuccess() {
         case true:

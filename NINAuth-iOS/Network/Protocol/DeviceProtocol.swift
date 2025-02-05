@@ -7,7 +7,7 @@
 
 protocol DeviceProtocol {
     
-    func giveDevices() async -> Result<[Device], ErrorBag>
+    func getDevices() async -> Result<[Device], ErrorBag>
     
     func deleteDevice(deviceRequest: DeviceRequest) async -> Result<Bool, ErrorBag>
 }
