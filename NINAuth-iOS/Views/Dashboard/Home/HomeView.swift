@@ -10,19 +10,6 @@ import SwiftUI
 struct HomeView: View {
     @State private var selected: PickerOptions = .digitalID
 
-    init() {
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.gray.opacity(0.1))
-        UISegmentedControl.appearance().backgroundColor = UIColor.white
-        UISegmentedControl.appearance().setTitleTextAttributes(
-            [
-                .font:UIFont.systemFont(ofSize: 17, weight: .light),
-            ], for: .normal)
-        UISegmentedControl.appearance().setTitleTextAttributes(
-            [
-                .font:UIFont.systemFont(ofSize: 17, weight: .semibold),
-            ], for: .selected)
-    }
-
     var body: some View {
         ZStack {
             Color.secondaryGrayBackground
@@ -47,6 +34,16 @@ extension UISegmentedControl {
   override open func didMoveToSuperview() {
      super.didMoveToSuperview()
      self.setContentHuggingPriority(.defaultLow, for: .vertical)
+      UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.gray.opacity(0.1))
+      UISegmentedControl.appearance().backgroundColor = UIColor.white
+      UISegmentedControl.appearance().setTitleTextAttributes(
+          [
+              .font:UIFont.systemFont(ofSize: 17, weight: .light),
+          ], for: .normal)
+      UISegmentedControl.appearance().setTitleTextAttributes(
+          [
+              .font:UIFont.systemFont(ofSize: 17, weight: .semibold),
+          ], for: .selected)
    }
 }
 

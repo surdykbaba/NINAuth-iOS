@@ -18,7 +18,7 @@ struct TabControllerView: View {
                 }
                 .tag(0)
 
-            DevicesView()
+            ConsentView()
                 .tabItem {
                     CustomTabItem(imageName: "consent", title: "Consent", isActive: selectedTab == 1)
                 }
