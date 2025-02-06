@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct DigitalIDView: View {
-    @State private var choice = ""
     @State private var changeView = true
-
+    @State private var showShareIDPopover = false
+    
     var body: some View {
         Color.secondaryGrayBackground
             .ignoresSafeArea()
@@ -43,18 +43,27 @@ struct DigitalIDView: View {
                             .padding(.bottom, 15)
                         
                         VStack(spacing: 12) {
-                            IdentityView(icon: "barcode", title: "Share my ID", subtitle: "Scan the QR code to share identity data")
+                            IdentityView(icon: "barcode", title: "Share my ID", subtitle: "Scan the QR code to share identity data", completion: {
+                                showShareIDPopover = true
+                            })
+                            .popover(isPresented: $showShareIDPopover) {
+                                ShareIDView()
+                            }
                             
-                            IdentityView(icon: "padlock", title: "Get Security PIN", subtitle: "Get PIN to access NIMC digital services")
+                            IdentityView(icon: "padlock", title: "Get Security PIN", subtitle: "Get PIN to access NIMC digital services", completion: {
+                                //                                    GetSecurityPINView()
+                            })
                             
-                            IdentityView(icon: "link", title: "Linked IDs", subtitle: "View other functional IDs linked to your NIN")
+                            IdentityView(icon: "link", title: "Linked IDs", subtitle: "View other functional IDs linked to your NIN", completion: {
+                                
+                            })
                         }
                     }
                     .padding()
                 }
             )
     }
-
+    
     func showQR(title: String, subtitle: String) -> some View {
         VStack(spacing: 5) {
             Text(title)
