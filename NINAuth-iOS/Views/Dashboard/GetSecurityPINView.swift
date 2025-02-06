@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NINAuthCodeView: View {
+struct GetSecurityPINView: View {
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
@@ -64,5 +64,5 @@ struct NINAuthCodeView: View {
 }
 
 #Preview {
-    NINAuthCodeView()
+    GetSecurityPINView()
 }
