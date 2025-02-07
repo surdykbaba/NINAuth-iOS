@@ -104,7 +104,7 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: VerificationStatusView()) {
                     SettingsRow(image: "lock", name: "Privacy policy")
                 }
                 NavigationLink(destination: VerificationStatusView()) {
@@ -126,19 +126,19 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: VerificationStatusView()) {
                     SettingsRow(image: "wifi.off", name: "Offline data sharing")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: VerificationStatusView()) {
                     SettingsRow(image: "lock", name: "Update PIN")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
                 biometrics
                 
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: VerificationStatusView()) {
                     SettingsRow(image: "device.mobile", name: "Devices")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
@@ -158,10 +158,10 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: CheckIdentityView()) {
                     SettingsRow(image: "notification", name: "Notifications")
                 }
-                NavigationLink(destination: LoginView()) {
+                NavigationLink(destination: CheckIdentityView()) {
                     SettingsRow(image: "logout", name: "Sign out")
                 }
             }
