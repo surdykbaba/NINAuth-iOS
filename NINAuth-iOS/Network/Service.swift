@@ -62,7 +62,7 @@ struct Service{
         }
     }
     
-    func patcht<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
+    func patch<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "PATCH"
@@ -144,12 +144,16 @@ struct NetworkResponseModel {
         }
     }
     
+    func getStatusCode() -> Int {
+        return statusCode
+    }
+    
     static func initLogoutResponse(errorMessage: String? = nil) -> NetworkResponseModel {
         return NetworkResponseModel(statusCode: 403)
     }
     
     func isSuccess() -> Bool {
-        return statusCode == 200 || statusCode == 201
+        return statusCode == 200 || statusCode == 201 || statusCode == 204
     }
     
     fileprivate func isFailed() -> Bool {
@@ -225,12 +229,28 @@ struct NetworkResponseModel {
         return ""
     }
     
-    fileprivate static func generateHeader(endpoint: String, authoriseHeader: Bool) -> URLRequest {
+    static func generateHeader(endpoint: String, authoriseHeader: Bool) -> URLRequest {
         Log.info(URLs.baseurl + endpoint)
         let url = URL(string: URLs.baseurl + endpoint)
         var request = URLRequest(url: url!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("*/*", forHTTPHeaderField: "Accept")
+        if(authoriseHeader) {
+            request.setValue("Bearer " + getToken(), forHTTPHeaderField: "Authorization")
+        }
+        return request
+    }
+    
+    static func generateSecretHeader(endpoint: String, authoriseHeader: Bool) -> URLRequest {
+        Log.info(URLs.baseurl + endpoint)
+        let clientID = Bundle.main.object(forInfoDictionaryKey: "CLIENT_ID") as! String
+        let clientSecret = Bundle.main.object(forInfoDictionaryKey: "CLIENT_SECRET") as! String
+        let url = URL(string: URLs.baseurl + endpoint)
+        var request = URLRequest(url: url!)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("*/*", forHTTPHeaderField: "Accept")
+        request.setValue("client-id", forHTTPHeaderField: clientID)
+        request.setValue("client-secret", forHTTPHeaderField: clientSecret)
         if(authoriseHeader) {
             request.setValue("Bearer " + getToken(), forHTTPHeaderField: "Authorization")
         }
@@ -273,5 +293,12 @@ enum LoadingState: Equatable {
     case loading
     case success
     case failed(ErrorBag)
+}
+
+enum APIVerb: String, CaseIterable {
+    case POST = "POST"
+    case GET = "GET"
+    case PUT = "PUT"
+    case DELETE = "DELETE"
 }
 

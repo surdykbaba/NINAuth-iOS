@@ -59,7 +59,7 @@ struct OrganizationCardView: View {
                         Image(systemName: "square.on.square")
                             .tint(Color.button)
                         Link("https://www.gtbank.com", destination: URL("https://www.gtbank.com")!)
-                            .accentColor(Color.button)
+                            .tint(Color.button)
                     }
 
                 }

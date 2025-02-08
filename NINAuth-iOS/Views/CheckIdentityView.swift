@@ -25,22 +25,35 @@ struct CheckIdentityView: View {
                 TextField("12345678910", text: $identificationNumber)
                     .keyboardType(.numberPad)
                     .customTextField()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke()
+                        .fill(isFormValid ? .gray : .red)
+                    )
+                    .onAppear(perform: {
+                        isFormValid = true
+                    })
                     .onChange(of: identificationNumber) { _ in
                         validateNIN()
                     }
+                if !isFormValid {
+                    Text("NIN must be 11 digits long")
+                        .customFont(.subheadline, fontSize: 16)
+                        .foregroundColor(.red)
+                }
             }
             .padding(.bottom, 20)
 
             Button {
-                print(identificationNumber)
+                validateNIN()
             } label: {
-                    Text("Continue Verification")
-                .customFont(.title, fontSize: 18)
-                .foregroundStyle(.white)
+                Text("Continue Verification")
+                    .customFont(.title, fontSize: 18)
+                    .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(isFormValid ? Color("buttonColor") : .gray)
+            .background(Color("buttonColor"))
             .cornerRadius(4)
             .disabled(!isFormValid)
 
