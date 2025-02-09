@@ -11,10 +11,6 @@ struct SettingsView: View {
     @State private var biometricsIsOn = false
     
     var body: some View {
-        //NOTE: It is bad practice to put navigationView as a child.
-        //NOTE: It is bad practice to put a list in a scrollView, at most with constraint
-        NavigationView {
-            ScrollView() {
                 VStack {
                     VStack(spacing: 10) {
                         Image("profileImage")
@@ -34,18 +30,18 @@ struct SettingsView: View {
                                 .foregroundStyle(Color(.darkGray))
                                 .customFont(.headline, fontSize: 16)
                         }
-                        
-                        legalAndComplaince
-                        
-                        security
-                        
-                        others
+
+                        List {
+                            legalAndComplaince
+
+                            security
+
+                            others
+                        }
+                        .listRowSeparator(.hidden)
+                        .listStyle(.inset)
                     }
                 }
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity
-                )
                 .padding()
                 .padding(.top, 20)
                 .toolbar {
@@ -75,8 +71,6 @@ struct SettingsView: View {
                         }
                     }
                 }
-            }
-        }
     }
     
     var biometrics: some View {
@@ -105,11 +99,7 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-<<<<<<< HEAD
-                NavigationLink(destination: OnboardingView()) {
-=======
                 NavigationLink(destination: VerificationStatusView()) {
->>>>>>> dev
                     SettingsRow(image: "lock", name: "Privacy policy")
                 }
                 NavigationLink(destination: PrivacyPolicyView()) {
@@ -131,31 +121,19 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-<<<<<<< HEAD
-                NavigationLink(destination: OnboardingView()) {
-=======
                 NavigationLink(destination: VerificationStatusView()) {
->>>>>>> dev
                     SettingsRow(image: "wifi.off", name: "Offline data sharing")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
-                
-<<<<<<< HEAD
-                NavigationLink(destination: OnboardingView()) {
-=======
+
                 NavigationLink(destination: VerificationStatusView()) {
->>>>>>> dev
                     SettingsRow(image: "lock", name: "Update PIN")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
                 biometrics
-                
-<<<<<<< HEAD
-                NavigationLink(destination: OnboardingView()) {
-=======
+
                 NavigationLink(destination: VerificationStatusView()) {
->>>>>>> dev
                     SettingsRow(image: "device.mobile", name: "Devices")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
@@ -175,17 +153,10 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-<<<<<<< HEAD
-                NavigationLink(destination: OnboardingView()) {
-                    SettingsRow(image: "notification", name: "Notifications")
-                }
-                NavigationLink(destination: OnboardingView()) {
-=======
                 NavigationLink(destination: CheckIdentityView()) {
                     SettingsRow(image: "notification", name: "Notifications")
                 }
                 NavigationLink(destination: CheckIdentityView()) {
->>>>>>> dev
                     SettingsRow(image: "logout", name: "Sign out")
                 }
             }

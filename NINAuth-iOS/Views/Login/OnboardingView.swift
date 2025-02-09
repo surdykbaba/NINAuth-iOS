@@ -7,10 +7,7 @@
 
 import SwiftUI
 
-<<<<<<< HEAD:NINAuth-iOS/Views/Login/OnboardingView.swift
 struct OnboardingView: View {
-=======
-struct LoginView: View {
     @State private var showSheet = false
     var currentCode = "123456"
     @State var requestCode: String = ""
@@ -18,7 +15,6 @@ struct LoginView: View {
     @FocusState var isFocused: Bool
     @State var isValid: Bool = true
 
->>>>>>> dev:NINAuth-iOS/Views/LoginView.swift
     var body: some View {
         VStack {
             Button {} label: {
@@ -65,7 +61,6 @@ struct LoginView: View {
                         .foregroundStyle(Color("buttonColor"))
                 }
                 .halfSheet(showSheet: $showSheet) {
-                    //Write code here
                     ZStack {
                         Color.white
                         VStack(alignment: .leading) {
