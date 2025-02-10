@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LoginPINView: View {
+struct LoginView: View {
     @State var loginPin: String = ""
     var currentLoginPin = "123456"
     @FocusState var isFocused: Bool
@@ -65,7 +65,7 @@ struct LoginPINView: View {
 }
 
 #Preview {
-    LoginPINView()
+    LoginView()
 }
 
 enum EnterPinState {

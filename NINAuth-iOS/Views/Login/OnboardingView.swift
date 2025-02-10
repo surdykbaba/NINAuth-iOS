@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LoginView: View {
+struct OnboardingView: View {
     @State private var showSheet = false
     var currentCode = "123456"
     @State var requestCode: String = ""
@@ -61,7 +61,6 @@ struct LoginView: View {
                         .foregroundStyle(Color("buttonColor"))
                 }
                 .halfSheet(showSheet: $showSheet) {
-                    //Write code here
                     ZStack {
                         Color.white
                         VStack(alignment: .leading) {
@@ -119,5 +118,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    OnboardingView()
 }

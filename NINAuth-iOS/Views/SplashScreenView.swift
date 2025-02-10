@@ -13,7 +13,7 @@ struct SplashScreenView: View {
     var body: some View {
         VStack {
             if self.showLoginScreen {
-                LoginView()
+                OnboardingView()
             } else {
                 Spacer()
                 Image("AppFullLogo")
