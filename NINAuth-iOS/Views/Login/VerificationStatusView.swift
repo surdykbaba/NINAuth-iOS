@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct VerificationStatusView: View {
-    var verificationStatus: VerificationStatus = .failed
+    @State var verificationStatus: VerificationStatus = .inProgress
+    @EnvironmentObject var appState: AppState
+    @State private var goToPin = false
 
     var body: some View {
         VStack {
@@ -22,10 +24,24 @@ struct VerificationStatusView: View {
             }
 
             Spacer()
+            
+            if (appState.verifyStatus == "passed") {
+                Color.clear.onAppear {
+                    verificationStatus = .done
+                }
+            }
+            
+            NavigationLink(destination: SetPINView(), isActive: $goToPin) {}.isDetailLink(false)
 
+        }
+        .padding(.top, 50)
+        .padding()
+        .safeAreaInset(edge: .bottom) {
             switch verificationStatus {
             case .done:
-                Button {} label: {
+                Button {
+                    goToPin.toggle()
+                } label: {
                         Text("Continue")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
@@ -34,6 +50,7 @@ struct VerificationStatusView: View {
                 .padding(.vertical, 18)
                 .background(Color("buttonColor"))
                 .cornerRadius(4)
+                .padding()
             case .failed:
                 Button {} label: {
                         Text("Retry")
@@ -44,14 +61,19 @@ struct VerificationStatusView: View {
                 .padding(.vertical, 18)
                 .background(Color("buttonColor"))
                 .cornerRadius(4)
+                .padding()
             case .inProgress:
                 EmptyView()
             }
-
-
         }
-        .padding(.top, 50)
-        .padding()
+        .onAppear {
+            if (verificationStatus == .inProgress) {
+                appState.getFaceAuthStatus(deviceID: appState.getDeviceID())
+            }
+        }
+        .onDisappear {
+            appState.timer?.invalidate()
+        }
     }
 
     @ViewBuilder
@@ -69,6 +91,7 @@ struct VerificationStatusView: View {
 
 #Preview {
     VerificationStatusView()
+        .environmentObject(AppState())
 }
 
 enum VerificationStatus {

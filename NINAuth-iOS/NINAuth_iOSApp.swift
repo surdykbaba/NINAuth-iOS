@@ -7,20 +7,21 @@
 
 import SwiftUI
 import RealmSwift
+import SmileID
 
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var appState = AppState()
     
     var body: some Scene {
         WindowGroup {
-            Group {
-                NavigationView {
-                    SplashScreenView()
-                }
-                .navigationViewStyle(.stack)
-                .tint(Color.green)
+            NavigationView {
+                SplashScreenView()
             }
+            .navigationViewStyle(.stack)
+            .tint(Color("buttonColor"))
+            .environmentObject(appState)
         }
     }
 }
@@ -33,8 +34,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 schemaVersion: 1, deleteRealmIfMigrationNeeded: false)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
-        let uuid = UIDevice.current.identifierForVendor?.uuidString
-        Log.info(uuid ?? "")
+        SmileID.initialize(useSandbox: true)
+        SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         return true
     }
     

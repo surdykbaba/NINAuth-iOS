@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CheckIdentityView: View {
+    @State var code: String
+    @EnvironmentObject var appState: AppState
+    @StateObject var viewModel = AuthViewModel()
     @State private var identificationNumber = ""
     @State private var isFormValid: Bool = false
 
@@ -58,17 +61,40 @@ struct CheckIdentityView: View {
             .disabled(!isFormValid)
 
             Spacer()
+            
+            NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+            
+            if case .loading = viewModel.state {
+                //TODO: Add your custom loding view here
+            }
+            if case .failed(let errorBag) = viewModel.state {
+                //TODO: Add your custom error view here
+            }
         }
         .padding(.top, 20)
         .padding()
+        .navigationTitle(Text(""))
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private func validateNIN() {
         isFormValid = !identificationNumber.isEmpty && identificationNumber.count == 11 && identificationNumber.allSatisfy { ("0"..."9").contains($0) }
+        
+        if(isFormValid) {
+            var registerUserRequest = RegisterUserRequest()
+            registerUserRequest.deviceId = appState.getDeviceID()
+            registerUserRequest.requestCode = code
+            registerUserRequest.ninId = identificationNumber
+            registerUserRequest.deviceMetadata = DeviceMetadata()
+            Task {
+                await viewModel.registerUser(registerUserRequest: registerUserRequest)
+            }
+        }
     }
 }
 
 #Preview {
-    CheckIdentityView()
+    CheckIdentityView(code: "bunchhhhhh")
+        .environmentObject(AppState())
 }
 

@@ -10,6 +10,8 @@
 		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
 		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
 		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
+		CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA82D2D60D6BF00835FC1 /* CodeScanner */; };
+		CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA8FE2D60F1DE00835FC1 /* SmileID */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +44,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */,
 				CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */,
 				CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */,
+				CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */,
 				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +94,8 @@
 				CF6FE76D2D48F03000DF9470 /* Realm */,
 				CF6FE76F2D48F03000DF9470 /* RealmSwift */,
 				CF6FE7722D48F0F300DF9470 /* SwiftyJSON */,
+				CFFFA82D2D60D6BF00835FC1 /* CodeScanner */,
+				CFFFA8FE2D60F1DE00835FC1 /* SmileID */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -122,6 +128,8 @@
 			packageReferences = (
 				CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
@@ -286,6 +294,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -318,6 +327,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -377,6 +387,22 @@
 				minimumVersion = 5.0.2;
 			};
 		};
+		CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.2;
+			};
+		};
+		CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/smileidentity/ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -394,6 +420,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		CFFFA82D2D60D6BF00835FC1 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
+		};
+		CFFFA8FE2D60F1DE00835FC1 /* SmileID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */;
+			productName = SmileID;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

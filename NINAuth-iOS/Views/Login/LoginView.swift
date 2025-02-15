@@ -8,24 +8,18 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State var loginPin: String = ""
-    var currentLoginPin = "123456"
-    @FocusState var isFocused: Bool
-    @State var isValid: Bool = true
+    @EnvironmentObject var appState: AppState
+    @StateObject var viewModel = AuthViewModel()
+    @State private var loginPin: String = ""
+    @FocusState private var isFocused: Bool
+    @State private var isValid: Bool = true
     private let numberOfFields = 6
 
     var body: some View {
         VStack {
-            Button {} label: {
-                Text("Forgot PIN?")
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(Color("buttonColor"))
-            }
-            .padding(.bottom, 60)
-            .frame(maxWidth: .infinity, alignment: .trailing)
-
             Image("NigerianCoatOfArms")
                 .padding(.bottom, 10)
+                .padding(.top, 30)
 
             Text("Enter PIN to login")
                 .customFont(.subheadline, fontSize: 20)
@@ -34,14 +28,17 @@ struct LoginView: View {
             OTPView(numberOfFields: numberOfFields, otp: $loginPin, valid: $isValid)
                 .padding(.bottom, 20)
                 .onChange(of: loginPin) { newOtp in
-                    if newOtp.count == numberOfFields && newOtp == currentLoginPin {
-                        isValid = true
-                    } else if newOtp != currentLoginPin && newOtp.count == numberOfFields {
-                        isValid = false
+                    if newOtp.count == numberOfFields && !newOtp.isEmpty {
+                        var loginRequest = LoginUserRequest()
+                        loginRequest.deviceId = appState.getDeviceID()
+                        loginRequest.pin = newOtp
+                        loginRequest.device = DeviceMetadata()
+                        Task {
+                            await viewModel.loginUser(loginUserRequest: loginRequest)
+                        }
                     }
                 } .focused($isFocused)
-
-            Text("Entered OTP: \(loginPin)")
+                .frame(maxHeight: 100)
 
             Button {} label: {
                 HStack {
@@ -56,16 +53,33 @@ struct LoginView: View {
             .background(Color("buttonColor"))
             .cornerRadius(4)
             .disabled(!isValid)
+            
+            Spacer()
+            NavigationLink(destination: TabControllerView(), isActive: $viewModel.isLoggedIn) {}.isDetailLink(false)
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .padding()
+        .navigationTitle(Text(""))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    //TODO: Go to forgot Pin View, I can't find it
+                    NotificationsView()
+                } label: {
+                    Text("Forgot PIN?")
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(Color("buttonColor"))
+                }
+            }
+        }
 
-        Spacer()
     }
 }
 
 #Preview {
     LoginView()
+        .environmentObject(AppState())
 }
 
 enum EnterPinState {

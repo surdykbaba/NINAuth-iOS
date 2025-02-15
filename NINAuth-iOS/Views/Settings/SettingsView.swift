@@ -153,10 +153,10 @@ struct SettingsView: View {
             Divider()
         }) {
             Group {
-                NavigationLink(destination: CheckIdentityView()) {
+                NavigationLink(destination: CheckIdentityView(code: "")) {
                     SettingsRow(image: "notification", name: "Notifications")
                 }
-                NavigationLink(destination: CheckIdentityView()) {
+                NavigationLink(destination: CheckIdentityView(code: "")) {
                     SettingsRow(image: "logout", name: "Sign out")
                 }
             }

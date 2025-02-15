@@ -9,11 +9,11 @@ struct RegisterUserRequest: Codable {
     var deviceId: String?
     var requestCode: String?
     var ninId: String?
-    private var deviceMetadata: DeviceMetadata
+    var deviceMetadata: DeviceMetadata?
 }
 
  struct DeviceMetadata: Codable {
-    var os: String = "Android"
+    var os: String = "IOS"
 }
 
 struct RegisterUserSelfieRequest: Codable {
@@ -29,7 +29,7 @@ struct SelfieImage: Codable {
 struct LoginUserRequest: Codable {
     var deviceId: String?
     var pin: String?
-    private var device: DeviceMetadata
+    var device: DeviceMetadata?
 }
 
 struct LogOutRequest: Codable {

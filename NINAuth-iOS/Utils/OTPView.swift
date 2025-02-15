@@ -51,7 +51,7 @@ struct OTPView: View {
                         .overlay(
                             withAnimation(.easeOut(duration: 0.1)) {
                                 RoundedRectangle(cornerRadius: 5)
-                                    .stroke(fieldFocus == index ? Color.white : borderColor, lineWidth: 1)
+                                    .stroke(fieldFocus == index ? Color.gray : borderColor, lineWidth: 1)
                             }
                         )
                         .onAppear {

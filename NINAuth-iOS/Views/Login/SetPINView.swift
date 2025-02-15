@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import RealmSwift
 
-struct ForgotPINView: View {
-    @State var newPIN: String = ""
-    @FocusState var isFocused: Bool
-    @State var isValid: Bool = true
+struct SetPINView: View {
+    @EnvironmentObject var appState: AppState
+    @StateObject private var viewModel = PinViewModel()
+    @State private var newPIN: String = ""
+    @FocusState private var isFocused: Bool
+    @State private var isValid: Bool = true
     private let numberOfFields = 6
+    @ObservedResults(Token.self) var token
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -30,10 +34,13 @@ struct ForgotPINView: View {
                         isValid = true
                     }
                 } .focused($isFocused)
+                .frame(maxHeight: 100)
 
-            Text("Entered OTP: \(newPIN)")
-
-            Button {} label: {
+            Button {
+                Task {
+                    await viewModel.setPin(setPinRequest: SetPinRequest(deviceId: appState.getDeviceID(), pin: newPIN, requestCode: token.first?.requestCode))
+                }
+            } label: {
                 Text("Continue")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
@@ -43,14 +50,18 @@ struct ForgotPINView: View {
             .background(Color("buttonColor"))
             .cornerRadius(4)
             .disabled(!isValid)
+            
+            NavigationLink(destination: LoginView(), isActive: $viewModel.pinIsSet) {}.isDetailLink(false)
 
             Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .padding()
+        .navigationTitle(Text(""))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    ForgotPINView()
+    SetPINView()
 }

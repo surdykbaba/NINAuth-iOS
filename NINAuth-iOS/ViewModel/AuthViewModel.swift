@@ -11,9 +11,9 @@ import Foundation
 class AuthViewModel: ObservableObject  {
     
     @Published private(set) var state: LoadingState = .idle
-    @Published private(set) var continueReg = false
-    @Published private(set) var verifyStatus = ""
-    @Published private(set) var isLoggedIn = false
+    @Published var continueReg = false
+    @Published var verifyStatus = ""
+    @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
     @Published private(set) var logOut = false
     
@@ -30,7 +30,7 @@ class AuthViewModel: ObservableObject  {
         state = .loading
         let result = await authService.registerUser(registerUserRequest: registerUserRequest)
         switch result {
-        case .success(let res):
+        case .success(_):
             continueReg = true
             state = .success
         case .failure(let failure):
@@ -77,7 +77,7 @@ class AuthViewModel: ObservableObject  {
         state = .loading
         let result = await authService.login(loginUserRequest: loginUserRequest)
         switch result {
-        case .success(let res):
+        case .success(_):
             isLoggedIn = true
             state = .success
         case .failure(let failure):
@@ -118,7 +118,7 @@ class AuthViewModel: ObservableObject  {
         state = .loading
         let result = await authService.logout(logOutRequest: logOutRequest)
         switch result {
-        case .success(let success):
+        case .success(_):
             logOut = true
             state = .success
         case .failure(let failure):
