@@ -21,7 +21,7 @@ struct OnboardingView: View {
     var body: some View {
         VStack {
             Button {} label: {
-                Text("Login")
+                Text("login")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(Color("buttonColor"))
             }
@@ -34,9 +34,9 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(spacing: 10) {
-                Text("Verify identity and authorize data access")
+                Text("verify_identity_and_authorize_data_access")
                     .customFont(.title, fontSize: 18)
-                Text("Ensure your privacy, manage and control access to your NIN data")
+                Text("ensure_your_privacy_manage_and_control")
                     .customFont(.body, fontSize: 16)
                     .multilineTextAlignment(.center)
             }
@@ -48,7 +48,7 @@ struct OnboardingView: View {
                     isPresentingScanner.toggle()
                 } label: {
                     HStack {
-                        Text("Scan QR code")
+                        Text("scan_qr_code")
                         Image(systemName: "qrcode")
                     }
                     .customFont(.title, fontSize: 18)
@@ -61,7 +61,7 @@ struct OnboardingView: View {
                 Button {
                     showSheet.toggle()
                 } label: {
-                    Text("I have a request code")
+                    Text("i_have_a_request_code")
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(Color("buttonColor"))
                 }

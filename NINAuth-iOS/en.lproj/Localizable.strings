@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+
+  Created by Maxwell Nwanna on 18/02/2025.
+  
+*/
+
+/**OnBoardingView*/
+"login" = "Login";
+"verify_identity_and_authorize_data_access" = "Verify identity and authorize data access";
+"ensure_your_privacy_manage_and_control" = "Ensure your privacy, manage and control access to your NIN data";
+"scan_qr_code" = "Scan QR code";
+"i_have_a_request_code" = "I have a request code";
