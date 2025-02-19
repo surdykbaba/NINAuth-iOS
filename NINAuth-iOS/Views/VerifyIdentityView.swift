@@ -86,7 +86,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
             .cornerRadius(4)
             .padding()
             .sheet(isPresented: $presentEnroll, content: {
-                SmileID.smartSelfieAuthenticationScreen(userId: appState.getRandomUniqueNumber(), delegate: self)
+                SmileID.smartSelfieAuthenticationScreenEnhanced(userId: appState.getRandomUniqueNumber(), delegate: self)
             })
         }
     }
