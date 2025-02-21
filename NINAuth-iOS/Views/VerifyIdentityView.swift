@@ -13,6 +13,18 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     @StateObject private var viewModel = AuthViewModel()
     @State private var presentEnroll = false
     @State private var switchView: Bool = false
+    @State private var userID = ""
+    private var defaultDirectory: URL {
+        get throws {
+            let documentDirectory = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            return documentDirectory.appendingPathComponent("SmileID")
+        }
+    }
     
     var body: some View {
         VStack {
@@ -62,6 +74,9 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                     }
                 }
             }
+            .onAppear {
+                userID = appState.getUserRandomUniqueNumber()
+            }
         }
         .padding()
         .navigationTitle(Text(""))
@@ -86,7 +101,8 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
             .cornerRadius(4)
             .padding()
             .sheet(isPresented: $presentEnroll, content: {
-                SmileID.smartSelfieAuthenticationScreenEnhanced(userId: appState.getRandomUniqueNumber(), delegate: self)
+//                OrchestratedEnhancedSelfieCaptureScreen(userId: appState.getUserRandomUniqueNumber(), isEnroll: false, allowNewEnroll: false, showAttribution: true, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                SmileID.smartSelfieEnrollmentScreen(delegate: self)
             })
         }
     }
@@ -94,12 +110,16 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     func didSucceed(selfieImage: URL, livenessImages: [URL], apiResponse: SmartSelfieResponse?) {
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
         registerUserSelfieRequest.deviceId = appState.getDeviceID()
+        registerUserSelfieRequest.images = []
         
         for img in livenessImages {
             var selfieImage = SelfieImage()
             selfieImage.image_type = "image_type_2"
-            selfieImage.image = try? String(contentsOf: img, encoding: .utf8)
-            registerUserSelfieRequest.images?.append(selfieImage)
+            if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
+                let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
+                selfieImage.image = stringImg?.base64EncodedString() ?? ""
+                registerUserSelfieRequest.images?.append(selfieImage)
+            }
         }
         
         Task {

@@ -45,8 +45,8 @@ class AppState: ObservableObject {
         return swiftString
     }
     
-    func getRandomUniqueNumber() -> String {
-        return UUID().uuidString
+    func getUserRandomUniqueNumber() -> String {
+        return "user-" + UUID().uuidString
     }
     
     func getFaceAuthStatus(deviceID: String) {
