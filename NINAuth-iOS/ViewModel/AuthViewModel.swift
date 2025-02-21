@@ -89,29 +89,21 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
-    func reGenerateCode() async -> Void {
+    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> User? {
         guard state != .loading else {
-            return
+            return nil
         }
         state = .loading
-        let sessionID = await startSession()
-        let result = await authService.regenerateCode(sessionID: sessionID)
+        let result = await authService.loginWithNIN(loginWithNIN: loginWithNIN)
         switch result {
-        case .success(let res):
-            requestCode = res["data"]["qrCode"].stringValue
+        case .success(let userResponse):
+            isLoggedIn = true
+            Log.info(userResponse.description)
             state = .success
+            return userResponse
         case .failure(let failure):
             state = .failed(failure)
-        }
-    }
-    
-    private func startSession() async -> String {
-        let result = await authService.startSession(startSessionRequest: StartSessionRequest())
-        switch result {
-        case .success(let res):
-            return res.sessionId ?? ""
-        case .failure(let failure):
-            return ""
+            return nil
         }
     }
     

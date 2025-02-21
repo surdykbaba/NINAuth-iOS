@@ -13,7 +13,6 @@ class AppState: ObservableObject {
     @Published var verifyStatus = ""
     private let authService: AuthService
     var timer: Timer? = nil
-    var user: User?
 
     init() {
         authService = AuthService()

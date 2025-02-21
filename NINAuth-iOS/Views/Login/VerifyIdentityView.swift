@@ -105,6 +105,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     
     func didSucceed(selfieImage: URL, livenessImages: [URL], apiResponse: SmartSelfieResponse?)
     {
+        presentEnroll.toggle()
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
         registerUserSelfieRequest.deviceId = appState.getDeviceID()
         registerUserSelfieRequest.images = []
@@ -126,6 +127,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     
     func didError(error: any Error) {
         //TODO: Display error dialog to user
+        presentEnroll.toggle()
     }
     
     @ViewBuilder

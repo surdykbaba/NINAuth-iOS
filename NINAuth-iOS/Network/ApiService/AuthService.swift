@@ -54,11 +54,10 @@ struct AuthService: AuthProtocol {
                 var user = User()
                 try await realm.asyncWrite {
                     let token = Token(value: networkResponse.getJson()?["tokens"])
-                    user = token.user ?? User()
+                    user = User(value: networkResponse.getJson()?["tokens"]["user"])
                     realm.deleteAll()
                     realm.add(token)
                     realm.add(user)
-                    print(user)
                 }
                 return .success(user.freeze())
             }catch {
@@ -111,11 +110,10 @@ struct AuthService: AuthProtocol {
                 var user = User()
                 try await realm.asyncWrite {
                     let token = Token(value: networkResponse.getJson()?["tokens"])
-                    user = token.user ?? User()
+                    user = User(value: networkResponse.getJson()?["tokens"]["user"])
                     realm.deleteAll()
                     realm.add(token)
                     realm.add(user)
-                    print(user)
                 }
                 return .success(user.freeze())
             }catch {

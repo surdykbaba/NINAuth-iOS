@@ -31,7 +31,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
         let config = Realm.Configuration(
-                schemaVersion: 1, deleteRealmIfMigrationNeeded: false)
+                schemaVersion: 2, deleteRealmIfMigrationNeeded: false)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
         SmileID.initialize(useSandbox: true)

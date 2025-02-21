@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct DigitalIDView: View {
     @EnvironmentObject var appState: AppState
     @State private var changeView = true
     @State private var showShareIDPopover = false
+    @ObservedResults(User.self) var user
     
     var body: some View {
         Color.secondaryGrayBackground
@@ -19,7 +21,7 @@ struct DigitalIDView: View {
                 ScrollView {
                     VStack(alignment: .leading) {
                         VStack(alignment: .center, spacing: 10) {
-                            if let user = appState.user, changeView {
+                            if let user = user.first, changeView {
                                 DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
                             } else {
                                 Image("qr_code")
@@ -31,7 +33,7 @@ struct DigitalIDView: View {
                             Button {
                                 changeView.toggle()
                             } label: {
-                                showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code" : "click_to_show_your_id")
+                                showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
                             }
                         }
                         .padding(.bottom, 30)
