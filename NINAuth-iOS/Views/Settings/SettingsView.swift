@@ -13,7 +13,7 @@ struct SettingsView: View {
     var body: some View {
                 VStack {
                     VStack(spacing: 10) {
-                        Image("profileImage")
+                        Image("profile_image")
                             .resizable()
                             .frame(width: 96, height: 96)
                             .clipped()
@@ -103,7 +103,7 @@ struct SettingsView: View {
                     SettingsRow(image: "lock", name: "Privacy policy")
                 }
                 NavigationLink(destination: PrivacyPolicyView()) {
-                    SettingsRow( image: "file.text", name: "Terms of service")
+                    SettingsRow( image: "file_text", name: "Terms of service")
                 }
             }
             .listRowSeparator(.hidden)
@@ -122,7 +122,7 @@ struct SettingsView: View {
         }) {
             Group {
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "wifi.off", name: "Offline data sharing")
+                    SettingsRow(image: "wifi_off", name: "Offline data sharing")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
 
@@ -134,7 +134,7 @@ struct SettingsView: View {
                 biometrics
 
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "device.mobile", name: "Devices")
+                    SettingsRow(image: "device_mobile", name: "Devices")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 

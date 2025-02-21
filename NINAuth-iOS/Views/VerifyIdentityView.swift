@@ -29,7 +29,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         }
                         .padding(.bottom, 40)
 
-                        Image("verifyIdentity")
+                        Image("verify_identity")
                             .padding(.bottom, 30)
 
                         HStack(spacing: 12) {

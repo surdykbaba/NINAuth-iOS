@@ -16,7 +16,7 @@ struct VerificationStatusView: View {
         VStack {
             switch verificationStatus {
             case .done:
-                displayStatusInfo(imageName: "checkmarkLogo", backgroundColor: Color("checkmarkBackground"), title: "Verification done!", titleMessage: "Your identity  has been successfully verified")
+                displayStatusInfo(imageName: "checkmark_icon", backgroundColor: Color("checkmarkBackground"), title: "Verification done!", titleMessage: "Your identity  has been successfully verified")
             case .failed:
                 displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "Unable to verify your identity", titleMessage: "Want to try again? Ensure you are in a well lit room and your face isn’t covered.")
             case .inProgress:

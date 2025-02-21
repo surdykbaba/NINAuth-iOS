@@ -17,7 +17,7 @@ struct LoginView: View {
 
     var body: some View {
         VStack {
-            Image("NigerianCoatOfArms")
+            Image("nigerian_coat_of_arms")
                 .padding(.bottom, 10)
                 .padding(.top, 30)
 
