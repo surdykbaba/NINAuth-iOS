@@ -80,7 +80,7 @@ class AuthViewModel: ObservableObject  {
         switch result {
         case .success(let userResponse):
             isLoggedIn = true
-            print(userResponse)
+            Log.info(userResponse.description)
             state = .success
             return userResponse
         case .failure(let failure):

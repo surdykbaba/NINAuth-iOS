@@ -60,7 +60,7 @@ struct AuthService: AuthProtocol {
                     realm.add(user)
                     print(user)
                 }
-                return .success(user)
+                return .success(user.freeze())
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
