@@ -9,7 +9,8 @@ import SwiftUI
 
 struct OrganizationCardView: View {
     @State private var showSheet = false
-    
+    var consent: Consent = Consent()
+
     var body: some View {
         ZStack {
             Color.secondaryGrayBackground
@@ -17,7 +18,7 @@ struct OrganizationCardView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Guaranty Trust Bank")
+                        Text(consent.enterprise?.name ?? "")
                             .customFont(.headline, fontSize: 24)
                         Text("Shared via QR code")
                             .customFont(.headline, fontSize: 17)
@@ -43,7 +44,7 @@ struct OrganizationCardView: View {
                         }
 
                         HStack {
-                            Text("RC:012456")
+                            Text(consent.enterprise?.id ?? "")
                             Image(systemName: "square.on.square")
                         }
                         .padding(10)
@@ -88,5 +89,5 @@ struct OrganizationCardView: View {
 }
 
 #Preview {
-    OrganizationCardView()
+    OrganizationCardView(consent: Consent())
 }
