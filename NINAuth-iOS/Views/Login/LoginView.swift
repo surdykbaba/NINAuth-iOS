@@ -34,7 +34,9 @@ struct LoginView: View {
                         loginRequest.pin = newOtp
                         loginRequest.device = DeviceMetadata()
                         Task {
-                            await viewModel.loginUser(loginUserRequest: loginRequest)
+                          let user = await viewModel.loginUser(loginUserRequest: loginRequest)
+                            appState.user = user
+                            print(user ?? User())
                         }
                     }
                 } .focused($isFocused)

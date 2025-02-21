@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DigitalIDView: View {
+    @EnvironmentObject var appState: AppState
     @State private var changeView = true
     @State private var showShareIDPopover = false
     
@@ -18,11 +19,8 @@ struct DigitalIDView: View {
                 ScrollView {
                     VStack(alignment: .leading) {
                         VStack(alignment: .center, spacing: 10) {
-                            if changeView {
-                                Image("id_card")
-                                    .resizable()
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 240)
+                            if let user = appState.user, changeView {
+                                DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
                             } else {
                                 Image("qr_code")
                                     .resizable()

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 @MainActor
 class AuthViewModel: ObservableObject  {
@@ -16,7 +17,7 @@ class AuthViewModel: ObservableObject  {
     @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
     @Published private(set) var logOut = false
-    
+
     private let authService: AuthService
     
     init() {
@@ -70,18 +71,21 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
-    func loginUser(loginUserRequest: LoginUserRequest) async -> Void {
+    func loginUser(loginUserRequest: LoginUserRequest) async -> User? {
         guard state != .loading else {
-            return
+            return nil
         }
         state = .loading
         let result = await authService.login(loginUserRequest: loginUserRequest)
         switch result {
-        case .success(_):
+        case .success(let userResponse):
             isLoggedIn = true
+            print(userResponse)
             state = .success
+            return userResponse
         case .failure(let failure):
             state = .failed(failure)
+            return nil
         }
     }
     
