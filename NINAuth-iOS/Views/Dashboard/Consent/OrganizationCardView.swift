@@ -44,7 +44,7 @@ struct OrganizationCardView: View {
                         }
 
                         HStack {
-                            Text(consent.enterprise?.id ?? "")
+                            Text(consent.enterprise_id ?? "")
                             Image(systemName: "square.on.square")
                         }
                         .padding(10)
@@ -63,13 +63,15 @@ struct OrganizationCardView: View {
                         Image("gtb_icon")
                             .resizable()
                             .frame(width: 72, height: 72)
-                        Text("Your data was shared with GT Bank")
+                        Text("Your data was shared with \(consent.enterprise?.name ?? "")")
                             .customFont(.headline, fontSize: 17)
                         HStack {
                             Image(systemName: "square.on.square")
                                 .foregroundColor(Color.button)
-                            Link("https://www.gtbank.com", destination: URL("https://www.gtbank.com")!)
-                                .tint(Color.button)
+                            if let url = URL(string: consent.enterprise?.website ?? "") {
+                                Link(consent.enterprise?.website ?? "", destination: url)
+                                    .tint(Color.button)
+                            }
                         }
 
                     }
@@ -79,7 +81,7 @@ struct OrganizationCardView: View {
                     .mask(
                         RoundedRectangle(cornerRadius: 15, style: .continuous))
 
-                    ConsentDetailsView(consentType: "Account opening", consentDetails: "Full name, Mobile number, Date of birth, Gender, Registered address, photograph", date: "23 July, 2024 10:11 am", consentPermission: "Consent given by you", consentID: 0178239465)
+                    ConsentDetailsView(consentType: consent.reason ?? "", consentDetails: "Full name, Mobile number, Date of birth, Gender, Registered address, photograph", date: "23 July, 2024 10:11 am", consentPermission: "Consent given by you", consentID: 0178239465)
                         .padding(.top, 10)
                 }
                 .padding()
