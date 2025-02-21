@@ -34,9 +34,20 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 schemaVersion: 1, deleteRealmIfMigrationNeeded: false)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
-        SmileID.initialize(useSandbox: true)
+        let configss = getConfig()
+        try? Log.info("The sending json body \(configss.jsonPrettyPrinted())")
+        
+        SmileID.initialize(config: configss, useSandbox: true)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         return true
+    }
+    
+    public func getConfig(from resourceName: String = "smile_config") -> Config {
+        let decoder = JSONDecoder()
+        let configUrl = Bundle.main.url(forResource: resourceName, withExtension: "json")!
+        // swiftlint:disable force_try
+        return try! decoder.decode(Config.self, from: Data(contentsOf: configUrl))
+        // swiftlint:enable force_try
     }
     
     func hideBackButtonText() {
