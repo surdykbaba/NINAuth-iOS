@@ -19,7 +19,7 @@ struct ScanQRCodeView: View {
                                 Image("barcode_green")
                                     .resizable()
                                     .frame(width: 40, height: 40)
-                                Text("Scan QR code to give consent")
+                                Text("scan_qr_code_to_give_consent")
                                     .customFont(.headline, fontSize: 17)
                             }
                             .padding(.bottom, 30)
@@ -30,9 +30,9 @@ struct ScanQRCodeView: View {
                             
                             HStack(spacing: 30) {
                                 VStack(alignment: .leading, spacing: 20) {
-                                    Text("Point your camera at the organization’s QR code to choose which NIN details you would like to share.")
+                                    Text("point_your_camera_at_the_organization’s_qr_code_to_choose_which_nin_details_you_would_like_to_share.")
                                     Button {} label: {
-                                        Text("Scan QR code")
+                                        Text("scan_qr_code")
                                             .customFont(.title, fontSize: 18)
                                             .foregroundStyle(Color.button)
                                     }
@@ -55,11 +55,11 @@ struct ScanQRCodeView: View {
                         VStack(alignment: .leading) {
                             HStack(spacing: 30) {
                                 VStack(alignment: .leading, spacing: 20) {
-                                    Text("Enter request code")
+                                    Text("enter_request_code")
                                         .customFont(.headline, fontSize: 17)
-                                    Text("If you are unable to scan a QR code, you can type in the 6-digit code provided by the organization.")
+                                    Text("if_you_are_unable_to_scan_a_QR_code_you_can_type_in_the_6-digit_code_provided_by_the_organization.")
                                     Button {} label: {
-                                        Text("Enter code")
+                                        Text("enter_code")
                                             .customFont(.title, fontSize: 18)
                                             .foregroundStyle(Color.button)
                                     }

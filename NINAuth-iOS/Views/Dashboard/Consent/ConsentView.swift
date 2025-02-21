@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ConsentView: View {
     @State private var selected: ApprovalStatus = .approved
+    @StateObject var viewModel = ConsentViewModel()
 
     var body: some View {
         ZStack {
@@ -23,8 +24,24 @@ struct ConsentView: View {
                 .pickerStyle(.segmented)
                 .frame(height: 60)
                 .padding()
-
-                ChosenStatusView(status: selected)
+                .onAppear {
+                    Task {
+                        await viewModel.getAllConsents()
+                    }
+                }
+                if let consents = viewModel.consent.consents {
+                    if consents.isEmpty {
+                        Text("No data")
+                        Spacer()
+                            .customFont(.headline, fontSize: 17)
+                    } else {
+                        ChosenStatusView(status: selected, consents: viewModel.consent.consents ?? [])
+                    }
+                }
+                else {
+                    Text("No data")
+                    Spacer()
+                }
             }
         }
     }
@@ -35,19 +52,20 @@ struct ConsentView: View {
 }
 
 enum ApprovalStatus: String, CaseIterable {
-    case approved = "Approved Access"
+    case approved = "approved_access"
     case rejected = "Rejected"
 }
 
 struct ChosenStatusView: View {
     var status: ApprovalStatus
+    var consents: [Consent]
 
     var body: some View {
         switch status {
         case .approved:
-            ConsentApprovedView(status: true)
+            ConsentApprovedView(consents: consents.filter { $0.status == "approved" })
         case .rejected:
-            ConsentApprovedView(status: false)
+            ConsentApprovedView(consents: consents.filter { $0.status != "approved" })
         }
     }
 }

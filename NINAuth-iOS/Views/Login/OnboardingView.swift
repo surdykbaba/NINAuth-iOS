@@ -17,10 +17,13 @@ struct OnboardingView: View {
     @State var isValid: Bool = true
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
+    @State var showLoginScreen: Bool = false
 
     var body: some View {
         VStack {
-            Button {} label: {
+            Button {
+                showLoginScreen = true
+            } label: {
                 Text("login")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(Color("buttonColor"))
@@ -29,7 +32,7 @@ struct OnboardingView: View {
 
             Spacer()
 
-            Image("NigerianCoatOfArms")
+            Image("nigerian_coat_of_arms")
 
             Spacer()
 
@@ -56,14 +59,14 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(Color("buttonColor"))
+                .background(Color.button)
                 .cornerRadius(4)
                 Button {
                     showSheet.toggle()
                 } label: {
                     Text("i_have_a_request_code")
                         .customFont(.title, fontSize: 18)
-                        .foregroundStyle(Color("buttonColor"))
+                        .foregroundStyle(Color.button)
                 }
                 .halfSheet(showSheet: $showSheet) {
                     requestCodeView
@@ -89,8 +92,12 @@ struct OnboardingView: View {
                 }
             }
         }
+        loginNavigation
     }
-    
+
+    var loginNavigation: some View {
+        NavigationLink(destination: LoginView(), isActive: $showLoginScreen){}.isDetailLink(false)
+    }
     var requestCodeView: some View {
         ZStack {
             Color.white

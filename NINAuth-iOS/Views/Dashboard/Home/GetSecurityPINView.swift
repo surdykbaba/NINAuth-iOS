@@ -11,12 +11,12 @@ struct GetSecurityPINView: View {
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
-                Text("Security PIN")
+                Text("security_pin")
                     .padding(.bottom, 10)
                     .padding(.top, 40)
                     .customFont(.headline, fontSize: 28)
 
-                Text("Enter the code below with your User ID to  access the NINAuth QR code")
+                Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code")
                     .customFont(.body, fontSize: 18)
                     .padding(.bottom, 50)
             }
@@ -24,7 +24,7 @@ struct GetSecurityPINView: View {
             VStack(alignment: .center, spacing: 10) {
                 Text("697694")
                     .customFont(.subheadline, fontSize: 40)
-                Text("Authentication PIN")
+                Text("authentication_pin")
                     .customFont(.caption2, fontSize: 14)
 
                 HStack {
@@ -50,13 +50,13 @@ struct GetSecurityPINView: View {
             Spacer()
 
             Button {} label: {
-                Text("Copy PIN")
+                Text("copy_pin")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(Color("buttonColor"))
+            .background(Color.button)
             .cornerRadius(4)
         }
         .padding()

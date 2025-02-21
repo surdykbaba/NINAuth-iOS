@@ -31,8 +31,8 @@ struct HomeView: View {
 }
 
 enum PickerOptions: String, CaseIterable {
-    case digitalID = "My Digital ID"
-    case scanQR = "Scan QR "
+    case digitalID = "my_digital_id"
+    case scanQR = "scan_qr"
 }
 
 struct ChosenPickerView: View {

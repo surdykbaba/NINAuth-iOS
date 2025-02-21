@@ -11,8 +11,8 @@ protocol AuthProtocol {
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag>
     
-    func login(loginUserRequest: LoginUserRequest) async -> Result<Bool, ErrorBag>
-    
+    func login(loginUserRequest: LoginUserRequest) async -> Result<User, ErrorBag>
+
     func logout(logOutRequest: LogOutRequest) async -> Result<Bool, ErrorBag>
     
     func getFaceAuthStatus(deviceID: String) async -> Result<JSON, ErrorBag>

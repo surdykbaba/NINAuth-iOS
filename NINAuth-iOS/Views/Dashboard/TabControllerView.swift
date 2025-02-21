@@ -34,6 +34,7 @@ struct TabControllerView: View {
         .onAppear() {
             UITabBar.appearance().backgroundColor = .white
         }
+        .navigationBarBackButtonHidden()
     }
 
     func CustomTabItem(imageName: String, title: String, isActive: Bool) -> some View {

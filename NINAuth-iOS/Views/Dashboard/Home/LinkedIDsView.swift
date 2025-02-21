@@ -15,9 +15,9 @@ struct LinkedIDsView: View {
             ScrollView {
                 VStack {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Linked ID")
+                        Text("linked_id")
                             .customFont(.headline, fontSize: 24)
-                        Text("View other functional IDs linked to your NIN")
+                        Text("view_other_functional_ids_linked_t_your_NIN")
                             .customFont(.caption, fontSize: 17)
                             .padding(.bottom, 20)
 
