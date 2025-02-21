@@ -12,4 +12,11 @@ extension String {
     var localized: String {
         return NSLocalizedString(self, comment:"")
     }
+    
+    var imageFromBase64: UIImage? {
+        guard let imageData = Data(base64Encoded: self, options: .ignoreUnknownCharacters) else {
+            return nil
+        }
+        return UIImage(data: imageData)
+    }
 }

@@ -6,71 +6,63 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct SettingsView: View {
     @State private var biometricsIsOn = false
+    @ObservedResults(User.self) var user
     
     var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack {
                 VStack {
-                    VStack(spacing: 10) {
-                        Image("profile_image")
-                            .resizable()
-                            .frame(width: 96, height: 96)
-                            .clipped()
-                        Text("Bisola Adegoke Eniola")
-                            .customFont(.title, fontSize: 24)
-                        HStack {
-                            Text("Last Login")
-                                .foregroundStyle(Color(.darkGray))
-                                .customFont(.headline, fontSize: 16)
-                            Circle()
-                                .fill(Color(.darkGray))
-                                .frame(width: 6, height: 6)
-                            Text("23 July, 2024")
-                                .foregroundStyle(Color(.darkGray))
-                                .customFont(.headline, fontSize: 16)
-                        }
-
-                        List {
-                            legalAndComplaince
-
-                            security
-
-                            others
-                        }
-                        .listRowSeparator(.hidden)
-                        .listStyle(.inset)
+                    Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                        .resizable()
+                        .frame(width: 96, height: 96)
+                        .clipShape(Circle())
+                        .padding(.bottom, 16)
+                    
+                    Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
+                        .customFont(.title, fontSize: 24)
+//                    HStack {
+//                        Text("Last Login")
+//                            .foregroundStyle(Color(.darkGray))
+//                            .customFont(.headline, fontSize: 16)
+//                        Circle()
+//                            .fill(Color(.darkGray))
+//                            .frame(width: 6, height: 6)
+//                        Text("23 July, 2024")
+//                            .foregroundStyle(Color(.darkGray))
+//                            .customFont(.headline, fontSize: 16)
+//                    }
+                    .padding(.bottom, 60)
+                    
+                    legalAndComplaince
+                    
+                    security
+                        .padding(.top, 44)
+                    
+                    others
+                        .padding(.top, 44)
+                }
+                .foregroundColor(Color(.text))
+            }
+            .padding()
+            .padding(.top, 20)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        NotificationsView()
+                    } label: {
+                        Image(systemName: "bell.badge")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.red, .black)
+                            .customFont(.caption, fontSize: 18)
+                            .foregroundStyle(Color.button)
                     }
                 }
-                .padding()
-                .padding(.top, 20)
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        NavigationLink {} label: {
-                            Image(systemName: "xmark")
-                                .resizable()
-                                .frame(width: 15, height: 15)
-                                .padding(10)
-                                .customFont(.headline, fontSize: 15)
-                                .background(Color("grayBackground"))
-                                .foregroundColor(.black)
-                                .clipShape(Circle())
-                        }
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            NotificationsView()
-                        } label: {
-                            Image(systemName: "bell.badge")
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(.red, .black)
-                                .customFont(.caption, fontSize: 18)
-                                .foregroundStyle(Color.button)
-                        }
-                    }
-                }
+            }
+        }
     }
     
     var biometrics: some View {
@@ -91,79 +83,72 @@ struct SettingsView: View {
     }
     
     var legalAndComplaince: some View {
-        Section(header:
-                    VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 20){
             Text("legal_and_compliance")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
+            
             Divider()
-        }) {
+            
             Group {
-                NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "lock", name: "privacy_policy")
+                Link(destination: URL(string: "https://ninauth.com/privacy-policy")!) {
+                    SettingsRow(image: "lock", name: "privacy_policy".localized)
                 }
-                NavigationLink(destination: PrivacyPolicyView()) {
-                    SettingsRow( image: "file_text", name: "terms_of_service")
+                
+                Link(destination: URL(string: "https://ninauth.com/terms-of-service")!) {
+                    SettingsRow( image: "file_text", name: "terms_of_service".localized)
                 }
             }
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
         }
-        .listSectionSeparator(.hidden)
+        .padding(.horizontal, 20)
+
     }
     
     var security: some View {
-        Section(header:
-                    VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 20){
             Text("security")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
+            
             Divider()
-        }) {
+            
             Group {
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "wifi_off", name: "offline_data_sharing")
+                    SettingsRow(image: "wifi_off", name: "offline_data_sharing".localized)
                 }
-                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
 
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "lock", name: "update_pin")
+                    SettingsRow(image: "lock", name: "update_pin".localized)
                 }
-                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
                 biometrics
 
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "device_mobile", name: "devices")
+                    SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
-                .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
-                
             }
-            .listRowSeparator(.hidden)
         }
-        .listSectionSeparator(.hidden)
+        .padding(.horizontal, 20)
     }
     
     var others: some View {
-        Section(header:
-                    VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 20){
             Text("others")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
+            
             Divider()
-        }) {
+            
             Group {
                 NavigationLink(destination: CheckIdentityView(code: "")) {
-                    SettingsRow(image: "notification", name: "notifications")
+                    SettingsRow(image: "notification", name: "notifications".localized)
                 }
                 NavigationLink(destination: CheckIdentityView(code: "")) {
-                    SettingsRow(image: "logout", name: "sign_out")
+                    SettingsRow(image: "logout", name: "sign_out".localized)
                 }
             }
-            .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
-            .listRowSeparator(.hidden)
         }
-        .listSectionSeparator(.hidden)
+        .padding(.horizontal, 20)
     }
     
 }
