@@ -17,8 +17,6 @@ protocol AuthProtocol {
     
     func getFaceAuthStatus(deviceID: String) async -> Result<JSON, ErrorBag>
     
-    func regenerateCode(sessionID: String) async -> Result<JSON, ErrorBag>
-    
-    func startSession(startSessionRequest: StartSessionRequest) async -> Result<SessionResponse, ErrorBag>
+    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Result<User, ErrorBag>
 
 }

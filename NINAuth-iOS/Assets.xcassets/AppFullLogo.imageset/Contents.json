@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "ninauth-logo 4.svg",
+      "filename" : "ninauth-logo 5.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "ninauth-logo 4.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "ninauth-logo 4-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

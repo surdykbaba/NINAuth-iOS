@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
@@ -13,7 +14,10 @@ struct LoginView: View {
     @State private var loginPin: String = ""
     @FocusState private var isFocused: Bool
     @State private var isValid: Bool = true
-    private let numberOfFields = 6
+    @State private var identificationNumber = ""
+    @State private var password: String = ""
+    @State private var isFormValid: Bool = false
+    @ObservedResults(User.self) var user
 
     var body: some View {
         VStack {
@@ -24,23 +28,56 @@ struct LoginView: View {
             Text("enter_pin_to_login")
                 .customFont(.subheadline, fontSize: 20)
                 .padding(.bottom, 40)
-
-            OTPView(numberOfFields: numberOfFields, otp: $loginPin, valid: $isValid)
-                .padding(.bottom, 20)
-                .onChange(of: loginPin) { newOtp in
-                    if newOtp.count == numberOfFields && !newOtp.isEmpty {
-                        var loginRequest = LoginUserRequest()
-                        loginRequest.deviceId = appState.getDeviceID()
-                        loginRequest.pin = newOtp
-                        loginRequest.device = DeviceMetadata()
-                        Task {
-                          let user = await viewModel.loginUser(loginUserRequest: loginRequest)
-                            appState.user = user
-                            print(user ?? User())
+            
+            SecureField("nin_number", text: $identificationNumber)
+                .keyboardType(.numberPad)
+                .customTextField()
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke()
+                    .fill(isFormValid ? .gray : .red)
+                )
+                .onAppear(perform: {
+                    isFormValid = true
+                    identificationNumber = user.first?.nin ?? ""
+                })
+                .onChange(of: identificationNumber) { _ in
+                    if(identificationNumber.count > 11) {
+                        identificationNumber = String(identificationNumber.prefix(11))
+                    }
+                }
+            
+            SecureField("pin_camel", text: $password)
+                .keyboardType(.numberPad)
+                .customTextField()
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke()
+                    .fill(isFormValid ? .gray : .red)
+                )
+                .onAppear(perform: {
+                    isFormValid = true
+                })
+                .onChange(of: password) { _ in
+                    if(password.count > 6) {
+                        password = String(password.prefix(6))
+                    }
+                    
+                    if(password.count == 6) {
+                        if(identificationNumber == "12345678901" && password == "000000") {
+                            loginWithNIN()
+                        }else if let user = user.first {
+                            if(identificationNumber == user.nin) {
+                                loginUser()
+                            }else {
+                                // TODO: Show user a dialog and refer to reset pin
+                            }
+                        }else {
+                            loginUser()
                         }
                     }
-                } .focused($isFocused)
-                .frame(maxHeight: 100)
+                }
+                .padding(.top, 16)
 
             Button {} label: {
                 HStack {
@@ -54,7 +91,8 @@ struct LoginView: View {
             .padding(.vertical, 18)
             .background(Color.button)
             .cornerRadius(4)
-            .disabled(!isValid)
+            .disabled(isValid)
+            .padding(.top, 24)
             
             Spacer()
             NavigationLink(destination: TabControllerView(), isActive: $viewModel.isLoggedIn) {}.isDetailLink(false)
@@ -76,6 +114,27 @@ struct LoginView: View {
             }
         }
 
+    }
+    
+    func loginUser() {
+        var loginRequest = LoginUserRequest()
+        loginRequest.deviceId = appState.getDeviceID()
+        loginRequest.pin = password
+        loginRequest.device = DeviceMetadata()
+        Task {
+            _ = await viewModel.loginUser(loginUserRequest: loginRequest)
+        }
+    }
+    
+    func loginWithNIN() {
+        var loginRequest = LoginWithNIN()
+        loginRequest.deviceId = appState.getDeviceID()
+        loginRequest.pin = password
+        loginRequest.ninId = identificationNumber
+        loginRequest.device = DeviceMetadata()
+        Task {
+            _ = await viewModel.loginWithNIN(loginWithNIN: loginRequest)
+        }
     }
 }
 

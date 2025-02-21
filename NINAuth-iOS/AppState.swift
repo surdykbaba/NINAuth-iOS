@@ -13,7 +13,6 @@ class AppState: ObservableObject {
     @Published var verifyStatus = ""
     private let authService: AuthService
     var timer: Timer? = nil
-    var user: User?
 
     init() {
         authService = AuthService()
@@ -46,8 +45,8 @@ class AppState: ObservableObject {
         return swiftString
     }
     
-    func getRandomUniqueNumber() -> String {
-        return UUID().uuidString
+    func getUserRandomUniqueNumber() -> String {
+        return "user-" + UUID().uuidString
     }
     
     func getFaceAuthStatus(deviceID: String) {

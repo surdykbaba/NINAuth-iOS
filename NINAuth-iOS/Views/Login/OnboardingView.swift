@@ -71,7 +71,7 @@ struct OnboardingView: View {
                 .halfSheet(showSheet: $showSheet) {
                     requestCodeView
                 } onEnd: {
-                    print("Dismissed Sheet")
+                    Log.info("Dismissed Sheet")
                 }
             }
             
@@ -79,6 +79,7 @@ struct OnboardingView: View {
                 if let code = scannedCode {
                     NavigationLink(destination: CheckIdentityView(code: code), isActive: .constant(true)) {}.isDetailLink(false)
                 }
+                NavigationLink(destination: LoginView(), isActive: $showLoginScreen){}.isDetailLink(false)
             }
             .frame(width: 0, height: 0)
         }
@@ -92,12 +93,8 @@ struct OnboardingView: View {
                 }
             }
         }
-        loginNavigation
     }
 
-    var loginNavigation: some View {
-        NavigationLink(destination: LoginView(), isActive: $showLoginScreen){}.isDetailLink(false)
-    }
     var requestCodeView: some View {
         ZStack {
             Color.white

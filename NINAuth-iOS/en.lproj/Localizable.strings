@@ -16,6 +16,8 @@
 "enter_pin_to_login" = "Enter PIN to login";
 "sign_in_with_biometrics" = "Sign in with biometrics";
 "forgot_pin?" = "Forgot PIN?";
+"nin_number" = "NIN Number";
+"pin_camel" = "Pin";
 
 /**SetPINView*/
 "set_a_login_pin" = "Set a login PIN";

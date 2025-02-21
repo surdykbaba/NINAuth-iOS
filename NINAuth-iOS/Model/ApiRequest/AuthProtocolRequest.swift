@@ -32,6 +32,13 @@ struct LoginUserRequest: Codable {
     var device: DeviceMetadata?
 }
 
+struct LoginWithNIN: Codable {
+    var deviceId: String?
+    var pin: String?
+    var ninId: String?
+    var device: DeviceMetadata?
+}
+
 struct LogOutRequest: Codable {
     var deviceId: String?
 }

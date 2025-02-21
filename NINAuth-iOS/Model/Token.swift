@@ -13,7 +13,6 @@ class Token: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var access: String?
     @Persisted var refresh: String? = ""
     @Persisted var requestCode: String? = ""
-    var user : User? = nil
 
     convenience init(value: JSON?){
         self.init()
@@ -21,6 +20,5 @@ class Token: Object, ObjectKeyIdentifiable {
         self.access = value?["access"].string
         self.refresh = value?["refresh"].string
         self.requestCode = value?["requestCode"].string
-        self.user = User(value: value?["user"])
     }
 }

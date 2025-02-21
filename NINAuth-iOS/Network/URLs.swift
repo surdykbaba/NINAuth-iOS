@@ -20,6 +20,7 @@ enum URLs {
     static let REGISTER_USER = "auth/register"
     static let REGISTER_USER_SELFIE = "auth/face-auth"
     static let LOGIN = "auth/login"
+    static let LOGIN_NIN = "auth/login-with-nin"
     static let LOGOUT = "auth/logout"
     static let FACE_AUTH_STATUS = "auth/face-auth-status/"
     static let RE_GENERATE_CODE = "integration/enterprise/online/session/regenerate/"

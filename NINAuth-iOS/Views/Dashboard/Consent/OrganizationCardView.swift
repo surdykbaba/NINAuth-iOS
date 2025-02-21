@@ -40,7 +40,7 @@ struct OrganizationCardView: View {
                         .halfSheet(showSheet: $showSheet) {
 
                         } onEnd: {
-                            print("Dismissed Sheet")
+                            Log.info("Dismissed Sheet")
                         }
 
                         HStack {

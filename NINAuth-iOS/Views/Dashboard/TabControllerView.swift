@@ -12,23 +12,37 @@ struct TabControllerView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    CustomTabItem(imageName: "home", title: "Home", isActive: selectedTab == 0)
-                }
-                .tag(0)
+            NavigationView {
+                HomeView()
+            }
+            .navigationViewStyle(.stack)
+            .tag(0)
+            .tint(Color(.greenText))
+            .tabItem {
+                CustomTabItem(imageName: "home", title: "Home", isActive: selectedTab == 0)
+            }
 
-            ConsentView()
-                .tabItem {
-                    CustomTabItem(imageName: "consent", title: "Consent", isActive: selectedTab == 1)
-                }
-                .tag(1)
+            
+            NavigationView {
+                ConsentView()
+            }
+            .navigationViewStyle(.stack)
+            .tag(1)
+            .tint(Color(.greenText))
+            .tabItem {
+                CustomTabItem(imageName: "consent", title: "Consent", isActive: selectedTab == 1)
+            }
 
-            SettingsView()
-                .tabItem {
-                    CustomTabItem(imageName: "settings", title: "Settings", isActive: selectedTab == 2)
-                }
-                .tag(2)
+
+            NavigationView {
+                SettingsView()
+            }
+            .navigationViewStyle(.stack)
+            .tag(2)
+            .tint(Color(.greenText))
+            .tabItem {
+                CustomTabItem(imageName: "settings", title: "Settings", isActive: selectedTab == 2)
+            }
 
         }
         .onAppear() {
