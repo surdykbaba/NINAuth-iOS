@@ -21,7 +21,6 @@ struct ConsentApprovedView: View {
                             self.consent = consent
                             isPressed.toggle()
                         }
-//                                .background(NavigationLink(destination: OrganizationCardView(consent: consent), isActive: $isPressed){}.isDetailLink(false))
                     }
             }
             .frame(maxWidth: .infinity)
