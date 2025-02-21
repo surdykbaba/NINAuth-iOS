@@ -19,12 +19,12 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
                     if case .failed(_) = viewModel.state {
-                        displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "Unable to verify your identity", titleMessage: "Want to try again? Ensure you are in a well lit room and your face isn’t covered.")
+                        displayStatusInfo(imageName: "error", backgroundColor: Color.errorBackground, title: "unable_to_verify_your_identity", titleMessage: "Want to try again? Ensure you are in a well lit room and your face isn’t covered.")
                     } else {
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Verify your identity")
+                            Text("verify_your_identity")
                                 .customFont(.headline, fontSize: 24)
-                            Text("You will be asked to take a selfie to confirm that you are the owner of the identity number.")
+                            Text("you_will_be_asked_to_take_a_selfie_to_confirm_that_you_are_the_owner_of_the_identity_number.")
                                 .customFont(.body, fontSize: 17)
                         }
                         .padding(.bottom, 40)
@@ -35,12 +35,12 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         HStack(spacing: 12) {
                             Image(systemName: "info.circle.fill")
                                 .frame(width: 24, height: 24)
-                                .foregroundStyle(Color("infoBackground"))
-                            Text("You will be redirected to a page to complete this process.")
+                                .foregroundStyle(Color.infoBackground)
+                            Text("you_will_be_redirected_to_a_page_to_complete_this_process.")
                                 .customFont(.subheadline, fontSize: 16)
                         }
                         .padding()
-                        .background(Color("infoBackground").opacity(0.1))
+                        .background(Color.infoBackground.opacity(0.1))
                         .mask(
                             RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .overlay(
@@ -82,7 +82,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(Color("buttonColor"))
+            .background(Color.button)
             .cornerRadius(4)
             .padding()
             .sheet(isPresented: $presentEnroll, content: {

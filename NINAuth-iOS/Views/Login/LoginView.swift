@@ -21,7 +21,7 @@ struct LoginView: View {
                 .padding(.bottom, 10)
                 .padding(.top, 30)
 
-            Text("Enter PIN to login")
+            Text("enter_pin_to_login")
                 .customFont(.subheadline, fontSize: 20)
                 .padding(.bottom, 40)
 
@@ -44,7 +44,7 @@ struct LoginView: View {
 
             Button {} label: {
                 HStack {
-                    Text("Sign in with biometrics")
+                    Text("sign_in_with_biometrics")
                     Image(systemName: "touchid")
                 }
                 .customFont(.title, fontSize: 18)
@@ -52,7 +52,7 @@ struct LoginView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(Color("buttonColor"))
+            .background(Color.button)
             .cornerRadius(4)
             .disabled(!isValid)
             
@@ -69,9 +69,9 @@ struct LoginView: View {
                     //TODO: Go to forgot Pin View, I can't find it
                     NotificationsView()
                 } label: {
-                    Text("Forgot PIN?")
+                    Text("forgot_pin?")
                         .customFont(.title, fontSize: 18)
-                        .foregroundStyle(Color("buttonColor"))
+                        .foregroundStyle(Color.button)
                 }
             }
         }

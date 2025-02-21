@@ -52,7 +52,7 @@ struct ConsentView: View {
 }
 
 enum ApprovalStatus: String, CaseIterable {
-    case approved = "Approved Access"
+    case approved = "approved_access"
     case rejected = "Rejected"
 }
 

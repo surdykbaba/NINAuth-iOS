@@ -16,14 +16,14 @@ struct CheckIdentityView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("Enter your National Identification Number")
+            Text("enter_your_national_identification_number")
                 .customFont(.headline, fontSize: 24)
-            Text("Your information is secure with us and will be used solely for verification purposes.")
+            Text("your_information_is_secure_with_us_and_will_be_used_solely_for verification_purposes.")
                 .customFont(.body, fontSize: 17)
                 .padding(.bottom, 30)
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("National Identification Number")
+                Text("national_identification_number")
                     .customFont(.subheadline, fontSize: 16)
                 TextField("12345678910", text: $identificationNumber)
                     .keyboardType(.numberPad)
@@ -40,7 +40,7 @@ struct CheckIdentityView: View {
                         validateNIN()
                     }
                 if !isFormValid {
-                    Text("NIN must be 11 digits long")
+                    Text("nin_must_be_11_digits_long")
                         .customFont(.subheadline, fontSize: 16)
                         .foregroundColor(.red)
                 }
@@ -50,13 +50,13 @@ struct CheckIdentityView: View {
             Button {
                 validateNIN()
             } label: {
-                Text("Continue Verification")
+                Text("continue_verification")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(Color("buttonColor"))
+            .background(Color.button)
             .cornerRadius(4)
             .disabled(!isFormValid)
 

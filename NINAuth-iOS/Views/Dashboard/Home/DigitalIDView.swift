@@ -31,29 +31,29 @@ struct DigitalIDView: View {
                             Button {
                                 changeView.toggle()
                             } label: {
-                                showQR(title: changeView ? "Show QR code" : "Show my ID", subtitle: changeView ? "Click to view QR code" : "Click to show your ID")
+                                showQR(title: changeView ? "show_qr_code" : "Show my ID", subtitle: changeView ? "click_to_view_qr_code" : "click_to_show_your_id")
                             }
                         }
                         .padding(.bottom, 30)
                         
-                        Text("Manage your identity")
+                        Text("manage_your_identity")
                             .customFont(.subheadline, fontSize: 17)
                             .padding(.bottom, 15)
                         
                         VStack(spacing: 12) {
-                            IdentityView(icon: "barcode", title: "Share my ID", subtitle: "Scan the QR code to share identity data", completion: {
+                            IdentityView(icon: "barcode", title: "share_my_id", subtitle: "scan_the_qr_code_to_share_identity_data", completion: {
                                 showShareIDPopover = true
                             })
                             .popover(isPresented: $showShareIDPopover) {
                                 ShareIDView()
                             }
                             
-                            IdentityView(icon: "padlock", title: "Get Security PIN", subtitle: "Get PIN to access NIMC digital services", completion: {
+                            IdentityView(icon: "padlock", title: "get_security_pin", subtitle: "get_pin_to_access_nimc_digital_services", completion: {
                                 //                                    GetSecurityPINView()
                             })
                             
-                            IdentityView(icon: "link", title: "Linked IDs", subtitle: "View other functional IDs linked to your NIN", completion: {
-                                
+                            IdentityView(icon: "link", title: "linked_ids", subtitle: "view_other_functional_ids_linked_to_your_nin", completion: {
+
                             })
                         }
                     }

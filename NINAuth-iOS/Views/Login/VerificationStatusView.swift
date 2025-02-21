@@ -16,11 +16,11 @@ struct VerificationStatusView: View {
         VStack {
             switch verificationStatus {
             case .done:
-                displayStatusInfo(imageName: "checkmark_icon", backgroundColor: Color("checkmarkBackground"), title: "Verification done!", titleMessage: "Your identity  has been successfully verified")
+                displayStatusInfo(imageName: "checkmark_icon", backgroundColor: Color("checkmarkBackground"), title: "verification_done!", titleMessage: "your_identity_has_been_successfully_verified")
             case .failed:
-                displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "Unable to verify your identity", titleMessage: "Want to try again? Ensure you are in a well lit room and your face isn’t covered.")
+                displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "unable_to_verify_your_identity", titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.")
             case .inProgress:
-                displayStatusInfo(imageName: "loading", backgroundColor: Color("checkmarkBackground"), title: "Identity verification in process", titleMessage: "The verification process is taking a little longer time to get done... Please wait.")
+                displayStatusInfo(imageName: "loading", backgroundColor: Color("checkmarkBackground"), title: "identity_verification_in_process", titleMessage: "the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait.")
             }
 
             Spacer()
@@ -48,7 +48,7 @@ struct VerificationStatusView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(Color("buttonColor"))
+                .background(Color.button)
                 .cornerRadius(4)
                 .padding()
             case .failed:
@@ -59,7 +59,7 @@ struct VerificationStatusView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(Color("buttonColor"))
+                .background(Color.button)
                 .cornerRadius(4)
                 .padding()
             case .inProgress:

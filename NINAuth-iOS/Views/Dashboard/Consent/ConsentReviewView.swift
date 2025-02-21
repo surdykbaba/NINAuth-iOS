@@ -16,7 +16,7 @@ struct ConsentReviewView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Consent")
                         .customFont(.headline, fontSize: 24)
-                    Text("Send your data to this organization")
+                    Text("send_your_data_to_this_organization")
                         .customFont(.caption, fontSize: 17)
                 }
                 .padding(.bottom, 20)
@@ -24,17 +24,17 @@ struct ConsentReviewView: View {
                 ConsentReviewOrganisationCard(icon: "nhis_icon", organisationName: "National Health Insurance Scheme", reason: "For Health Insurance Registration")
                     .padding(.bottom, 20)
 
-                Text("Before you proceed, please review the information you are sharing")
+                Text("before_you_proceed_please_review_the_information_you_are_sharing")
                     .customFont(.caption, fontSize: 17)
                     .padding(.bottom, 10)
 
                 VStack(alignment: .leading, spacing: 30) {
-                    InformationCardView(number: 1, title: "Full Name")
-                    InformationCardView(number: 2, title: "Mobile Number")
-                    InformationCardView(number: 3, title: "Date of Birth")
+                    InformationCardView(number: 1, title: "full_name")
+                    InformationCardView(number: 2, title: "mobile_number")
+                    InformationCardView(number: 3, title: "date_of_birth")
                     InformationCardView(number: 4, title: "Gender")
                     InformationCardView(number: 5, title: "Photograph")
-                    InformationCardView(number: 6, title: "Registered Address")
+                    InformationCardView(number: 6, title: "registered_address")
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)

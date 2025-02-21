@@ -29,13 +29,13 @@ struct OrganizationCardView: View {
 
                     HStack {
                         Button {} label: {
-                            Text("Revoke access")
+                            Text("revoke_access")
                                 .customFont(.title, fontSize: 18)
                                 .foregroundStyle(.white)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 18)
-                        .background(Color("buttonColor"))
+                        .background(Color.button)
                         .cornerRadius(4)
                         .halfSheet(showSheet: $showSheet) {
 

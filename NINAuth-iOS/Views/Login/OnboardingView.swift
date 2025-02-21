@@ -32,7 +32,7 @@ struct OnboardingView: View {
 
             Spacer()
 
-            Image("NigerianCoatOfArms")
+            Image("nigerian_coat_of_arms")
 
             Spacer()
 
@@ -59,14 +59,14 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(Color("buttonColor"))
+                .background(Color.button)
                 .cornerRadius(4)
                 Button {
                     showSheet.toggle()
                 } label: {
                     Text("i_have_a_request_code")
                         .customFont(.title, fontSize: 18)
-                        .foregroundStyle(Color("buttonColor"))
+                        .foregroundStyle(Color.button)
                 }
                 .halfSheet(showSheet: $showSheet) {
                     requestCodeView
