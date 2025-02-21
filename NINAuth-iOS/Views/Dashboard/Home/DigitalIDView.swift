@@ -31,7 +31,7 @@ struct DigitalIDView: View {
                             Button {
                                 changeView.toggle()
                             } label: {
-                                showQR(title: changeView ? "show_qr_code" : "Show my ID", subtitle: changeView ? "click_to_view_qr_code" : "click_to_show_your_id")
+                                showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code" : "click_to_show_your_id")
                             }
                         }
                         .padding(.bottom, 30)
@@ -41,18 +41,18 @@ struct DigitalIDView: View {
                             .padding(.bottom, 15)
                         
                         VStack(spacing: 12) {
-                            IdentityView(icon: "barcode", title: "share_my_id", subtitle: "scan_the_qr_code_to_share_identity_data", completion: {
+                            IdentityView(icon: "barcode", title: "share_my_id".localized, subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
                                 showShareIDPopover = true
                             })
                             .popover(isPresented: $showShareIDPopover) {
                                 ShareIDView()
                             }
                             
-                            IdentityView(icon: "padlock", title: "get_security_pin", subtitle: "get_pin_to_access_nimc_digital_services", completion: {
+                            IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
                                 //                                    GetSecurityPINView()
                             })
                             
-                            IdentityView(icon: "link", title: "linked_ids", subtitle: "view_other_functional_ids_linked_to_your_nin", completion: {
+                            IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
 
                             })
                         }
@@ -81,4 +81,5 @@ struct DigitalIDView: View {
 
 #Preview {
     DigitalIDView()
+        .environmentObject(AppState())
 }

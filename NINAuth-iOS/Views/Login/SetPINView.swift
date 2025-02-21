@@ -64,4 +64,5 @@ struct SetPINView: View {
 
 #Preview {
     SetPINView()
+        .environmentObject(AppState())
 }
