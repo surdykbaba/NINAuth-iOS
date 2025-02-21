@@ -19,11 +19,11 @@ struct SetPINView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Set a login PIN")
+            Text("set_a_login_pin")
                 .customFont(.subheadline, fontSize: 24)
                 .padding(.bottom, 5)
 
-            Text("Set a 6-digit PIN for your NINAuth account.")
+            Text("set_a_6-digit_pin_for_your_ninauth_account.")
                 .customFont(.body, fontSize: 18)
                 .padding(.bottom, 30)
 
@@ -47,7 +47,7 @@ struct SetPINView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
-            .background(Color("buttonColor"))
+            .background(Color.button)
             .cornerRadius(4)
             .disabled(!isValid)
             

@@ -45,20 +45,22 @@ struct AuthService: AuthProtocol {
     }
     
     @MainActor
-    func login(loginUserRequest: LoginUserRequest) async -> Result<Bool, ErrorBag> {
+    func login(loginUserRequest: LoginUserRequest) async -> Result<User, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.LOGIN, params: loginUserRequest, authoriseHeader: false)
         switch networkResponse.isSuccess() {
         case true:
             do {
                 let realm = try await Realm()
+                var user = User()
                 try await realm.asyncWrite {
                     let token = Token(value: networkResponse.getJson()?["tokens"])
-                    let user = User(value: networkResponse.getJson()?["user"])
+                    user = token.user ?? User()
                     realm.deleteAll()
                     realm.add(token)
                     realm.add(user)
+                    print(user)
                 }
-                return .success(true)
+                return .success(user)
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())

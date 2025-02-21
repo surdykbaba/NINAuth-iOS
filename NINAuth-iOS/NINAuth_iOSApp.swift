@@ -20,7 +20,7 @@ struct NINAuth_iOSApp: SwiftUI.App {
                 OnboardingView()
             }
             .navigationViewStyle(.stack)
-            .tint(Color("buttonColor"))
+            .tint(Color.button)
             .environmentObject(appState)
         }
     }

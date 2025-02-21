@@ -13,7 +13,7 @@ struct SettingsView: View {
     var body: some View {
                 VStack {
                     VStack(spacing: 10) {
-                        Image("profileImage")
+                        Image("profile_image")
                             .resizable()
                             .frame(width: 96, height: 96)
                             .clipped()
@@ -67,7 +67,7 @@ struct SettingsView: View {
                                 .symbolRenderingMode(.palette)
                                 .foregroundStyle(.red, .black)
                                 .customFont(.caption, fontSize: 18)
-                                .foregroundStyle(Color("buttonColor"))
+                                .foregroundStyle(Color.button)
                         }
                     }
                 }
@@ -79,12 +79,12 @@ struct SettingsView: View {
                 .resizable()
                 .frame(width: 25, height: 25)
                 .padding(15)
-                .background(Color("grayBackground"))
+                .background(Color.grayBackground)
                 .clipShape(Circle())
             
             Toggle(isOn: $biometricsIsOn,
                    label : {
-                Text("Biometrics")
+                Text("biometrics")
                     .customFont(.headline, fontSize: 19)
             })
         }
@@ -93,17 +93,17 @@ struct SettingsView: View {
     var legalAndComplaince: some View {
         Section(header:
                     VStack(alignment: .leading, spacing: 20) {
-            Text("Legal and compliance")
+            Text("legal_and_compliance")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
             Divider()
         }) {
             Group {
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "lock", name: "Privacy policy")
+                    SettingsRow(image: "lock", name: "privacy_policy")
                 }
                 NavigationLink(destination: PrivacyPolicyView()) {
-                    SettingsRow( image: "file.text", name: "Terms of service")
+                    SettingsRow( image: "file_text", name: "terms_of_service")
                 }
             }
             .listRowSeparator(.hidden)
@@ -115,26 +115,26 @@ struct SettingsView: View {
     var security: some View {
         Section(header:
                     VStack(alignment: .leading, spacing: 20) {
-            Text("Security")
+            Text("security")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
             Divider()
         }) {
             Group {
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "wifi.off", name: "Offline data sharing")
+                    SettingsRow(image: "wifi_off", name: "offline_data_sharing")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
 
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "lock", name: "Update PIN")
+                    SettingsRow(image: "lock", name: "update_pin")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
                 biometrics
 
                 NavigationLink(destination: VerificationStatusView()) {
-                    SettingsRow(image: "device.mobile", name: "Devices")
+                    SettingsRow(image: "device_mobile", name: "devices")
                 }
                 .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))
                 
@@ -147,17 +147,17 @@ struct SettingsView: View {
     var others: some View {
         Section(header:
                     VStack(alignment: .leading, spacing: 20) {
-            Text("Others")
+            Text("others")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
             Divider()
         }) {
             Group {
                 NavigationLink(destination: CheckIdentityView(code: "")) {
-                    SettingsRow(image: "notification", name: "Notifications")
+                    SettingsRow(image: "notification", name: "notifications")
                 }
                 NavigationLink(destination: CheckIdentityView(code: "")) {
-                    SettingsRow(image: "logout", name: "Sign out")
+                    SettingsRow(image: "logout", name: "sign_out")
                 }
             }
             .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: -8))

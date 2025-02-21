@@ -11,3 +11,112 @@
 "ensure_your_privacy_manage_and_control" = "Ensure your privacy, manage and control access to your NIN data";
 "scan_qr_code" = "Scan QR code";
 "i_have_a_request_code" = "I have a request code";
+
+/**LoginView*/
+"enter_pin_to_login" = "Enter PIN to login";
+"sign_in_with_biometrics" = "Sign in with biometrics";
+"forgot_pin?" = "Forgot PIN?";
+
+/**SetPINView*/
+"set_a_login_pin" = "Set a login PIN";
+"set_a_6-digit_pin_for_your_ninauth_account." = "Set a 6-digit PIN for your NINAuth account.";
+
+/**VerificationStatusView*/
+"verification_done!" = "Verification done!";
+"your_identity_has_been_successfully_verified" = "Your identity has been successfully verified";
+"unable_to_verify_your_identity" = "Unable to verify your identity";
+"want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered." = "Want to try again? Ensure you are in a well lit room and your face isn’t covered.";
+"identity_verification_in_process" = "Identity verification in process";
+"the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "The verification process is taking a little longer time to get done... Please wait.";
+
+/**CheckIdentityView*/
+"enter_your_national_identification_number" = "Enter your National Identification Number";
+"your_information_is_secure_with_us_and_will_be_used_solely_for verification_purposes." = "Your information is secure with us and will be used solely for verification purposes.";
+"national_identification_number" = "National Identification Number";
+"nin_must_be_11_digits_long" = "NIN must be 11 digits long";
+"continue_verification" = "Continue Verification";
+
+/**VerifyIdentityView*/
+"unable_to_verify_your_identity" = "Unable to verify your identity";
+"verify_your_identity" = "Verify your identity";
+"you_will_be_asked_to_take_a_selfie_to_confirm_that_you_are_the_owner_of_the_identity_number." = "You will be asked to take a selfie to confirm that you are the owner of the identity number.";
+"you_will_be_redirected_to_a_page_to_complete_this_process." = "You will be redirected to a page to complete this process.";
+
+/**HomeView*/
+"my_digital_id" = "My Digital ID";
+"scan_qr" = "Scan QR";
+
+/**DigitalIDView*/
+"show_qr_code" = "Show QR code";
+"show_my_id" = "Show my ID";
+"click_to_view_qr_code" = "Click to view QR code";
+"click_to_show_your_id" = "Click to show your ID";
+"manage_your_identity" = "Manage your identity";
+"share_my_id" = "Share my ID";
+"scan_the_qr_code_to_share_identity_data" = "Scan the QR code to share identity data";
+"get_security_pin" = "Get Security PIN";
+"get_pin_to_access_nimc_digital_services" = "Get PIN to access NIMC digital services";
+"linked_ids" = "Linked IDs";
+"view_other_functional_ids_linked_to_your_nin" = "View other functional IDs linked to your NIN";
+
+/**GetSecurityPINView*/
+"security_pin" = "Security PIN";
+"enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code" = "Enter the code below with your User ID to access the NINAuth QR code";
+"authentication_pin" = "Authentication PIN";
+"copy_pin" = "Copy PIN";
+
+/**LinkedIDsView*/
+"linked_id" ="Linked ID";
+"view_other_functional_ids_linked_t_your_NIN" = "View other functional IDs linked to your NIN";
+
+/**ScanQRCodeView*/
+"scan_qr_code_to_give_consent" = "Scan QR code to give consent";
+"point_your_camera_at_the_organization’s_qr_code_to_choose_which_nin_details_you_would_like_to_share." = "Point your camera at the organization’s QR code to choose which NIN details you would like to share.";
+"enter_request_code" = "Enter request code";
+"enter_code" = "Enter code";
+"if_you_are_unable_to_scan_a_QR_code_you_can_type_in_the_6-digit_code_provided_by_the_organization." = "If you are unable to scan a QR code, you can type in the 6-digit code provided by the organization.";
+
+/**ShareIDView*/
+"your_qr_code_is_your_digital_id_When_you_share_it_with_an organization_you_can_select_what_information_can_be_shared_with_them." = "Your QR code is your digital ID. When you share it with an organization, you can select what information can be shared with them.";
+"allow_organizations_or_entities_to_scan_the_displayed_qr_code_to_share_your_nin_data." = "Allow organizations or entities to scan the displayed QR code to share your NIN data.";
+"share_the_pin_below_the_qr_code_for_authentication" = "Share the PIN below the QR code for authentication";
+"got_it" = "Got it";
+
+/**ConsentReviewView*/
+"send_your_data_to_this_organization" = "Send your data to this organization";
+"before_you_proceed_please_review_the_information_you_are_sharing" = "Before you proceed, please review the information you are sharing";
+"full_name" = "Full Name";
+"mobile_number" = "Mobile Number";
+"date_of_birth" = "Date of Birth";
+"registered_address" = "Registered Address";
+
+/**ConsentView*/
+"approved_access" = "Approved Access";
+
+/**OrganizationCardView*/
+"revoke_access" = "Revoke access";
+
+/**SingleDeviceView*/
+"current_device" = "Current device";
+"sign_out" = "Sign out";
+
+/**DataSharingView*/
+"offline_data_sharing" = "Offline data sharing";
+"manage_and_update_the_personal_information_you_share_with_organizations_offline_to_stay_fully_in_control_of_your_data." = "Manage and update the personal information you share with organizations offline to stay fully in control of your data.";
+"only_selected_data_will_be_shared" = "Only selected data will be shared";
+"save_update" = "Save update";
+
+/**SettingsView*/
+"biometrics" = "Biometrics";
+"legal_and_compliance" = "Legal and compliance";
+"privacy_policy" = "Privacy policy";
+"terms_of_service" = "Terms of service";
+"security" = "Security";
+"offline_data_sharing" = "Offline data sharing";
+"update_pin" = "Update PIN";
+"devices" = "Devices";
+"others" = "Others";
+"notifications" = "Notifications";
+
+/**SplashScreenView*/
+"powered_by_nimc" = "Powered by NIMC";

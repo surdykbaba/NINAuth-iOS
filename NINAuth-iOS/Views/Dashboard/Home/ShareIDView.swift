@@ -13,7 +13,7 @@ struct ShareIDView: View {
             VStack {
                 Spacer()
 
-                Text("Share my ID")
+                Text("share_my_id")
                     .customFont(.subheadline, fontSize: 24)
                 Image("qr_code")
                     .resizable()
@@ -21,7 +21,7 @@ struct ShareIDView: View {
                     .frame(maxWidth: .infinity)
 
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Your QR code is your digital ID. When you share it with an organization, you can select what information can be shared with them.")
+                    Text("your_qr_code_is_your_digital_id_When_you_share_it_with_an organization_you_can_select_what_information_can_be_shared_with_them." )
                         .padding(.bottom, 10)
 
                     HStack(alignment: .top) {
@@ -32,7 +32,7 @@ struct ShareIDView: View {
                                 .frame(width: 3, height: 50)
                                 .foregroundColor(.gray.opacity(0.4))
                         }
-                        Text("Allow organizations or entities to scan the displayed QR code to share your NIN data.")
+                        Text("allow_organizations_or_entities_to_scan_the_displayed_qr_code_to_share_your_nin_data.")
                             .frame(maxWidth: .infinity, alignment: .top)
                     }
                     .frame(maxWidth: .infinity)
@@ -45,7 +45,7 @@ struct ShareIDView: View {
                                 .frame(width: 3, height: 35)
                                 .foregroundColor(.gray.opacity(0.4))
                         }
-                        Text("Share the PIN below the QR code for authentication")
+                        Text("share_the_pin_below_the_qr_code_for_authentication")
                     }
 
                     HStack(alignment: .top) {
@@ -66,13 +66,13 @@ struct ShareIDView: View {
                 Spacer()
 
                 Button {} label: {
-                    Text("Got it")
+                    Text("got_it")
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(Color("buttonColor"))
+                .background(Color.button)
                 .cornerRadius(4)
             }
             .padding()

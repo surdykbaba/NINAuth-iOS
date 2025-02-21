@@ -13,7 +13,7 @@ struct ConsentCardView: View {
     var date: String
     var organizationIcon: String
 
-    @Binding var status: Bool
+    var status: Bool
 
     var body: some View {
         HStack(alignment: .top) {
@@ -46,5 +46,5 @@ struct ConsentCardView: View {
 }
 
 #Preview {
-    ConsentCardView(organizationName: "Guaranty Trust Bank", title: "Account opening", date: "26 July, 2024", organizationIcon: "gtb_icon", status: .constant(true))
+    ConsentCardView(organizationName: "Guaranty Trust Bank", title: "Account opening", date: "26 July, 2024", organizationIcon: "gtb_icon", status: true)
 }

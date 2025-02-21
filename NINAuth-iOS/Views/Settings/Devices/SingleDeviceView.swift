@@ -15,7 +15,7 @@ struct SingleDeviceView: View {
     var body: some View {
             VStack(alignment: .leading) {
                 if isCurrentDevice {
-                    Text("Current device")
+                    Text("current_device")
                         .foregroundColor(Color.greenText)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 7)
@@ -53,7 +53,7 @@ struct SingleDeviceView: View {
                     HStack {
                         Spacer()
                         Button {} label: {
-                            Text("Sign out")
+                            Text("sign_out")
                                 .foregroundColor(.black)
                                 .customFont(.title, fontSize: 17)
                         }

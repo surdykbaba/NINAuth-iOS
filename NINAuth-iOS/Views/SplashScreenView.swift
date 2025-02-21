@@ -19,7 +19,7 @@ struct SplashScreenView: View {
                 Image("AppFullLogo")
                     .frame(width: 157, height: 41)
                 Spacer()
-                Text("Powered by NIMC")
+                Text("powered_by_nimc")
                     .customFont(.headline, fontSize: 17)
             }
         }
