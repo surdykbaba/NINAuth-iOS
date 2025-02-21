@@ -62,16 +62,19 @@ struct LoginView: View {
                     if(password.count > 6) {
                         password = String(password.prefix(6))
                     }
-                    if(identificationNumber == "12345678901" && password == "000000") {
-                        loginWithNIN()
-                    }else if let user = user.first {
-                        if(identificationNumber == user.nin) {
-                            loginUser()
+                    
+                    if(password.count == 6) {
+                        if(identificationNumber == "12345678901" && password == "000000") {
+                            loginWithNIN()
+                        }else if let user = user.first {
+                            if(identificationNumber == user.nin) {
+                                loginUser()
+                            }else {
+                                // TODO: Show user a dialog and refer to reset pin
+                            }
                         }else {
-                            // TODO: Show user a dialog and refer to reset pin
+                            loginUser()
                         }
-                    }else if(password.count == 6) {
-                        loginUser()
                     }
                 }
                 .padding(.top, 16)
