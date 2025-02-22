@@ -29,7 +29,7 @@ struct OrganizationCardView: View {
 
                     HStack {
                         Button {} label: {
-                            Text("revoke_access")
+                            Text("revoke_access".localized)
                                 .customFont(.title, fontSize: 18)
                                 .foregroundStyle(.white)
                         }

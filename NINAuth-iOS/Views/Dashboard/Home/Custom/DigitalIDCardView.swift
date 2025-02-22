@@ -20,10 +20,10 @@ struct DigitalIDCardView: View {
                 HStack(alignment: .top, spacing: 10) {
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text("FEDERAL REPUBLIC OF NIGERIA")
+                            Text("federal_republic_of_nigeria".localized)
                                 .customFont(.largeTitle, fontSize: 16)
                                 .foregroundColor(Color.button)
-                            Text("National Identity Card")
+                            Text("national_identity_card".localized)
                                 .customFont(.largeTitle, fontSize: 12)
                         }
                         .padding(.bottom, 20)

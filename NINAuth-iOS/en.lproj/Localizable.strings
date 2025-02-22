@@ -22,6 +22,7 @@
 /**SetPINView*/
 "set_a_login_pin" = "Set a login PIN";
 "set_a_6-digit_pin_for_your_ninauth_account." = "Set a 6-digit PIN for your NINAuth account.";
+"continue" = "Continue";
 
 /**VerificationStatusView*/
 "verification_done!" = "Verification done!";
@@ -30,6 +31,7 @@
 "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered." = "Want to try again? Ensure you are in a well lit room and your face isn’t covered.";
 "identity_verification_in_process" = "Identity verification in process";
 "the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "The verification process is taking a little longer time to get done... Please wait.";
+"retry" = "Retry";
 
 /**CheckIdentityView*/
 "enter_your_national_identification_number" = "Enter your National Identification Number";
@@ -44,9 +46,9 @@
 "you_will_be_asked_to_take_a_selfie_to_confirm_that_you_are_the_owner_of_the_identity_number." = "You will be asked to take a selfie to confirm that you are the owner of the identity number.";
 "you_will_be_redirected_to_a_page_to_complete_this_process." = "You will be redirected to a page to complete this process.";
 
-/**HomeView*/
-"my_digital_id" = "My Digital ID";
-"scan_qr" = "Scan QR";
+/**igitalIDCardView*/
+"federal_republic_of_nigeria" = "FEDERAL REPUBLIC OF NIGERIA";
+"national_identity_card" = "National Identity Card";
 
 /**DigitalIDView*/
 "show_qr_code" = "Show QR code";
@@ -68,7 +70,6 @@
 "copy_pin" = "Copy PIN";
 
 /**LinkedIDsView*/
-"linked_id" ="Linked ID";
 "view_other_functional_ids_linked_t_your_NIN" = "View other functional IDs linked to your NIN";
 
 /**ScanQRCodeView*/
@@ -84,16 +85,16 @@
 "share_the_pin_below_the_qr_code_for_authentication" = "Share the PIN below the QR code for authentication";
 "got_it" = "Got it";
 
+/**ConsentDetailsView*/
+"consent_details" = "Consent details";
+"id_generated:" = "ID generated: ";
+
 /**ConsentReviewView*/
 "send_your_data_to_this_organization" = "Send your data to this organization";
 "before_you_proceed_please_review_the_information_you_are_sharing" = "Before you proceed, please review the information you are sharing";
-"full_name" = "Full Name";
-"mobile_number" = "Mobile Number";
-"date_of_birth" = "Date of Birth";
-"registered_address" = "Registered Address";
-
-/**ConsentView*/
-"approved_access" = "Approved Access";
+"this_organization_has_been_blocked_from_accessing_your_data" = "This organization has been blocked from accessing your data";
+"the_selected_data_has_been_shared" = "The selected data has been shared";
+"view_organization" = "View organization";
 
 /**OrganizationCardView*/
 "revoke_access" = "Revoke access";

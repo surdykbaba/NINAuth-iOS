@@ -13,7 +13,7 @@ struct Service{
     
     func post<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
         do {
-            var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
+            var request = NetworkResponseModel .generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData

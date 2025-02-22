@@ -19,6 +19,7 @@ struct ConsentApprovedView: View {
                     ConsentCardView(organizationName: consent.enterprise?.name ?? "", title: consent.reason ?? "", date: consent.created_at ?? "", organizationIcon: consent.enterprise?.logo ?? "", status: consent.status ==  "approved")
                         .onTapGesture {
                             self.consent = consent
+                            print(consent.enterprise?.logo ?? "")
                             isPressed.toggle()
                         }
                     }

@@ -30,7 +30,8 @@ struct LinkedIDsCardView: View {
 
                 Image(systemName: "chevron.right")
                     .resizable()
-                    .frame(width: 10, height: 10)
+                    .frame(width: 10, height: 15)
+                    .customFont(.headline, fontSize: 15)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(10)

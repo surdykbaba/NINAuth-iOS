@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct GetSecurityPINView: View {
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    @State var currentTimer: Date = .now + 30
+
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
@@ -16,21 +20,27 @@ struct GetSecurityPINView: View {
                     .padding(.top, 40)
                     .customFont(.headline, fontSize: 28)
 
-                Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code")
+                Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code".localized)
                     .customFont(.body, fontSize: 18)
                     .padding(.bottom, 50)
             }
 
+            let randomNumber = randomNumberWith(digits: 6)
+
             VStack(alignment: .center, spacing: 10) {
-                Text("697694")
-                    .customFont(.subheadline, fontSize: 40)
-                Text("authentication_pin")
+                Text(String(randomNumber))
+                    .customFont(.headline, fontSize: 40)
+                    .onReceive(timer) { time in
+                        Log.info("The time is now \(time)")
+                    }
+                Text("authentication_pin".localized)
                     .customFont(.caption2, fontSize: 14)
 
                 HStack {
                     Image(systemName: "clock.fill")
                         .foregroundColor(.green)
-                    Text("00:17")
+                    Text(currentTimer, style: .timer)
+                        .foregroundColor(.green)
                 }
                 .padding(.vertical, 5)
                 .padding(.horizontal, 10)
@@ -41,16 +51,19 @@ struct GetSecurityPINView: View {
             .padding(.vertical, 30)
             .overlay(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .stroke(.gray, lineWidth: 1)
+                    .stroke(.gray.opacity(0.2), lineWidth: 1)
             )
             .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(Color.grayBackground)
+                .fill(Color.grayBackground.opacity(0.1))
                 .shadow(color: Color.secondary, radius: 8, x: 0, y: 10))
+            .onAppear {
+
+            }
 
             Spacer()
 
             Button {} label: {
-                Text("copy_pin")
+                Text("copy_pin".localized)
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
             }
@@ -60,6 +73,12 @@ struct GetSecurityPINView: View {
             .cornerRadius(4)
         }
         .padding()
+    }
+
+    func randomNumberWith(digits:Int) -> Int {
+        let min = Int(pow(Double(10), Double(digits-1))) - 1
+        let max = Int(pow(Double(10), Double(digits))) - 1
+        return Int(Range(uncheckedBounds: (min, max)))
     }
 }
 
