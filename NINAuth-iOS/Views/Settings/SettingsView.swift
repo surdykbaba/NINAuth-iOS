@@ -9,8 +9,12 @@ import SwiftUI
 import RealmSwift
 
 struct SettingsView: View {
+    @StateObject private var viewModel = AuthViewModel()
     @State private var biometricsIsOn = false
     @ObservedResults(User.self) var user
+    @State private var showSignOut = false
+    @EnvironmentObject private var appState: AppState
+    @State private var showSheet: Bool = false
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -46,6 +50,11 @@ struct SettingsView: View {
                         .padding(.top, 44)
                 }
                 .foregroundColor(Color(.text))
+                .halfSheet(showSheet: $showSheet) {
+                    
+                } onEnd: {
+                    Log.info("Dismissed Sheet")
+                }
             }
             .padding()
             .padding(.top, 20)
@@ -123,7 +132,7 @@ struct SettingsView: View {
                 
                 biometrics
 
-                NavigationLink(destination: VerificationStatusView()) {
+                NavigationLink(destination: DevicesView()) {
                     SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
             }
@@ -140,11 +149,22 @@ struct SettingsView: View {
             Divider()
             
             Group {
-                NavigationLink(destination: CheckIdentityView(code: "")) {
+                NavigationLink(destination: NotificationsView()) {
                     SettingsRow(image: "notification", name: "notifications".localized)
                 }
-                NavigationLink(destination: CheckIdentityView(code: "")) {
+                
+                Button {
+                    showSignOut = true
+                } label: {
                     SettingsRow(image: "logout", name: "sign_out".localized)
+                }
+                .alert("You want to sign out?", isPresented: $showSignOut) {
+                    Button("OK", role: .destructive) {
+                        Task {
+                            await viewModel.logoutUser(logOutRequest: LogOutRequest(deviceId: appState.getDeviceID()))
+                        }
+                    }
+                    Button("Cancel", role: .cancel) { }
                 }
             }
         }
@@ -155,4 +175,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(AppState())
 }

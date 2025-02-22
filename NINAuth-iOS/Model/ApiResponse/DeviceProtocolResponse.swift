@@ -13,6 +13,16 @@ struct Device: Codable {
     var created_at: String?
     var deleted_at: DeleteAt?
     var updated_at: String?
+    
+    func getDisplayedDate() -> String {
+        if (updated_at == nil) {
+            return ""
+        }else {
+            let date = updated_at?.convertToDate(formater: DateFormat.UniversalDateFormat)
+            let stringDate = date?.getFormattedDate(format: DateFormat.Dateformat) ?? ""
+            return stringDate
+        }
+    }
 }
 
 

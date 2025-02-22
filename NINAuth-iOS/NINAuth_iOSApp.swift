@@ -52,15 +52,16 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         navigationBarAppearance.shadowImage = UIImage()
         navigationBarAppearance.backgroundImage = UIImage()
         navigationBarAppearance.configureWithOpaqueBackground()
-        //navigationBarAppearance.backgroundColor = UIColor(named: "bg_black")
+        navigationBarAppearance.backgroundColor = .clear
         navigationBarAppearance.shadowColor = .clear
         // Title font color
-//        navigationBarAppearance.titleTextAttributes = [
-//                NSAttributedString.Key.foregroundColor: UIColor.white,
-//                NSAttributedString.Key.font: UIFont(name: "FuturaPT-Medium", size: 20)!]
-//        navigationBarAppearance.largeTitleTextAttributes = [
-//                NSAttributedString.Key.foregroundColor: UIColor.white,
-//                NSAttributedString.Key.font: UIFont(name: "FuturaPT-Medium", size: 22)!]
+        navigationBarAppearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor(named: "text")!,
+                NSAttributedString.Key.font: UIFont(name: "PlusJakartaSans-Medium", size: 20)!]
+        navigationBarAppearance.largeTitleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor(named: "text")!,
+                NSAttributedString.Key.font: UIFont(name: "PlusJakartaSans-Medium", size: 24)!]
+        
 
         //Not sure you'll need both of these, but feel free to adjust to your needs.
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance

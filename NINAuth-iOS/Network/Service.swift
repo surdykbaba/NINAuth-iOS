@@ -25,11 +25,15 @@ struct Service{
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
-                let jsonValue = try JSON(data: data)
-                #if DEBUG
-                print(jsonValue)
-                #endif
-                return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                if(networkResponse.statusCode != 204) {
+                    let jsonValue = try JSON(data: data)
+                    #if DEBUG
+                    print(jsonValue)
+                    #endif
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                }else {
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
+                }
             }else {
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
             }
@@ -104,11 +108,15 @@ struct Service{
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
-                let jsonValue = try JSON(data: data)
-                #if DEBUG
-                print(jsonValue)
-                #endif
-                return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                if(networkResponse.statusCode != 204) {
+                    let jsonValue = try JSON(data: data)
+                    #if DEBUG
+                    print(jsonValue)
+                    #endif
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                }else {
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
+                }
             }else {
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
             }

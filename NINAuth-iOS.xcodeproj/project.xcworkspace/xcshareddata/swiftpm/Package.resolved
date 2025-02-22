@@ -1,5 +1,5 @@
 {
-  "originHash" : "5916d70688676675f62047f6ffdcda66eaf85e963d82d6a69ec7bed84539c709",
+  "originHash" : "2ab694a06b00aa295e25401f65360e7bb38db082413d5f62f479cc01d847b7b9",
   "pins" : [
     {
       "identity" : "codescanner",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "5e886430238944c7200fc9e10dbf2d9550dba865",
         "version" : "2.5.2"
+      }
+    },
+    {
+      "identity" : "easyskeleton",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SpectralDragon/EasySkeleton",
+      "state" : {
+        "revision" : "1cfdd165da0619053a931df3b03d22b6f42a7924",
+        "version" : "1.0.0"
       }
     },
     {

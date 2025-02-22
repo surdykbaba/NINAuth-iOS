@@ -115,6 +115,14 @@ class AuthViewModel: ObservableObject  {
         let result = await authService.logout(logOutRequest: logOutRequest)
         switch result {
         case .success(_):
+            do {
+                let realm = try await Realm()
+                try? realm.write {
+                    realm.deleteAll()
+                }
+            }catch {
+                Log.info(error.localizedDescription)
+            }
             logOut = true
             state = .success
         case .failure(let failure):

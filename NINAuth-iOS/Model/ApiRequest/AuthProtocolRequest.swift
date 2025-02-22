@@ -13,7 +13,7 @@ struct RegisterUserRequest: Codable {
 }
 
  struct DeviceMetadata: Codable {
-    var os: String = "IOS"
+    var os: String? = "IOS"
 }
 
 struct RegisterUserSelfieRequest: Codable {

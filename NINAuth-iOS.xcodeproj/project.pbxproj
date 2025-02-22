@@ -10,6 +10,7 @@
 		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
 		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
 		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
+		CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */ = {isa = PBXBuildFile; productRef = CFE4EEAA2D6A352D005C26BA /* EasySkeleton */; };
 		CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA82D2D60D6BF00835FC1 /* CodeScanner */; };
 		CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA8FE2D60F1DE00835FC1 /* SmileID */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,7 @@
 				CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */,
 				CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */,
 				CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */,
+				CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */,
 				CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */,
 				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
 			);
@@ -96,6 +98,7 @@
 				CF6FE7722D48F0F300DF9470 /* SwiftyJSON */,
 				CFFFA82D2D60D6BF00835FC1 /* CodeScanner */,
 				CFFFA8FE2D60F1DE00835FC1 /* SmileID */,
+				CFE4EEAA2D6A352D005C26BA /* EasySkeleton */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -130,6 +133,7 @@
 				CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */,
+				CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
@@ -300,13 +304,14 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.ng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -333,13 +338,14 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.ng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -387,6 +393,14 @@
 				minimumVersion = 5.0.2;
 			};
 		};
+		CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SpectralDragon/EasySkeleton";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.0;
+			};
+		};
 		CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -420,6 +434,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		CFE4EEAA2D6A352D005C26BA /* EasySkeleton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */;
+			productName = EasySkeleton;
 		};
 		CFFFA82D2D60D6BF00835FC1 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;

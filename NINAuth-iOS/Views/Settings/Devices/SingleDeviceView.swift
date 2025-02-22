@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct SingleDeviceView: View {
-    var coordinates: String
-    var date: String
-    var isCurrentDevice: Bool
+    @State var device: Device
+    @ObservedObject var viewModel: DeviceViewModel
+    @EnvironmentObject private var appState: AppState
+    @State private var showAlert: Bool = false
+    @State private var error = ErrorBag()
 
     var body: some View {
             VStack(alignment: .leading) {
-                if isCurrentDevice {
+                if appState.getDeviceID() == device.device_id {
                     Text("current_device")
                         .foregroundColor(Color.greenText)
                         .padding(.horizontal, 20)
@@ -28,31 +30,35 @@ struct SingleDeviceView: View {
                 HStack {
                     Image("phone")
                         .frame(width: 32, height: 32)
-                    Text("Android Phone")
+                    Text(device.metadata?.os ?? "")
                         .customFont(.headline, fontSize: 18)
                 }
 
                 Divider()
 
                 Group {
-                    HStack {
-                        Image("coordinates")
-                        Text(coordinates)
-                    }
+//                    HStack {
+//                        Image("coordinates")
+//                        Text(device.metadata?.os ?? "")
+//                    }
 
                     HStack {
                         Image("clock")
-                        Text(date)
+                        Text(device.getDisplayedDate())
                     }
                 }
                 .padding(.top, 10)
                 .foregroundColor(Color.grayTextBackground)
                 .customFont(.headline, fontSize: 17)
 
-                if !isCurrentDevice {
+                if appState.getDeviceID() != device.device_id {
                     HStack {
                         Spacer()
-                        Button {} label: {
+                        Button {
+                            Task {
+                                await viewModel.deleteDevice(deviceRequest: DeviceRequest(deviceId: device.device_id))
+                            }
+                        } label: {
                             Text("sign_out")
                                 .foregroundColor(.black)
                                 .customFont(.title, fontSize: 17)
@@ -63,14 +69,24 @@ struct SingleDeviceView: View {
                         .cornerRadius(8)
                     }
                 }
+                
+                if case .failed(let errorBag) = viewModel.state {
+                    Color.clear.onAppear {
+                        error = errorBag
+                        showAlert.toggle()
+                    }
+                }
             }
             .padding(20)
             .background(.white)
-            .mask(
-                RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .alert(error.description, isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            }
     }
 }
 
 #Preview {
-    SingleDeviceView(coordinates: "58.11.253.25", date: "26 July, 2024", isCurrentDevice: false)
+    SingleDeviceView(device: Device(), viewModel: DeviceViewModel())
+        .environmentObject(AppState())
 }

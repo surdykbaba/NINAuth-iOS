@@ -6,39 +6,61 @@
 //
 
 import SwiftUI
+import EasySkeleton
 
 struct DevicesView: View {
-    var deviceInfo = [
-        DeviceInfo(coordinates: "58.11.253.25", date: "26 July, 2024", isCurrentDevice: true),
-        DeviceInfo(coordinates: "58.11.253.25", date: "26 July, 2024", isCurrentDevice: false),
-        DeviceInfo(coordinates: "58.11.253.25", date: "26 July, 2024", isCurrentDevice: false)
-    ]
+    @StateObject private var viewModel = DeviceViewModel()
     
     var body: some View {
-        Color.secondaryGrayBackground
-            .ignoresSafeArea()
-            .overlay(
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text("Devices")
-                            .padding(.bottom, 10)
-                            .padding(.top, 40)
-                            .customFont(.headline, fontSize: 24)
-                        ForEach(deviceInfo, id: \.self) { info in
-                            SingleDeviceView(coordinates: info.coordinates, date: info.date, isCurrentDevice: info.isCurrentDevice)
-                        }
+        if #available(iOS 16.0, *) {
+            bodyView
+                .toolbarBackground(.bg, for: .navigationBar)
+                .toolbarRole(.editor)
+        }else {
+            bodyView
+        }
+    }
+    
+    var bodyView: some View {
+        ScrollView {
+            if(viewModel.loadingDevices) {
+                VStack(spacing: 8) {
+                    Spacer().frame(height: 4)
+                    DataLoaderView()
+                        .frame(height: 120)
+                    Spacer().frame(height: 6)
+                    DataLoaderView()
+                        .frame(height: 120)
+                    Spacer().frame(height: 6)
+                    DataLoaderView()
+                        .frame(height: 120)
+                    Spacer().frame(height: 6)
+                    DataLoaderView()
+                        .frame(height: 120)
+                    Spacer().frame(height: 6)
+                    DataLoaderView()
+                        .frame(height: 120)
+                    Spacer().frame(height: 6)
+                }.padding(.horizontal, 16)
+            }else {
+                LazyVStack(alignment: .leading, spacing: 12) {
+                    ForEach(viewModel.devices, id: \.self.id!) { dev in
+                        SingleDeviceView(device: dev, viewModel: viewModel)
                     }
-                    .padding()
-                })
+                }
+                .padding(20)
+            }
+        }
+        .setSkeleton($viewModel.loadingDevices)
+        .background(Color(.bg))
+        .navigationTitle(Text("Devices"))
+        .navigationBarTitleDisplayMode(.large)
+        .task {
+            await viewModel.getDevices()
+        }
     }
 }
 
 #Preview {
     DevicesView()
-}
-
-struct DeviceInfo: Hashable {
-    var coordinates: String
-    var date: String
-    var isCurrentDevice: Bool
 }

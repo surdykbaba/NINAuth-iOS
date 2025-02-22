@@ -19,4 +19,12 @@ extension String {
         }
         return UIImage(data: imageData)
     }
+    
+    func convertToDate(formater: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        dateFormatter.dateFormat = formater
+        let date = dateFormatter.date(from:self)
+        return date
+    }
 }
