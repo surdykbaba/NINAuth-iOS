@@ -28,19 +28,8 @@ struct SettingsView: View {
                     
                     Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
                         .customFont(.title, fontSize: 24)
-//                    HStack {
-//                        Text("Last Login")
-//                            .foregroundStyle(Color(.darkGray))
-//                            .customFont(.headline, fontSize: 16)
-//                        Circle()
-//                            .fill(Color(.darkGray))
-//                            .frame(width: 6, height: 6)
-//                        Text("23 July, 2024")
-//                            .foregroundStyle(Color(.darkGray))
-//                            .customFont(.headline, fontSize: 16)
-//                    }
-                    .padding(.bottom, 60)
-                    
+                        .padding(.bottom, 60)
+
                     legalAndComplaince
                     
                     security
@@ -83,7 +72,7 @@ struct SettingsView: View {
                 .background(Color.grayBackground)
                 .clipShape(Circle())
             
-            Toggle(isOn: $biometricsIsOn,
+            Toggle(isOn: $appState.biometricsIsOn,
                    label : {
                 Text("biometrics".localized)
                     .customFont(.headline, fontSize: 19)
