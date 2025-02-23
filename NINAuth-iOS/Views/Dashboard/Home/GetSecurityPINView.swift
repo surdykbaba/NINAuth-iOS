@@ -10,10 +10,11 @@ import Combine
 
 struct GetSecurityPINView: View {
     let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    @State var currentTimer: Date = .now + 30
+    @State var currentTimer: Date = .now + 17
     private let pasteboard = UIPasteboard.general
+    @StateObject var viewModel = PinViewModel()
     @State private var buttonText = "Copy PIN"
-    @State private var randomNumber = 0
+    private var randomNumber = 0
 
     var body: some View {
         VStack {
@@ -27,10 +28,8 @@ struct GetSecurityPINView: View {
                     .padding(.bottom, 50)
             }
 
-            var randomNumber = randomNumberWith(6)
-
             VStack(alignment: .center, spacing: 10) {
-                Text(String(randomNumber))
+                Text(String(viewModel.randomNumber))
                     .customFont(.headline, fontSize: 40)
                     .onReceive(timer) { time in
                         Log.info("The time is now \(time)")
@@ -76,14 +75,8 @@ struct GetSecurityPINView: View {
         .padding()
     }
 
-    func randomNumberWith(_ digits:Int) -> Int {
-        let min = Int(pow(Double(10), Double(digits-1))) - 1
-        let max = Int(pow(Double(10), Double(digits))) - 1
-        return Int(Range(uncheckedBounds: (min, max)))
-    }
-
     func copyToClipboard() {
-        pasteboard.string = String(randomNumber)
+        pasteboard.string = String(viewModel.randomNumber)
         self.buttonText = "Copied!"
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -94,12 +87,4 @@ struct GetSecurityPINView: View {
 
 #Preview {
     GetSecurityPINView()
-}
-
-extension Int {
-    func randomNumberWith(_ digits:Int = 6) -> Int {
-        let min = Int(pow(Double(10), Double(digits-1))) - 1
-        let max = Int(pow(Double(10), Double(digits))) - 1
-        return Int(Range(uncheckedBounds: (min, max)))
-    }
 }
