@@ -10,13 +10,30 @@
 		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
 		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
 		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
+		CF98AC712D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */; };
+		CF98AC722D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */ = {isa = PBXBuildFile; productRef = CFE4EEAA2D6A352D005C26BA /* EasySkeleton */; };
 		CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA82D2D60D6BF00835FC1 /* CodeScanner */; };
 		CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA8FE2D60F1DE00835FC1 /* SmileID */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CF98AC732D6B9C3600A3011F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CF98AC722D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NINAuth-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BlusaltLivenessOnly.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -46,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */,
+				CF98AC712D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Frameworks */,
 				CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */,
 				CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */,
 				CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */,
@@ -61,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				7AC0750E2D46D83200ECC913 /* NINAuth-iOS */,
+				CF98AC702D6B9C1600A3011F /* Frameworks */,
 				7AC0750D2D46D83200ECC913 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,6 +92,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CF98AC702D6B9C1600A3011F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,6 +110,7 @@
 				7AC075082D46D83200ECC913 /* Sources */,
 				7AC075092D46D83200ECC913 /* Frameworks */,
 				7AC0750A2D46D83200ECC913 /* Resources */,
+				CF98AC732D6B9C3600A3011F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
