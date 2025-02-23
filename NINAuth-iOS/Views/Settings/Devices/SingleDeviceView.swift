@@ -11,8 +11,6 @@ struct SingleDeviceView: View {
     @State var device: Device
     @ObservedObject var viewModel: DeviceViewModel
     @EnvironmentObject private var appState: AppState
-    @State private var showAlert: Bool = false
-    @State private var error = ErrorBag()
 
     var body: some View {
             VStack(alignment: .leading) {
@@ -69,20 +67,10 @@ struct SingleDeviceView: View {
                         .cornerRadius(8)
                     }
                 }
-                
-                if case .failed(let errorBag) = viewModel.state {
-                    Color.clear.onAppear {
-                        error = errorBag
-                        showAlert.toggle()
-                    }
-                }
             }
             .padding(20)
             .background(.white)
             .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .alert(error.description, isPresented: $showAlert) {
-                Button("OK", role: .cancel) { }
-            }
     }
 }
 
