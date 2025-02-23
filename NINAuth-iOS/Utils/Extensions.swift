@@ -1,0 +1,44 @@
+//
+//  Extensions.swift
+//  NINAuth-iOS
+//
+//  Created by Chioma Amanda Mmegwa  on 07/02/2025.
+//
+
+import SwiftUI
+
+// Custom Half Sheet Modifier...
+extension View {
+    // Binding Show Variable
+    func halfSheet<SheetView: View>(showSheet: Binding<Bool>, @ViewBuilder sheetView: @escaping () -> SheetView, onEnd: @escaping ()->()) -> some View {
+        //Using background so it automatically uses swiftui frame size inly
+        return self
+            .background(
+                HalfSheetHelper(sheetView: sheetView(), showSheet: showSheet, onEnd: onEnd)
+            )
+    }
+}
+
+// UISegmentedControl for homeView appearance
+extension UISegmentedControl {
+  override open func didMoveToSuperview() {
+     super.didMoveToSuperview()
+     self.setContentHuggingPriority(.defaultLow, for: .vertical)
+      UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.gray.opacity(0.1))
+      UISegmentedControl.appearance().backgroundColor = UIColor.white
+      UISegmentedControl.appearance().setTitleTextAttributes(
+          [
+              .font:UIFont.systemFont(ofSize: 17, weight: .light),
+          ], for: .normal)
+      UISegmentedControl.appearance().setTitleTextAttributes(
+          [
+              .font:UIFont.systemFont(ofSize: 17, weight: .semibold),
+          ], for: .selected)
+   }
+}
+
+extension Font {
+  init(_ uiFont: UIFont) {
+    self = Font(uiFont as CTFont)
+  }
+}

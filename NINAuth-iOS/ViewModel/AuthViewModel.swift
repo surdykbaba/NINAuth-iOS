@@ -6,17 +6,18 @@
 //
 
 import Foundation
+import RealmSwift
 
 @MainActor
 class AuthViewModel: ObservableObject  {
     
     @Published private(set) var state: LoadingState = .idle
-    @Published private(set) var continueReg = false
-    @Published private(set) var verifyStatus = ""
-    @Published private(set) var isLoggedIn = false
+    @Published var continueReg = false
+    @Published var verifyStatus = ""
+    @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
-    @Published private(set) var logOut = false
-    
+    @Published var logOut = false
+
     private let authService: AuthService
     
     init() {
@@ -30,7 +31,7 @@ class AuthViewModel: ObservableObject  {
         state = .loading
         let result = await authService.registerUser(registerUserRequest: registerUserRequest)
         switch result {
-        case .success(let res):
+        case .success(_):
             continueReg = true
             state = .success
         case .failure(let failure):
@@ -70,44 +71,39 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
-    func loginUser(loginUserRequest: LoginUserRequest) async -> Void {
+    func loginUser(loginUserRequest: LoginUserRequest) async -> User? {
         guard state != .loading else {
-            return
+            return nil
         }
         state = .loading
         let result = await authService.login(loginUserRequest: loginUserRequest)
         switch result {
-        case .success(let res):
+        case .success(let userResponse):
             isLoggedIn = true
+            Log.info(userResponse.description)
             state = .success
+            return userResponse
         case .failure(let failure):
             state = .failed(failure)
+            return nil
         }
     }
     
-    func reGenerateCode() async -> Void {
+    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> User? {
         guard state != .loading else {
-            return
+            return nil
         }
         state = .loading
-        let sessionID = await startSession()
-        let result = await authService.regenerateCode(sessionID: sessionID)
+        let result = await authService.loginWithNIN(loginWithNIN: loginWithNIN)
         switch result {
-        case .success(let res):
-            requestCode = res["data"]["qrCode"].stringValue
+        case .success(let userResponse):
+            isLoggedIn = true
+            Log.info(userResponse.description)
             state = .success
+            return userResponse
         case .failure(let failure):
             state = .failed(failure)
-        }
-    }
-    
-    private func startSession() async -> String {
-        let result = await authService.startSession(startSessionRequest: StartSessionRequest())
-        switch result {
-        case .success(let res):
-            return res.sessionId ?? ""
-        case .failure(let failure):
-            return ""
+            return nil
         }
     }
     
@@ -118,7 +114,15 @@ class AuthViewModel: ObservableObject  {
         state = .loading
         let result = await authService.logout(logOutRequest: logOutRequest)
         switch result {
-        case .success(let success):
+        case .success(_):
+            do {
+                let realm = try await Realm()
+                try? realm.write {
+                    realm.deleteAll()
+                }
+            }catch {
+                Log.info(error.localizedDescription)
+            }
             logOut = true
             state = .success
         case .failure(let failure):

@@ -13,7 +13,7 @@ class Token: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var access: String?
     @Persisted var refresh: String? = ""
     @Persisted var requestCode: String? = ""
-    
+
     convenience init(value: JSON?){
         self.init()
         

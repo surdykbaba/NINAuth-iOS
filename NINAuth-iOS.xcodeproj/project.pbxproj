@@ -10,6 +10,9 @@
 		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
 		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
 		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
+		CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */ = {isa = PBXBuildFile; productRef = CFE4EEAA2D6A352D005C26BA /* EasySkeleton */; };
+		CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA82D2D60D6BF00835FC1 /* CodeScanner */; };
+		CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA8FE2D60F1DE00835FC1 /* SmileID */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +45,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */,
 				CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */,
 				CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */,
+				CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */,
+				CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */,
 				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +96,9 @@
 				CF6FE76D2D48F03000DF9470 /* Realm */,
 				CF6FE76F2D48F03000DF9470 /* RealmSwift */,
 				CF6FE7722D48F0F300DF9470 /* SwiftyJSON */,
+				CFFFA82D2D60D6BF00835FC1 /* CodeScanner */,
+				CFFFA8FE2D60F1DE00835FC1 /* SmileID */,
+				CFE4EEAA2D6A352D005C26BA /* EasySkeleton */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -122,6 +131,9 @@
 			packageReferences = (
 				CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
+				CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */,
+				CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
@@ -278,27 +290,32 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NINAuth-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = SHTSMY47AT;
+				DEVELOPMENT_TEAM = 8672FZ8LLL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to activate another means of unlocking your application.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "NINAuth-com.ninauth.ng";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -310,27 +327,32 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"NINAuth-iOS/Preview Content\"";
-				DEVELOPMENT_TEAM = SHTSMY47AT;
+				DEVELOPMENT_TEAM = 8672FZ8LLL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NinAuth;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to activate another means of unlocking your application.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = "NINAuth-com.ninauth.ng";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -377,6 +399,30 @@
 				minimumVersion = 5.0.2;
 			};
 		};
+		CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SpectralDragon/EasySkeleton";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.0;
+			};
+		};
+		CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.2;
+			};
+		};
+		CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/smileidentity/ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.4.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -394,6 +440,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CF6FE7712D48F0F300DF9470 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		CFE4EEAA2D6A352D005C26BA /* EasySkeleton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */;
+			productName = EasySkeleton;
+		};
+		CFFFA82D2D60D6BF00835FC1 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFFFA82C2D60D6BF00835FC1 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
+		};
+		CFFFA8FE2D60F1DE00835FC1 /* SmileID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */;
+			productName = SmileID;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

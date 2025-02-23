@@ -7,5 +7,5 @@
 
 
 struct DeviceRequest: Codable {
-    let deviceId: String
+    let deviceId: String?
 }

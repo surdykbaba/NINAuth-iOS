@@ -16,7 +16,7 @@ struct SettingsRow: View {
             Image(image)
                 .resizable()
                 .frame(width: 25, height: 25)
-                .padding(15)
+                .padding(12)
                 .background(Color("grayBackground"))
                 .clipShape(Circle())
             Text(name)

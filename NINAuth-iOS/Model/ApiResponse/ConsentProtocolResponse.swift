@@ -14,7 +14,7 @@ struct ConsentResponse: Codable {
 }
 
 
-struct Consent: Codable {
+struct Consent: Codable, Hashable {
     var id: String?
     var userId: String?
     var enterprise_id: String?
@@ -25,9 +25,24 @@ struct Consent: Codable {
     var status: String?
     var created_at: String?
     var updated_at: String?
+    
+    func getDisplayDate() -> String {
+        if (updated_at == nil) {
+            return ""
+        }else {
+            let date = updated_at?.convertToDate(formater: DateFormat.UniversalDateFormat)
+            let stringDate = date?.getFormattedDate(format: DateFormat.Dateformat) ?? ""
+            return stringDate
+        }
+    }
+    
+    func getRequestString() -> String {
+        let stringArray = data_requested?.map { $0 ?? "" }
+        return stringArray?.joined(separator: ", ") ?? ""
+    }
 }
 
-struct Enterprise: Codable {
+struct Enterprise: Codable, Hashable {
     var id: String?
     var name: String?
     var logo: String?
@@ -37,22 +52,8 @@ struct Enterprise: Codable {
 
 
 struct ConsentRequest: Codable {
-    var consent: ConsentInRequest?
+    var consent: Consent?
     var enterprise: Enterprise?
-}
-
-
-struct ConsentInRequest: Codable {
-    var id: String?
-    var userId: String?
-    var enterprise_id: String?
-    var enterprise: EnterpriseInRequest?
-    var data_requested: [String]?
-    var medium: String?
-    var reason: String?
-    var status: String?
-    var created_at: String?
-    var updated_at: String?
 }
 
 

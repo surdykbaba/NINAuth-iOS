@@ -10,7 +10,7 @@ import SwiftyJSON
 struct LinkedIDService: LinkedIDProtocol {
     
     func getLinkedIDs() async -> Result<[LinkedIDs], ErrorBag> {
-        let networkResponse = await Service.init().get(URLs.DEVICES)
+        let networkResponse = await Service.init().get(URLs.LINKEDID)
         switch networkResponse.isSuccess() {
         case true:
             do {

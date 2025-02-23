@@ -11,17 +11,18 @@ import SwiftyJSON
 
 class User: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: String?
-    @Persisted var nin: String? = ""
-    @Persisted var first_name: String? = ""
-    @Persisted var last_name: String? = ""
-    @Persisted var gender: String? = ""
-    @Persisted var phone_number: String? = ""
+    @Persisted var nin: String?
+    @Persisted var first_name: String?
+    @Persisted var middle_name: String?
+    @Persisted var last_name: String?
+    @Persisted var gender: String?
+    @Persisted var phone_number: String?
     @Persisted var date_of_birth: String?
-    @Persisted var address: String? = ""
-    @Persisted var image: String? = ""
-    @Persisted var FaceAuthCompleted: String? = ""
-    @Persisted var created_at: String? = ""
-    @Persisted var updated_at: String? = ""
+    @Persisted var address: String?
+    @Persisted var image: String?
+    @Persisted var FaceAuthCompleted: String?
+    @Persisted var created_at: String?
+    @Persisted var updated_at: String?
     
     convenience init(value: JSON?){
         self.init()
@@ -29,6 +30,7 @@ class User: Object, ObjectKeyIdentifiable {
         self.id = value?["id"].string
         self.nin = value?["nin"].string
         self.first_name = value?["first_name"].string
+        self.middle_name = value?["middle_name"].string
         self.last_name = value?["last_name"].string
         self.gender = value?["gender"].string
         self.phone_number = value?["phone_number"].string
