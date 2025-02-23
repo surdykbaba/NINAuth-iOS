@@ -1,0 +1,4 @@
+framework module BlusaltLivenessOnly {
+  header "BlusaltLivenessOnly-Swift.h"
+  requires objc
+}
