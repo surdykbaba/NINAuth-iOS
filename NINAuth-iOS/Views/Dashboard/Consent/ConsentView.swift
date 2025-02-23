@@ -43,6 +43,14 @@ struct ConsentView: View {
                     Spacer()
                 }
             }
+            
+            if case .loading = viewModel.state {
+                //TODO: Add your custom loding view here
+                ProgressView()
+                    .scaleEffect(2)
+            }
+
+            Spacer()
         }
     }
 }
@@ -52,7 +60,7 @@ struct ConsentView: View {
 }
 
 enum ApprovalStatus: String, CaseIterable {
-    case approved = "approved_access"
+    case approved = "Approved Access"
     case rejected = "Rejected"
 }
 

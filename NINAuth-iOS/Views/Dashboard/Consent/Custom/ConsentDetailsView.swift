@@ -16,7 +16,7 @@ struct ConsentDetailsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("Consent details")
+            Text("consent_details".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.gray.opacity(0.4))
                 .padding(.bottom, 10)
@@ -31,7 +31,7 @@ struct ConsentDetailsView: View {
                     .frame(width: 13, height: 13)
                     .foregroundColor(Color.button)
                 HStack {
-                    Text("ID generated: ")
+                    Text("id_generated:".localized)
                     Text(String(consentID))
                         .foregroundColor(.orange)
                 }

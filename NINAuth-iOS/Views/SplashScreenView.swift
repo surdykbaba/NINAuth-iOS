@@ -19,7 +19,7 @@ struct SplashScreenView: View {
             Image("AppFullLogo")
                 .frame(width: 157, height: 41)
             Spacer()
-            Text("powered_by_nimc")
+            Text("powered_by_nimc".localized)
                 .customFont(.headline, fontSize: 17)
             Group {
                 NavigationLink(destination: LoginView().navigationBarBackButtonHidden(true), isActive: $showLoginScreen){}.isDetailLink(false)

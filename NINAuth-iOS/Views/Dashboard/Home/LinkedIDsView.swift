@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct LinkedIDsView: View {
+    @StateObject var viewModel = LinkedIDViewModel()
+    var linkedIds: [LinkedIDs] = []
+
     var body: some View {
         ZStack {
             Color.secondaryGrayBackground
@@ -15,20 +18,31 @@ struct LinkedIDsView: View {
             ScrollView {
                 VStack {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("linked_id")
+                        Text("linked_ids".localized)
                             .customFont(.headline, fontSize: 24)
-                        Text("view_other_functional_ids_linked_t_your_NIN")
+                        Text("view_other_functional_ids_linked_t_your_NIN".localized)
                             .customFont(.caption, fontSize: 17)
                             .padding(.bottom, 20)
-
-                        ForEach(MockData.linkedIDs, id: \.id) { data in
-                            LinkedIDsCardView(icon: data.icon, title: data.title, subtitle: data.subtitle)
-                                .padding(.top, 10)
+                        ForEach(linkedIds, id: \.id) { ids in
+                            LinkedIDsCardView(icon: "phone_color", title: ids.id ?? "", subtitle: ids.user_id ?? "")
+                        }
+                        .onAppear {
+                            Task {
+                                await viewModel.getLinkedIDs()
+                            }
                         }
                     }
                 }
                 .padding()
+        }
+            
+            if case .loading = viewModel.state {
+                //TODO: Add your custom loding view here
+                ProgressView()
+                    .scaleEffect(2)
             }
+
+            Spacer()
         }
     }
 }
@@ -43,16 +57,4 @@ struct LinkedIDData: Identifiable, Equatable {
     var icon: String
     var title: String
     var subtitle: String
-}
-
-// Temporary mock data
-struct MockData {
-    static var linkedIDs: [LinkedIDData] = [LinkedIDData(icon: "phone_color", title: "Phone Number", subtitle: "2 phone numbers linked"),
-        LinkedIDData(icon: "taxID_color", title: "Tax Identification Number", subtitle: "1 Tax ID linked"),
-        LinkedIDData(icon: "international_passport", title: "International Passport", subtitle: "No action taken"),
-        LinkedIDData(icon: "financial_institution", title: "Financial Institutions", subtitle: "No action taken"),
-        LinkedIDData(icon: "educational_institution", title: "Educational Institutions", subtitle: "No action taken"),
-        LinkedIDData(icon: "drivers_license", title: "Driver's License", subtitle: "No action taken"),
-        LinkedIDData(icon: "voters_id", title: "Voter's ID", subtitle: "No action taken")]
-
 }

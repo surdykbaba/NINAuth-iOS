@@ -11,11 +11,11 @@ class ConsentViewModel: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
     @Published private(set) var consent = ConsentResponse()
-    @Published private(set) var consentRevoked: Bool = false
-    @Published private(set) var consentApprove: Bool = false
-    @Published private(set) var consentRequest = ConsentRequest()
-    
-    
+    @Published var consentRevoked: Bool = false
+    @Published var consentApprove: Bool = false
+    @Published var consentRequest = ConsentRequest()
+    @Published var isVerified = false
+
     private let consentService: ConsentService
     
     init() {
@@ -67,18 +67,22 @@ class ConsentViewModel: ObservableObject {
         }
     }
     
-    func verifyConsent(consentCode: ConsentCode) async -> Void {
+    func verifyConsent(consentCode: ConsentCode) async -> ConsentRequest? {
         guard state != .loading else {
-            return
+            return nil
         }
         state = .loading
         let result = await consentService.verifyConsent(consentCode: consentCode)
         switch result {
         case .success(let consentReq):
+            isVerified = true
             consentRequest = consentReq
             state = .success
+            print(consentReq)
+            return consentReq
         case .failure(let failure):
             state = .failed(failure)
+            return nil
         }
     }
 }

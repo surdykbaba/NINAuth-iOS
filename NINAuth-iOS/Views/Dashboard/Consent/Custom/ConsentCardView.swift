@@ -37,7 +37,7 @@ struct ConsentCardView: View {
 
             Spacer()
 
-            Image(organizationIcon)
+            Image(base64String: organizationIcon)?
                 .resizable()
                 .frame(width: 50, height: 50)
                 .cornerRadius(25)

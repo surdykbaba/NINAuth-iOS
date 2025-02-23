@@ -10,14 +10,14 @@ import CodeScanner
 
 struct OnboardingView: View {
     @State private var showSheet = false
-    var currentCode = "123456"
-    @State var requestCode: String = ""
+    @State private var requestCode = ""
     private let numberOfFields = 6
     @FocusState var isFocused: Bool
-    @State var isValid: Bool = true
+    @State private var isValid = true
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
-    @State var showLoginScreen: Bool = false
+    @State private var showLoginScreen = false
+    @State private var showingAlert = false
 
     var body: some View {
         VStack {
@@ -72,6 +72,12 @@ struct OnboardingView: View {
                     requestCodeView
                 } onEnd: {
                     Log.info("Dismissed Sheet")
+                }.alert("Invalid pin", isPresented: $showingAlert) {
+                    Button("Ok"){
+                        showSheet = false
+                    }
+                } message: {
+                    Text("Please scan QR code")
                 }
             }
             
@@ -117,26 +123,28 @@ struct OnboardingView: View {
                         .customFont(.body, fontSize: 17)
                         .padding(.bottom, 40)
 
-                    OTPView(numberOfFields: 6, otp: $requestCode, valid: $isValid)
+                    OTPView(numberOfFields: numberOfFields, otp: $requestCode, valid: $isValid)
                         .onChange(of: requestCode) { newOtp in
-                            if newOtp.count == numberOfFields && newOtp == currentCode {
+                            if newOtp.count == numberOfFields && !newOtp.isEmpty{
+                                print(newOtp)
                                 isValid = true
-                            } else if newOtp != currentCode && newOtp.count == numberOfFields {
-                                isValid = false
                             }
                         }
                         .focused($isFocused)
 
-                    Button {} label: {
+                    Button {
+                        showingAlert = true
+                    } label: {
                         Text("Continue")
                             .customFont(.title, fontSize: 18)
                             .foregroundStyle(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 18)
-                    .background(Color("buttonColor"))
+                    .background(isValid ? Color.button : Color.button.opacity(0.2))
                     .cornerRadius(4)
                     .disabled(!isValid)
+
                 }
             }
             .padding()

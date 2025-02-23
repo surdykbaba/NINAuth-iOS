@@ -85,7 +85,7 @@ struct SettingsView: View {
             
             Toggle(isOn: $biometricsIsOn,
                    label : {
-                Text("biometrics")
+                Text("biometrics".localized)
                     .customFont(.headline, fontSize: 19)
             })
         }
@@ -93,7 +93,7 @@ struct SettingsView: View {
     
     var legalAndComplaince: some View {
         VStack(alignment: .leading, spacing: 20){
-            Text("legal_and_compliance")
+            Text("legal_and_compliance".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
             
@@ -115,7 +115,7 @@ struct SettingsView: View {
     
     var security: some View {
         VStack(alignment: .leading, spacing: 20){
-            Text("security")
+            Text("security".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
             

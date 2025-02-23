@@ -13,7 +13,7 @@ struct InformationCardView: View {
 
     var body: some View {
         HStack(spacing: 20) {
-            Text("\(number)")
+            Text("\(number + 1)")
                 .customFont(.title, fontSize: 10)
                 .padding(.vertical, 4)
                 .padding(.horizontal, 6)

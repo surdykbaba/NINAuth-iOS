@@ -12,58 +12,85 @@ struct DigitalIDView: View {
     @EnvironmentObject var appState: AppState
     @State private var changeView = true
     @State private var showShareIDPopover = false
+    @State private var showSecurityPinView = false
+    @State private var showLinkedIDsView = false
+    @State private var showSecurityPINView = false
     @ObservedResults(User.self) var user
-    
-    var body: some View {
-        Color.secondaryGrayBackground
-            .ignoresSafeArea()
-            .overlay(
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        VStack(alignment: .center, spacing: 10) {
-                            if let user = user.first, changeView {
-                                DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
-                            } else {
-                                Image("qr_code")
-                                    .resizable()
-                                    .frame(width: 250, height: 250)
-                                    .frame(maxWidth: .infinity)
-                            }
-                            
-                            Button {
-                                changeView.toggle()
-                            } label: {
-                                showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
-                            }
-                        }
-                        .padding(.bottom, 30)
-                        
-                        Text("manage_your_identity")
-                            .customFont(.subheadline, fontSize: 17)
-                            .padding(.bottom, 15)
-                        
-                        VStack(spacing: 12) {
-                            IdentityView(icon: "barcode", title: "share_my_id".localized, subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
-                                showShareIDPopover = true
-                            })
-                            .popover(isPresented: $showShareIDPopover) {
-                                ShareIDView()
-                            }
-                            
-                            IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
-                                //                                    GetSecurityPINView()
-                            })
-                            
-                            IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
+    @StateObject var viewModel = LinkedIDViewModel()
 
-                            })
+    var body: some View {
+        ZStack {
+            Color.secondaryGrayBackground
+                .ignoresSafeArea()
+                .overlay(
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            VStack(alignment: .center, spacing: 10) {
+                                if let user = user.first, changeView {
+                                    DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
+                                } else {
+                                    Image("qr_code")
+                                        .resizable()
+                                        .frame(width: 250, height: 250)
+                                        .frame(maxWidth: .infinity)
+                                }
+
+                                Button {
+                                    changeView.toggle()
+                                } label: {
+                                    showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
+                                }
+                            }
+                            .padding(.bottom, 30)
+
+                            Text("manage_your_identity".localized)
+                                .customFont(.subheadline, fontSize: 17)
+                                .padding(.bottom, 15)
+
+                            VStack(spacing: 12) {
+                                IdentityView(icon: "barcode", title: "share_my_id".localized, subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
+                                    showShareIDPopover = true
+                                })
+                                .popover(isPresented: $showShareIDPopover) {
+                                    ShareIDView()
+                                }
+
+                                IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
+                                    showSecurityPINView = true
+                                })
+
+                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
+                                    showLinkedIDsView = true
+                                    Task {
+                                        await viewModel.getLinkedIDs()
+                                    }
+                                })
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
-                }
-            )
+                )
+            
+            if case .loading = viewModel.state {
+                //TODO: Add your custom loding view here
+                ProgressView()
+                    .scaleEffect(2)
+            }
+
+            Spacer()
+        }
+        moveToLinkedIDsView()
+        moveToGetSecurityPINView()
     }
-    
+
+    func moveToLinkedIDsView() -> some View {
+        NavigationLink(destination: LinkedIDsView(linkedIds: viewModel.linkedIds), isActive: $showLinkedIDsView){}
+    }
+
+    func moveToGetSecurityPINView() -> some View {
+        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView){}
+    }
+
     func showQR(title: String, subtitle: String) -> some View {
         VStack(spacing: 5) {
             Text(title)

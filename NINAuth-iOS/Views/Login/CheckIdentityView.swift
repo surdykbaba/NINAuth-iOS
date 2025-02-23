@@ -13,68 +13,86 @@ struct CheckIdentityView: View {
     @StateObject var viewModel = AuthViewModel()
     @State private var identificationNumber = ""
     @State private var isFormValid: Bool = false
+    @State private var isPresentingAlert: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("enter_your_national_identification_number")
-                .customFont(.headline, fontSize: 24)
-            Text("your_information_is_secure_with_us_and_will_be_used_solely_for verification_purposes.")
-                .customFont(.body, fontSize: 17)
-                .padding(.bottom, 30)
+        ZStack {
+            VStack(alignment: .leading, spacing: 15) {
+                Text("enter_your_national_identification_number".localized)
+                    .customFont(.headline, fontSize: 24)
+                Text("your_information_is_secure_with_us_and_will_be_used_solely_for verification_purposes.".localized)
+                    .customFont(.body, fontSize: 17)
+                    .padding(.bottom, 30)
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("national_identification_number")
-                    .customFont(.subheadline, fontSize: 16)
-                TextField("12345678910", text: $identificationNumber)
-                    .keyboardType(.numberPad)
-                    .customTextField()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke()
-                        .fill(isFormValid ? .gray : .red)
-                    )
-                    .onAppear(perform: {
-                        isFormValid = true
-                    })
-                    .onChange(of: identificationNumber) { _ in
-                        validateNIN()
-                    }
-                if !isFormValid {
-                    Text("nin_must_be_11_digits_long")
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("national_identification_number".localized)
                         .customFont(.subheadline, fontSize: 16)
-                        .foregroundColor(.red)
+                    TextField("12345678910", text: $identificationNumber)
+                        .keyboardType(.numberPad)
+                        .customTextField()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke()
+                            .fill(isFormValid ? .gray : .red)
+                        )
+                        .onAppear(perform: {
+                            isFormValid = true
+                        })
+                        .onChange(of: identificationNumber) { _ in
+                            validateNIN()
+//                            isPresentingAlert = true
+                        }
+                    if !isFormValid {
+                        Text("nin_must_be_11_digits_long".localized)
+                            .customFont(.subheadline, fontSize: 16)
+                            .foregroundColor(.red)
+                    }
                 }
-            }
-            .padding(.bottom, 20)
+                .padding(.bottom, 20)
 
-            Button {
-                validateNIN()
-            } label: {
-                Text("continue_verification")
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(.white)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 18)
-            .background(Color.button)
-            .cornerRadius(4)
-            .disabled(!isFormValid)
+                Button {
+                    validateNIN()
+                } label: {
+                    Text("continue_verification".localized)
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .background(isFormValid ? Color.button : Color.button.opacity(0.2))
+                .cornerRadius(4)
+                .disabled(!isFormValid)
 
-            Spacer()
-            
-            NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
-            
+                Spacer()
+
+                NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+            }
+            .padding(.top, 20)
+            .padding()
+            .navigationTitle(Text(""))
+            .navigationBarTitleDisplayMode(.inline)
+
             if case .loading = viewModel.state {
                 //TODO: Add your custom loding view here
+                ProgressView()
+                    .scaleEffect(2)
             }
+
             if case .failed(let errorBag) = viewModel.state {
                 //TODO: Add your custom error view here
+                Text("")
+                    .onAppear() {
+                        if case .failed(let errorBag) = viewModel.state {
+                            isPresentingAlert = true
+                        }
+                    }
+                    .alert(errorBag.description, isPresented: $isPresentingAlert) {
+                        Button("OK", role: .cancel) { }
+                    }
             }
+
+            Spacer()
         }
-        .padding(.top, 20)
-        .padding()
-        .navigationTitle(Text(""))
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     private func validateNIN() {
@@ -97,4 +115,3 @@ struct CheckIdentityView: View {
     CheckIdentityView(code: "bunchhhhhh")
         .environmentObject(AppState())
 }
-
