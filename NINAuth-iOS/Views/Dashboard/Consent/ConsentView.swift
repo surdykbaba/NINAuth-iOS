@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import EasySkeleton
 
 struct ConsentView: View {
     @State private var selected: ApprovalStatus = .approved
-    @StateObject var viewModel = ConsentViewModel()
+    @StateObject private var viewModel = ConsentViewModel()
+    @State private var searchText = ""
 
     var body: some View {
         ZStack {
@@ -24,33 +26,99 @@ struct ConsentView: View {
                 .pickerStyle(.segmented)
                 .frame(height: 60)
                 .padding()
-                .onAppear {
-                    Task {
-                        await viewModel.getAllConsents()
+
+                if case .loading = viewModel.state {
+                    VStack(spacing: 8) {
+                        Spacer().frame(height: 4)
+                        DataLoaderView()
+                            .frame(height: 120)
+                        Spacer().frame(height: 6)
+                        DataLoaderView()
+                            .frame(height: 120)
+                        Spacer().frame(height: 6)
+                        DataLoaderView()
+                            .frame(height: 120)
+                        Spacer().frame(height: 6)
                     }
+                    .padding(.horizontal, 16)
+                    .setSkeleton(.constant(true))
+                }else {
+                    consentBody
                 }
-                if let consents = viewModel.consent.consents {
-                    if consents.isEmpty {
-                        Text("No data")
-                        Spacer()
-                            .customFont(.headline, fontSize: 17)
-                    } else {
-                        ChosenStatusView(status: selected, consents: viewModel.consent.consents ?? [])
-                    }
-                }
-                else {
-                    Text("No data")
-                    Spacer()
-                }
+                
+                Spacer()
             }
-            
-            if case .loading = viewModel.state {
-                //TODO: Add your custom loding view here
-                ProgressView()
-                    .scaleEffect(2)
+            .task {
+                await viewModel.getAllConsents()
             }
 
-            Spacer()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Text("Consents")
+                    .customFont(.headline, fontSize: 24)
+            }
+        }
+    }
+    
+    var consentBody: some View {
+        VStack {
+            HStack {
+                TextField("Search organization", text: $searchText)
+                    .customTextField()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke()
+                        .fill(.gray)
+                    )
+                
+                Button {
+                    
+                } label: {
+                    Image(.consentCalendar)
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+            
+            if (viewModel.consent.consents?.isEmpty == true || viewModel.consent.consents == nil) {
+                Group{
+                    Image(.consentSearch)
+                        .resizable()
+                        .frame(width: 59, height: 54)
+                    Text("No data to display")
+                }
+                .padding(.bottom, 100)
+            }else {
+                consentData
+            }
+        }
+        .background(Color(.white))
+        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            .stroke()
+            .fill(Color(.white))
+        )
+        .padding(.horizontal, 20)
+    }
+    
+    var consentData: some View {
+        ScrollView(showsIndicators: false) {
+            LazyVStack(alignment: .leading, spacing: 30) {
+                ForEach(viewModel.consent.consents ?? [], id: \.self) { consent in
+                    if(selected == .approved && consent.status == "approved") {
+                        ConsentCardView(consent: consent)
+                    }else if(selected == .rejected && consent.status != "approved") {
+                        ConsentCardView(consent: consent)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .foregroundColor(.black)
+            .padding()
         }
     }
 }
@@ -62,18 +130,4 @@ struct ConsentView: View {
 enum ApprovalStatus: String, CaseIterable {
     case approved = "Approved Access"
     case rejected = "Rejected"
-}
-
-struct ChosenStatusView: View {
-    var status: ApprovalStatus
-    var consents: [Consent]
-
-    var body: some View {
-        switch status {
-        case .approved:
-            ConsentApprovedView(consents: consents.filter { $0.status == "approved" })
-        case .rejected:
-            ConsentApprovedView(consents: consents.filter { $0.status != "approved" })
-        }
-    }
 }

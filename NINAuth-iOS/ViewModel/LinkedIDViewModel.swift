@@ -6,6 +6,7 @@
 //
 import Foundation
 
+@MainActor
 class LinkedIDViewModel: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle

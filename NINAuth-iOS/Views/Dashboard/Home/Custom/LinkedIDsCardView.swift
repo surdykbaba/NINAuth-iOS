@@ -8,21 +8,19 @@
 import SwiftUI
 
 struct LinkedIDsCardView: View {
-    var icon: String
-    var title: String
-    var subtitle: String
-
+    @State var linkedIDs: LinkedIDs
+    
     var body: some View {
         VStack {
             HStack {
-                Image(icon)
+                Image("phone_color")
                     .resizable()
                     .frame(width: 47, height: 47)
 
                 VStack(alignment: .leading) {
-                    Text(title)
+                    Text(linkedIDs.functional_id ?? "")
                         .customFont(.headline, fontSize: 17)
-                    Text(subtitle)
+                    Text(linkedIDs.functional_id_name ?? "")
                         .customFont(.caption, fontSize: 15)
                 }
 
@@ -44,5 +42,5 @@ struct LinkedIDsCardView: View {
 }
 
 #Preview {
-    LinkedIDsCardView(icon: "taxID_color", title: "Tax Identification Number", subtitle: "1 Tax ID linked")
+    LinkedIDsCardView(linkedIDs: LinkedIDs())
 }

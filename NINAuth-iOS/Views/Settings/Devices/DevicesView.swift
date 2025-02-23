@@ -46,6 +46,11 @@ struct DevicesView: View {
                 }.padding(.horizontal, 16)
             }else {
                 LazyVStack(alignment: .leading, spacing: 12) {
+                    
+                    Text("Devices")
+                        .customFont(.headline, fontSize: 24)
+                        .padding(.bottom, 12)
+                    
                     ForEach(viewModel.devices, id: \.self.id!) { dev in
                         SingleDeviceView(device: dev, viewModel: viewModel)
                     }
@@ -62,8 +67,6 @@ struct DevicesView: View {
         }
         .setSkeleton($viewModel.loadingDevices)
         .background(Color(.bg))
-        .navigationTitle(Text("Devices"))
-        .navigationBarTitleDisplayMode(.large)
         .task {
             await viewModel.getDevices()
         }

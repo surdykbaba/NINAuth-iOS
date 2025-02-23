@@ -23,6 +23,8 @@ struct InformationCardView: View {
                 )
             Text(title)
                 .customFont(.body, fontSize: 17)
+            
+            Spacer()
         }
     }
 }

@@ -27,6 +27,12 @@ struct HomeView: View {
                 ChosenPickerView(option: selected)
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Text("Home")
+                    .customFont(.headline, fontSize: 24)
+            }
+        }
     }
 }
 

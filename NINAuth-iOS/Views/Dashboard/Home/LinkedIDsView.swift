@@ -9,32 +9,43 @@ import SwiftUI
 
 struct LinkedIDsView: View {
     @StateObject var viewModel = LinkedIDViewModel()
-    var linkedIds: [LinkedIDs] = []
 
     var body: some View {
+        if #available(iOS 16.0, *) {
+            bodyView
+                .toolbarBackground(.bg, for: .navigationBar)
+                .toolbarRole(.editor)
+        }else {
+            bodyView
+        }
+    }
+    
+    var bodyView: some View {
         ZStack {
             Color.secondaryGrayBackground
                 .ignoresSafeArea()
             ScrollView {
-                VStack {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("linked_ids".localized)
-                            .customFont(.headline, fontSize: 24)
-                        Text("view_other_functional_ids_linked_t_your_NIN".localized)
-                            .customFont(.caption, fontSize: 17)
-                            .padding(.bottom, 20)
-                        ForEach(linkedIds, id: \.id) { ids in
-                            LinkedIDsCardView(icon: "phone_color", title: ids.id ?? "", subtitle: ids.user_id ?? "")
-                        }
-                        .onAppear {
-                            Task {
-                                await viewModel.getLinkedIDs()
-                            }
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("linked_ids")
+                        .customFont(.headline, fontSize: 24)
+                    Text("view_other_functional_ids_linked_t_your_NIN")
+                        .customFont(.caption, fontSize: 17)
+                        .padding(.bottom, 20)
+                    if (viewModel.linkedIds.isEmpty) {
+                        Text("No linked IDs")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 100)
+                    }else {
+                        ForEach(viewModel.linkedIds, id: \.id) { ids in
+                            LinkedIDsCardView(linkedIDs: ids)
                         }
                     }
                 }
                 .padding()
-        }
+            }
+            .task {
+                await viewModel.getLinkedIDs()
+            }
             
             if case .loading = viewModel.state {
                 //TODO: Add your custom loding view here
@@ -49,12 +60,4 @@ struct LinkedIDsView: View {
 
 #Preview {
     LinkedIDsView()
-}
-
-// Temporary struct
-struct LinkedIDData: Identifiable, Equatable {
-    var id = UUID()
-    var icon: String
-    var title: String
-    var subtitle: String
 }

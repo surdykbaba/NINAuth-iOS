@@ -12,7 +12,7 @@ struct ScanQRCodeView: View {
     @EnvironmentObject var appState: AppState
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
-    @StateObject var viewModel = ConsentViewModel()
+    @StateObject private var viewModel = ConsentViewModel()
 
     var body: some View {
         Color.secondaryGrayBackground
@@ -102,7 +102,7 @@ struct ScanQRCodeView: View {
                             }
                         }
                     }
-                    NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest), isActive: $viewModel.isVerified) {}.isDetailLink(false)
+                    NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: scannedCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)
                 }
             )
 
@@ -120,9 +120,7 @@ struct ScanQRCodeView: View {
         consentCode.deviceId = appState.getDeviceID()
         consentCode.requestCode = code
         Task {
-            let consentResponse = await viewModel.verifyConsent(consentCode: consentCode)
-            viewModel.consentRequest = consentResponse ?? ConsentRequest()
-            print(consentResponse ?? ConsentRequest())
+            await viewModel.verifyConsent(consentCode: consentCode)
         }
     }
 }

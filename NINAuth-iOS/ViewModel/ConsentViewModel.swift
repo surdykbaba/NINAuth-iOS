@@ -44,7 +44,7 @@ class ConsentViewModel: ObservableObject {
         state = .loading
         let result = await consentService.giveConsent(consentCreated: consentCreated)
         switch result {
-        case .success(let result):
+        case .success(_):
             consentRevoked = true
             state = .success
         case .failure(let failure):
@@ -59,7 +59,7 @@ class ConsentViewModel: ObservableObject {
         state = .loading
         let result = await consentService.giveConsent(consentCreated: consentCreated)
         switch result {
-        case .success(let result):
+        case .success(_):
             consentApprove = true
             state = .success
         case .failure(let failure):
@@ -67,22 +67,19 @@ class ConsentViewModel: ObservableObject {
         }
     }
     
-    func verifyConsent(consentCode: ConsentCode) async -> ConsentRequest? {
+    func verifyConsent(consentCode: ConsentCode) async -> Void {
         guard state != .loading else {
-            return nil
+            return
         }
         state = .loading
         let result = await consentService.verifyConsent(consentCode: consentCode)
         switch result {
         case .success(let consentReq):
-            isVerified = true
             consentRequest = consentReq
             state = .success
-            print(consentReq)
-            return consentReq
+            isVerified = true
         case .failure(let failure):
             state = .failed(failure)
-            return nil
         }
     }
 }

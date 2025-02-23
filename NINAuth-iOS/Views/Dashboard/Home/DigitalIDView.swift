@@ -84,7 +84,7 @@ struct DigitalIDView: View {
     }
 
     func moveToLinkedIDsView() -> some View {
-        NavigationLink(destination: LinkedIDsView(linkedIds: viewModel.linkedIds), isActive: $showLinkedIDsView){}
+        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
     }
 
     func moveToGetSecurityPINView() -> some View {

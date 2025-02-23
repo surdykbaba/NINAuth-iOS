@@ -14,6 +14,7 @@ struct CheckIdentityView: View {
     @State private var identificationNumber = ""
     @State private var isFormValid: Bool = false
     @State private var isPresentingAlert: Bool = false
+    @State private var error = ErrorBag()
 
     var body: some View {
         ZStack {
@@ -39,6 +40,9 @@ struct CheckIdentityView: View {
                             isFormValid = true
                         })
                         .onChange(of: identificationNumber) { _ in
+                            if(identificationNumber.count > 11) {
+                                identificationNumber = String(identificationNumber.prefix(11))
+                            }
                             validateNIN()
 //                            isPresentingAlert = true
                         }
@@ -71,6 +75,9 @@ struct CheckIdentityView: View {
             .padding()
             .navigationTitle(Text(""))
             .navigationBarTitleDisplayMode(.inline)
+            .alert(error.description, isPresented: $isPresentingAlert) {
+                Button("OK", role: .cancel) { }
+            }
 
             if case .loading = viewModel.state {
                 //TODO: Add your custom loding view here
@@ -80,15 +87,11 @@ struct CheckIdentityView: View {
 
             if case .failed(let errorBag) = viewModel.state {
                 //TODO: Add your custom error view here
-                Text("")
-                    .onAppear() {
-                        if case .failed(let errorBag) = viewModel.state {
-                            isPresentingAlert = true
-                        }
-                    }
-                    .alert(errorBag.description, isPresented: $isPresentingAlert) {
-                        Button("OK", role: .cancel) { }
-                    }
+                Color.clear.onAppear() {
+                    error = errorBag
+                    isPresentingAlert = true
+                }
+                .frame(width: 0, height: 0)
             }
 
             Spacer()
