@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealmSwift
+import LocalAuthentication
 
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
@@ -17,6 +18,7 @@ struct LoginView: View {
     @State private var identificationNumber = ""
     @State private var password: String = ""
     @State private var isFormValid: Bool = false
+    @State private var isUnlocked = false
     @ObservedResults(User.self) var user
 
     var body: some View {
@@ -53,8 +55,8 @@ struct LoginView: View {
                     .customTextField()
                     .overlay(
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke()
-                        .fill(isFormValid ? .gray : .red)
+                            .stroke()
+                            .fill(isFormValid ? .gray : .red)
                     )
                     .onAppear(perform: {
                         isFormValid = true
@@ -80,7 +82,10 @@ struct LoginView: View {
                     }
                     .padding(.top, 16)
 
-                Button {} label: {
+                Button {
+                    enableBiometrics()
+                    viewModel.isLoggedIn = true
+                } label: {
                     HStack {
                         Text("sign_in_with_biometrics".localized)
                         Image(systemName: "touchid")
@@ -90,10 +95,10 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(isValid ? Color.button : Color.button.opacity(0.2))
+                .background(appState.biometricsIsOn ? Color.button : Color.button.opacity(0.1))
                 .cornerRadius(4)
-                .disabled(isValid)
                 .padding(.top, 24)
+                .disabled(!appState.biometricsIsOn)
 
                 Spacer()
                 NavigationLink(destination: TabControllerView(), isActive: $viewModel.isLoggedIn) {}.isDetailLink(false)
@@ -106,7 +111,7 @@ struct LoginView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         //TODO: Go to forgot Pin View, I can't find it
-                        NotificationsView()
+//                        NotificationsView()
                     } label: {
                         Text("forgot_pin?".localized)
                             .customFont(.title, fontSize: 18)
@@ -116,7 +121,6 @@ struct LoginView: View {
             }
 
             if case .loading = viewModel.state {
-                //TODO: Add your custom loding view here
                 ProgressView()
                     .scaleEffect(2)
             }
@@ -124,7 +128,27 @@ struct LoginView: View {
             Spacer()
         }
     }
-    
+
+    func enableBiometrics() {
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "We need to activate another means of unlocking your application."
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
+                if success {
+                    isUnlocked = true
+                    // aunthenticated successfully
+                } else {
+                    // there was a problem
+                }
+            }
+        } else {
+            // no biometrics
+        }
+    }
+
     func loginUser() {
         var loginRequest = LoginUserRequest()
         loginRequest.deviceId = appState.getDeviceID()

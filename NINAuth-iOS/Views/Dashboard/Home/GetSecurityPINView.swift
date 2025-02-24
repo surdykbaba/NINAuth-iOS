@@ -10,14 +10,17 @@ import Combine
 
 struct GetSecurityPINView: View {
     let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    @State var currentTimer: Date = .now + 30
+    @State var currentTimer: Date = .now + 17
+    private let pasteboard = UIPasteboard.general
+    @StateObject var viewModel = PinViewModel()
+    @State private var buttonText = "Copy PIN"
+    private var randomNumber = 0
 
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
                 Text("security_pin")
                     .padding(.bottom, 10)
-                    .padding(.top, 40)
                     .customFont(.headline, fontSize: 28)
 
                 Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code".localized)
@@ -25,10 +28,8 @@ struct GetSecurityPINView: View {
                     .padding(.bottom, 50)
             }
 
-            let randomNumber = randomNumberWith(digits: 6)
-
             VStack(alignment: .center, spacing: 10) {
-                Text(String(randomNumber))
+                Text(String(viewModel.randomNumber))
                     .customFont(.headline, fontSize: 40)
                     .onReceive(timer) { time in
                         Log.info("The time is now \(time)")
@@ -56,14 +57,13 @@ struct GetSecurityPINView: View {
             .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color.grayBackground.opacity(0.1))
                 .shadow(color: Color.secondary, radius: 8, x: 0, y: 10))
-            .onAppear {
-
-            }
 
             Spacer()
 
-            Button {} label: {
-                Text("copy_pin".localized)
+            Button {
+                copyToClipboard()
+            } label: {
+                Text(buttonText)
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(.white)
             }
@@ -75,10 +75,13 @@ struct GetSecurityPINView: View {
         .padding()
     }
 
-    func randomNumberWith(digits:Int) -> Int {
-        let min = Int(pow(Double(10), Double(digits-1))) - 1
-        let max = Int(pow(Double(10), Double(digits))) - 1
-        return Int(Range(uncheckedBounds: (min, max)))
+    func copyToClipboard() {
+        pasteboard.string = String(viewModel.randomNumber)
+        self.buttonText = "Copied!"
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.buttonText = "copy_pin".localized
+        }
     }
 }
 

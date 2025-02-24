@@ -16,7 +16,7 @@ class AuthViewModel: ObservableObject  {
     @Published var verifyStatus = ""
     @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
-    @Published private(set) var logOut = false
+    @Published var logOut = false
 
     private let authService: AuthService
     

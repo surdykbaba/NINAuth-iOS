@@ -6,10 +6,12 @@
 //
 import Foundation
 import UIKit
+import SwiftUI
 
 class AppState: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
+    @AppStorage("biometricsIsOn") var biometricsIsOn = false
     @Published var verifyStatus = ""
     private let authService: AuthService
     var timer: Timer? = nil
