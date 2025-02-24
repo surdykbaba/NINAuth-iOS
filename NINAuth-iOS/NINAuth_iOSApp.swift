@@ -17,8 +17,7 @@ struct NINAuth_iOSApp: SwiftUI.App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-//                SplashScreenView()
-                GetSecurityPINView()
+                SplashScreenView()
             }
             .navigationViewStyle(.stack)
             .tint(Color.button)
