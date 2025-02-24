@@ -12,16 +12,12 @@ class PinViewModel: ObservableObject {
     @Published var pinIsSet: Bool = false
     @Published private(set) var pinUpdated: Bool = false
     @Published var randomNumber: Int = 0
-    @Published var initial = 17
-    @Published var countdown = 17
-    var timer: Timer?
+    
 
     private let pinService: PinService
     
     init() {
         pinService = PinService()
-        randomNumber = randomNumberWith(6)
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(startCountdown), userInfo: nil, repeats: false)
     }
     
     func setPin(setPinRequest: SetPinRequest) async -> Void {
@@ -46,7 +42,7 @@ class PinViewModel: ObservableObject {
         state = .loading
         let result = await pinService.updatePin(updatePinRequest: updatePinRequest)
         switch result {
-        case .success(let linkID):
+        case .success(_):
             pinUpdated = true
             state = .success
         case .failure(let failure):
@@ -54,17 +50,14 @@ class PinViewModel: ObservableObject {
         }
     }
 
-    func randomNumberWith(_ digits:Int) -> Int {
+    private func randomNumberWith(_ digits:Int) -> Int {
         let min = Int(pow(Double(10), Double(digits-1))) - 1
         let max = Int(pow(Double(10), Double(digits))) - 1
         return Int(Range(uncheckedBounds: (min, max)))
     }
-
-    @objc func startCountdown() {
-        self.countdown -= 1
-        if self.countdown == 0 {
-            timer?.invalidate()
-            randomNumber = randomNumberWith(6)
-        }
+    
+    func generateRandomNumber() {
+        randomNumber = randomNumberWith(6)
     }
+    
 }

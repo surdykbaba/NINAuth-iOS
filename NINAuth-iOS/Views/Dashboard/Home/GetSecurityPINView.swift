@@ -73,6 +73,9 @@ struct GetSecurityPINView: View {
             .cornerRadius(4)
         }
         .padding()
+        .onAppear {
+            viewModel.generateRandomNumber()
+        }
     }
 
     func copyToClipboard() {
