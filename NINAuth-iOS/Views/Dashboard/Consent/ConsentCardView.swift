@@ -27,9 +27,9 @@ struct ConsentCardView: View {
                             Image(systemName: "chevron.right")
                         }
                         Text(consent.reason ?? "")
-                            .customFont(.caption, fontSize: 16)
-                        Text(consent.getDisplayDate())
                             .customFont(.body, fontSize: 16)
+                        Text(consent.getDisplayDate())
+                            .customFont(.subheadline, fontSize: 16)
                     }
                 }
 
@@ -44,6 +44,7 @@ struct ConsentCardView: View {
                 }
                 .frame(width: 50, height: 50)
             }
+            .frame(maxHeight: 84)
         }
     }
 }

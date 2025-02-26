@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct HomeView: View {
     @State private var selected: PickerOptions = .digitalID
+    @ObservedResults(User.self) var user
 
     var body: some View {
         ZStack {
@@ -31,6 +33,14 @@ struct HomeView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Text("Home")
                     .customFont(.headline, fontSize: 24)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                    .resizable()
+                    .frame(width: 47, height: 47)
+                    .clipShape(Circle())
             }
         }
     }

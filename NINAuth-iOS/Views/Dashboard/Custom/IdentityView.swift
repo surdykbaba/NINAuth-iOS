@@ -25,9 +25,11 @@ struct IdentityView: View {
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(title)
+                            .bold()
                             .customFont(.headline, fontSize: 17)
+                        
                         Text(subtitle)
-                            .customFont(.caption, fontSize: 16)
+                            .customFont(.body, fontSize: 16)
                     }
                     .multilineTextAlignment(.leading)
 

@@ -44,7 +44,6 @@ struct CheckIdentityView: View {
                                 identificationNumber = String(identificationNumber.prefix(11))
                             }
                             validateNIN()
-//                            isPresentingAlert = true
                         }
                     if !isFormValid {
                         Text("nin_must_be_11_digits_long".localized)

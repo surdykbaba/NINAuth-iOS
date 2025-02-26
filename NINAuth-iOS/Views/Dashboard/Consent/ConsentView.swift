@@ -71,6 +71,9 @@ struct ConsentView: View {
                         .stroke()
                         .fill(.gray)
                     )
+                    .onChange(of: searchText) { _ in
+                        viewModel.filterConsent(text: searchText)
+                    }
                 
                 Button {
                     
@@ -84,7 +87,7 @@ struct ConsentView: View {
             .padding(.vertical, 24)
             
             if (viewModel.consent.consents?.isEmpty == true || viewModel.consent.consents == nil) {
-                Group{
+                VStack(spacing: 20) {
                     Image(.consentSearch)
                         .resizable()
                         .frame(width: 59, height: 54)

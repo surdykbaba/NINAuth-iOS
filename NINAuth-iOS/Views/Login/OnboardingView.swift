@@ -116,6 +116,8 @@ struct OnboardingView: View {
                             showSheet.toggle()
                         }
                 }
+                .padding(.bottom)
+                
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Enter request code")
                         .customFont(.headline, fontSize: 24)
@@ -126,7 +128,6 @@ struct OnboardingView: View {
                     OTPView(numberOfFields: numberOfFields, otp: $requestCode, valid: $isValid)
                         .onChange(of: requestCode) { newOtp in
                             if newOtp.count == numberOfFields && !newOtp.isEmpty{
-                                print(newOtp)
                                 isValid = true
                             }
                         }

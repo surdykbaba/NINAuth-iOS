@@ -10,12 +10,14 @@ import UniformTypeIdentifiers
 
 struct ConsentDetailsView: View {
     @State var consent: Consent
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var appState: AppState
     @StateObject private var viewModel = ConsentViewModel()
     @State private var showSheet = false
     @State private var isCopied = false
     @State private var showAlert: Bool = false
     @State private var error = ErrorBag()
+    @State private var showingAlert = false
     
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -37,21 +39,16 @@ struct ConsentDetailsView: View {
                         Text(consent.enterprise?.name ?? "")
                             .customFont(.headline, fontSize: 24)
                         Text("Shared via \(consent.medium ?? "")")
-                            .customFont(.headline, fontSize: 17)
+                            .customFont(.headline, fontSize: 16)
                         Text(consent.getDisplayDate())
-                            .customFont(.caption, fontSize: 16)
+                            .customFont(.body, fontSize: 16)
                     }
                     .padding(.bottom, 15)
 
                     HStack {
                         Button {
                             if(consent.status == "approved") {
-                                //TODO: Call the sheet and transfer this function to the sheet
-                                Task {
-                                    await viewModel.rejectConsent(consentCreated: ConsentCreate(requestCode: consent.id, deviceId: appState.getDeviceID(), consent: consent.data_requested, status: "revoked", medium: consent.medium))
-                                }
-                            }else {
-//                              // TODO: Disable button alongside the button color
+                                showingAlert = true
                             }
                         } label: {
                             Text("revoke_access")
@@ -62,11 +59,22 @@ struct ConsentDetailsView: View {
                         .padding(.vertical, 18)
                         .background(Color.button)
                         .cornerRadius(4)
-                        .halfSheet(showSheet: $showSheet) {
-
-                        } onEnd: {
-                            Log.info("Dismissed Sheet")
+                        .background(consent.status == "approved" ? Color.button : Color.button.opacity(0.1))
+                        .alert("Revoke?", isPresented: $showingAlert) {
+                            Button("Ok", role: .destructive){
+                                Task {
+                                    await viewModel.updateContent(consentUpdate: ConsentUpdate(status: "revoked", consentId: consent.id))
+                                }
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        } message: {
+                            Text("You are about to revoke consent")
                         }
+//                        .halfSheet(showSheet: $showSheet) {
+//
+//                        } onEnd: {
+//                            Log.info("Dismissed Sheet")
+//                        }
 
                         HStack {
                             Text(consent.enterprise_id ?? "")
@@ -105,6 +113,12 @@ struct ConsentDetailsView: View {
                         Color.clear.onAppear {
                             error = errorBag
                             showAlert.toggle()
+                        }.frame(width: 0, height: 0)
+                    }
+                    
+                    if viewModel.consentRevoked {
+                        Color.clear.onAppear {
+                            self.presentationMode.wrappedValue.dismiss()
                         }.frame(width: 0, height: 0)
                     }
                 }

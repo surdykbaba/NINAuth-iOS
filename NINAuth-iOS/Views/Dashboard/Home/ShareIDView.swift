@@ -9,16 +9,17 @@ import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 struct ShareIDView: View {
-    let context = CIContext()
-    let filter = CIFilter.qrCodeGenerator()
+    @Binding var display: Bool
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         ScrollView {
             VStack {
                 Text("share_my_id".localized)
                     .customFont(.subheadline, fontSize: 24)
+                    .padding(.bottom, 20)
 
-                Image(uiImage: generateQRCode(from: "https://ninauth.com/privacy-policy"))
+                Image(uiImage: appState.generateQRCode())
                     .interpolation(.none)
                     .resizable()
                     .frame(width: 240, height: 240)
@@ -43,23 +44,12 @@ struct ShareIDView: View {
                     .frame(maxWidth: .infinity)
 
                     HStack(alignment: .top) {
-                        VStack {
-                            Circle()
-                                .frame(width: 10, height: 10)
-                            RoundedRectangle(cornerRadius: 1)
-                                .frame(width: 3, height: 35)
-                                .foregroundColor(.gray.opacity(0.4))
-                        }
-                        Text("share_the_pin_below_the_qr_code_for_authentication".localized)
-                    }
-
-                    HStack(alignment: .top) {
                         Circle()
                             .frame(width: 10, height: 10)
                         Text("QR code changes every 2 minutes")
                     }
                 }
-                .customFont(.caption, fontSize: 16)
+                .customFont(.body, fontSize: 16)
                 .frame(maxWidth: .infinity)
                 .foregroundColor(.black)
                 .padding(20)
@@ -68,7 +58,12 @@ struct ShareIDView: View {
                 .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(Color.transparentGreenBackground))
 
-                Button {} label: {
+                Spacer()
+                    .frame(height: 20)
+                
+                Button {
+                    display.toggle()
+                } label: {
                     Text("got_it".localized)
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(.white)
@@ -82,20 +77,9 @@ struct ShareIDView: View {
         }
 
     }
-
-    func generateQRCode(from string: String) -> UIImage {
-        filter.message = Data(string.utf8)
-
-        if let outputImage = filter.outputImage {
-            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
-                return UIImage(cgImage: cgImage)
-            }
-        }
-
-        return UIImage(systemName: "xmark.circle") ?? UIImage()
-    }
 }
 
 #Preview {
-    ShareIDView()
+    ShareIDView(display: .constant(true))
+        .environmentObject(AppState())
 }

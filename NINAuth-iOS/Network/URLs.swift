@@ -32,6 +32,7 @@ enum URLs {
     static let CONSENT = "consent"
     static let ALL_CONSENT = "consent/all"
     static let VERIFY_CONSENT = "request-code/verify"
+    static let UPDATE_CONSENT = "consent/status"
     
     
     
@@ -48,6 +49,7 @@ enum URLs {
     //MARK: Pin
     static let SET_PIN = "pin/new-user/set"
     static let UPDATE_PIN = "pin/update"
+    static let RESET_PIN = "pin/reset"
     
 }
 

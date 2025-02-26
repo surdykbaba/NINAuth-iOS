@@ -13,6 +13,7 @@ struct ScanQRCodeView: View {
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
     @StateObject private var viewModel = ConsentViewModel()
+    @State private var goToCode = false
 
     var body: some View {
         Color.secondaryGrayBackground
@@ -22,7 +23,7 @@ struct ScanQRCodeView: View {
                     VStack(spacing: 10) {
                         VStack(alignment: .leading) {
                             HStack(spacing: 15) {
-                                Image("barcode_green")
+                                Image("barcode")
                                     .resizable()
                                     .frame(width: 40, height: 40)
                                 Text("scan_qr_code_to_give_consent".localized)
@@ -44,13 +45,13 @@ struct ScanQRCodeView: View {
                                             .customFont(.title, fontSize: 18)
                                             .foregroundStyle(Color.button)
                                     }
-                                    .frame(width: 170, height: 50)
+                                    .frame(width: 170, height: 48)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 4, style: .continuous)
                                             .stroke(Color.button, lineWidth: 1)
                                     )
                                 }
-                                Image("barcode")
+                                Image(.barcodeGreen)
                                     .resizable()
                                     .frame(width: 97, height: 117)
                             }
@@ -66,12 +67,14 @@ struct ScanQRCodeView: View {
                                     Text("enter_request_code".localized)
                                         .customFont(.headline, fontSize: 17)
                                     Text("if_you_are_unable_to_scan_a_QR_code_you_can_type_in_the_6-digit_code_provided_by_the_organization.".localized)
-                                    Button {} label: {
+                                    Button {
+                                        goToCode.toggle()
+                                    } label: {
                                         Text("enter_code".localized)
                                             .customFont(.title, fontSize: 18)
                                             .foregroundStyle(Color.button)
                                     }
-                                    .frame(width: 170, height: 50)
+                                    .frame(width: 170, height: 48)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 4, style: .continuous)
                                             .stroke(Color.button, lineWidth: 1)
@@ -88,6 +91,7 @@ struct ScanQRCodeView: View {
                             .fill(.white))
                         
                         Spacer()
+                        NavigationLink(destination: EnterRequestCodeView(), isActive: $goToCode) {}.isDetailLink(false)
                     }
                     .padding()
                     .sheet(isPresented: $isPresentingScanner) {
@@ -98,8 +102,8 @@ struct ScanQRCodeView: View {
                                 if let code = scannedCode {
                                     verifyCode(code)
                                 }
-                                isPresentingScanner = false
                             }
+                            isPresentingScanner = false
                         }
                     }
                     NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: scannedCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)

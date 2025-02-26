@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 import SwiftyJSON
+import UIKit
 
 struct Service{
     
@@ -125,6 +126,7 @@ struct Service{
             return NetworkResponseModel(statusCode: 0, data: nil, errorMessage: error.localizedDescription)
         }
     }
+    
 }
 
 struct NetworkResponseModel {
@@ -229,8 +231,8 @@ struct NetworkResponseModel {
         do {
             let realm = try Realm()
             let token = realm.objects(Token.self).first
-            Log.info(token?.access ?? "")
-            return token?.access ?? ""
+            Log.info(token?.session ?? "")
+            return token?.session ?? ""
         } catch{
             Log.error(error.localizedDescription)
         }
@@ -243,10 +245,37 @@ struct NetworkResponseModel {
         var request = URLRequest(url: url!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("*/*", forHTTPHeaderField: "Accept")
+        request.setValue("devicae-id", forHTTPHeaderField: getDeviceID())
         if(authoriseHeader) {
             request.setValue("Bearer " + getToken(), forHTTPHeaderField: "Authorization")
         }
         return request
+    }
+    
+    private static func getDeviceID() -> String {
+        var deviceID: String = ""
+        if let id = KeyChainHelper.loadData(key: KeyChainHelper.deviceID) {
+            deviceID = id
+        }else {
+            if let uuid = UIDevice.current.identifierForVendor?.uuidString {
+                deviceID = uuid
+            }else {
+                deviceID = createUniqueID()
+            }
+            
+            let res = KeyChainHelper.storeData(key: KeyChainHelper.deviceID, data: deviceID.data(using: .utf8)!)
+            Log.info(String(res))
+        }
+        
+        return deviceID
+    }
+    
+    private static func createUniqueID() -> String {
+        let uuid: CFUUID = CFUUIDCreate(nil)
+        let cfStr: CFString = CFUUIDCreateString(nil, uuid)
+
+        let swiftString: String = cfStr as String
+        return swiftString
     }
     
 //    static func generateSecretHeader(endpoint: String, authoriseHeader: Bool) -> URLRequest {
@@ -308,5 +337,6 @@ enum APIVerb: String, CaseIterable {
     case GET = "GET"
     case PUT = "PUT"
     case DELETE = "DELETE"
+    case PATCH = "PATCH"
 }
 

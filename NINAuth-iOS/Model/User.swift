@@ -20,7 +20,7 @@ class User: Object, ObjectKeyIdentifiable {
     @Persisted var date_of_birth: String?
     @Persisted var address: String?
     @Persisted var image: String?
-    @Persisted var FaceAuthCompleted: String?
+    @Persisted var face_auth_completed: String?
     @Persisted var created_at: String?
     @Persisted var updated_at: String?
     
@@ -37,9 +37,19 @@ class User: Object, ObjectKeyIdentifiable {
         self.date_of_birth = value?["date_of_birth"].string
         self.address = value?["address"].string
         self.image = value?["image"].string
-        self.FaceAuthCompleted = value?["FaceAuthCompleted"].string
+        self.face_auth_completed = value?["face_auth_completed"].string
         self.created_at = value?["created_at"].string
         self.updated_at = value?["updated_at"].string
     
+    }
+    
+    func getDOB() -> String {
+        if (date_of_birth == nil) {
+            return ""
+        }else {
+            let date = date_of_birth?.convertToDate(formater: DateFormat.yrMonthDayFormat)
+            let stringDate = date?.getFormattedDate(format: DateFormat.dateFormat) ?? ""
+            return stringDate
+        }
     }
 }

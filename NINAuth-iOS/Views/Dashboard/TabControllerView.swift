@@ -61,6 +61,7 @@ struct TabControllerView: View {
             Text(title)
                 .foregroundColor(.black)
         }
+        .padding(.vertical)
     }
 }
 

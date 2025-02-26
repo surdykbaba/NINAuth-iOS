@@ -12,4 +12,6 @@ protocol ConsentProtocol {
     func getUserConsents() async -> Result<ConsentResponse, ErrorBag>
     
     func verifyConsent(consentCode: ConsentCode) async -> Result<ConsentRequest, ErrorBag>
+    
+    func updateConsent(consentUpdate: ConsentUpdate) async -> Result<Bool, ErrorBag>
 }

@@ -62,5 +62,25 @@ struct ConsentService: ConsentProtocol {
         }
     }
     
+    func updateConsent(consentUpdate: ConsentUpdate) async -> Result<Bool, ErrorBag> {
+        do {
+            var request = NetworkResponseModel.generateHeader(endpoint: URLs.UPDATE_CONSENT, authoriseHeader: true)
+            request.httpMethod = APIVerb.PATCH.rawValue
+            let jsonData = try? JSONEncoder().encode(consentUpdate)
+            request.httpBody = jsonData
+            let (data, response) = try await URLSession.shared.data(for: request)
+            let httpResponse = response as? HTTPURLResponse
+            let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
+            if(networkResponse.isSuccess()) {
+                return .success(true)
+            }else {
+                let networkResponseFailed = NetworkResponseModel(statusCode: networkResponse.getStatusCode(), data: data)
+                return .failure(networkResponseFailed.getErrorBag())
+            }
+        }catch {
+            let networkResponse = NetworkResponseModel(statusCode: 0, data: nil, errorMessage: error.localizedDescription)
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
     
 }

@@ -28,9 +28,11 @@ struct LinkedIDsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("linked_ids")
                         .customFont(.headline, fontSize: 24)
+                    
                     Text("view_other_functional_ids_linked_t_your_NIN")
-                        .customFont(.caption, fontSize: 17)
+                        .customFont(.body, fontSize: 16)
                         .padding(.bottom, 20)
+                    
                     if (viewModel.linkedIds.isEmpty) {
                         Text("No linked IDs")
                             .frame(maxWidth: .infinity, alignment: .center)

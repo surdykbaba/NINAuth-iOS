@@ -17,6 +17,7 @@ class ConsentViewModel: ObservableObject {
     @Published var isVerified = false
 
     private let consentService: ConsentService
+    private var localConsentRequest  = ConsentResponse()
     
     init() {
         consentService = ConsentService()
@@ -31,6 +32,7 @@ class ConsentViewModel: ObservableObject {
         switch result {
         case .success(let consentResponse):
             consent = consentResponse
+            localConsentRequest = consentResponse
             state = .success
         case .failure(let failure):
             state = .failed(failure)
@@ -80,6 +82,31 @@ class ConsentViewModel: ObservableObject {
             isVerified = true
         case .failure(let failure):
             state = .failed(failure)
+        }
+    }
+    
+    func updateContent(consentUpdate: ConsentUpdate) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await consentService.updateConsent(consentUpdate: consentUpdate)
+        switch result {
+        case .success(_):
+            consentRevoked = true
+            state = .success
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    func filterConsent(text: String) -> Void {
+        if(text.isEmpty) {
+            consent.consents = localConsentRequest.consents
+        }else {
+            consent.consents = localConsentRequest.consents?.filter {
+                $0.enterprise?.name?.contains(text) == true
+            }
         }
     }
 }

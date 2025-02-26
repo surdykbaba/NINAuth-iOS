@@ -7,40 +7,39 @@
 
 import SwiftUI
 import Combine
+import UniformTypeIdentifiers
 
 struct GetSecurityPINView: View {
-    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    @State var currentTimer: Date = .now + 17
-    private let pasteboard = UIPasteboard.general
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var currentTimer = 60
     @StateObject var viewModel = PinViewModel()
     @State private var buttonText = "Copy PIN"
-    private var randomNumber = 0
+    @State private var isCopied = false
 
     var body: some View {
         VStack {
             VStack(alignment: .leading) {
                 Text("security_pin")
                     .padding(.bottom, 10)
-                    .customFont(.headline, fontSize: 28)
+                    .customFont(.headline, fontSize: 24)
 
                 Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code".localized)
-                    .customFont(.body, fontSize: 18)
+                    .customFont(.body, fontSize: 16)
                     .padding(.bottom, 50)
             }
 
             VStack(alignment: .center, spacing: 10) {
                 Text(String(viewModel.randomNumber))
+                    .lineSpacing(20)
                     .customFont(.headline, fontSize: 40)
-                    .onReceive(timer) { time in
-                        Log.info("The time is now \(time)")
-                    }
+                    
                 Text("authentication_pin".localized)
-                    .customFont(.caption2, fontSize: 14)
+                    .customFont(.body, fontSize: 14)
 
                 HStack {
                     Image(systemName: "clock.fill")
                         .foregroundColor(.green)
-                    Text(currentTimer, style: .timer)
+                    Text("00:\(currentTimer)")
                         .foregroundColor(.green)
                 }
                 .padding(.vertical, 5)
@@ -57,9 +56,14 @@ struct GetSecurityPINView: View {
             .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color.grayBackground.opacity(0.1))
                 .shadow(color: Color.secondary, radius: 8, x: 0, y: 10))
+            .onReceive(timer) { time in
+                if currentTimer > 0 {
+                    currentTimer -= 1
+                }
+            }
 
             Spacer()
-
+            
             Button {
                 copyToClipboard()
             } label: {
@@ -73,17 +77,35 @@ struct GetSecurityPINView: View {
             .cornerRadius(4)
         }
         .padding()
+        .overlay {
+            if isCopied {
+                Text("Copied to clipboard")
+                    .customFont(.subheadline, fontSize: 16)
+                    .foregroundStyle(Color(.text))
+                    .padding()
+                    .background(Color(.white).cornerRadius(20))
+                    .padding(.bottom)
+                    .shadow(radius: 5)
+                    .transition(.move(edge: .bottom))
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+            }
+        }
         .onAppear {
             viewModel.generateRandomNumber()
         }
     }
 
     func copyToClipboard() {
-        pasteboard.string = String(viewModel.randomNumber)
-        self.buttonText = "Copied!"
-
+        UIPasteboard.general.setValue(viewModel.randomNumber,
+                    forPasteboardType: UTType.plainText.identifier)
+        withAnimation(.snappy) {
+            isCopied = true
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.buttonText = "copy_pin".localized
+            withAnimation(.snappy) {
+                isCopied = false
+            }
         }
     }
 }

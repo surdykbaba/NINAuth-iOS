@@ -26,24 +26,27 @@ struct DigitalIDView: View {
                     ScrollView {
                         VStack(alignment: .leading) {
                             VStack(alignment: .center, spacing: 10) {
-                                if let user = user.first, changeView {
-                                    DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
+                                if changeView {
+                                    DigitalIDCardView()
                                 } else {
-                                    Image("qr_code")
+                                    Image(uiImage: appState.generateQRCode())
                                         .resizable()
-                                        .frame(width: 250, height: 250)
+                                        .interpolation(.none)
+                                        .frame(width: 250, height: 242)
                                         .frame(maxWidth: .infinity)
                                 }
 
                                 Button {
-                                    changeView.toggle()
+                                    withAnimation {
+                                        changeView.toggle()
+                                    }
                                 } label: {
                                     showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
                                 }
                             }
                             .padding(.bottom, 30)
 
-                            Text("manage_your_identity".localized)
+                            Text("manage_your_identity")
                                 .customFont(.subheadline, fontSize: 17)
                                 .padding(.bottom, 15)
 
@@ -52,7 +55,7 @@ struct DigitalIDView: View {
                                     showShareIDPopover = true
                                 })
                                 .popover(isPresented: $showShareIDPopover) {
-                                    ShareIDView()
+                                    ShareIDView(display: $showShareIDPopover)
                                 }
 
                                 IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {

@@ -5,6 +5,8 @@
 //  Created by Maxwell Nwanna on 05/02/2025.
 //
 
+import RealmSwift
+
 struct PinService : PinProtocol {
     
     func setPin(setPinRequest: SetPinRequest) async -> Result<Bool, ErrorBag> {
@@ -22,6 +24,29 @@ struct PinService : PinProtocol {
         switch networkResponse.isSuccess() {
         case true:
             return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.RESET_PIN, params: resetPinRequest)
+        switch networkResponse.isSuccess() {
+        case true:
+            do {
+                let realm = try await Realm()
+                try await realm.asyncWrite {
+                    let token = Token(value: networkResponse.getJson())
+                    realm.deleteAll()
+                    realm.add(token)
+                    let mem = MemoryUtil()
+                    mem.setValue(key: mem.authentication_key, value: false)
+                }
+                return .success(true)
+            }catch {
+                Log.error(error.localizedDescription)
+                return .failure(ErrorBag())
+            }
         default:
             return .failure(networkResponse.getErrorBag())
         }

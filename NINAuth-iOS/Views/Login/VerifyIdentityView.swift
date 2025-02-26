@@ -141,7 +141,6 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     }
     
     func didError(error: any Error) {
-        //TODO: Display error dialog to user
         presentEnroll.toggle()
     }
     
