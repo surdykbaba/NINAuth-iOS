@@ -17,19 +17,19 @@ struct OnboardingView: View {
     @State private var isValid = true
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
-    @State private var showLoginScreen = false
     @State private var showingAlert = false
+    @State private var goNext = false
 
     var body: some View {
         VStack {
-            Button {
-                showLoginScreen = true
+            NavigationLink {
+                LoginView()
             } label: {
                 Text("login")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(Color("buttonColor"))
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
 
             Spacer()
 
@@ -85,14 +85,14 @@ struct OnboardingView: View {
             }
             
             Group {
-                if let code = scannedCode {
-                    NavigationLink(destination: CheckIdentityView(code: code), isActive: .constant(true)) {}.isDetailLink(false)
-                }
-                NavigationLink(destination: LoginView(), isActive: $showLoginScreen){}.isDetailLink(false)
+                NavigationLink(destination: CheckIdentityView(code: scannedCode ?? ""), isActive: $goNext) {}.isDetailLink(false)
             }
             .frame(width: 0, height: 0)
         }
         .padding()
+        .onChange(of: scannedCode) { _ in
+            goNext.toggle()
+        }
         .sheet(isPresented: $isPresentingScanner) {
             QRCodeScanner(result: $scannedCode)
 //            CodeScannerView(codeTypes: [.qr]) { response in

@@ -49,6 +49,13 @@ struct SettingsView: View {
                         .padding(.bottom)
                     
                     NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
+                    
+                    if case .failed(let errorBag) = viewModel.state {
+                        Color.clear.onAppear {
+                            msg = errorBag.description
+                            showAlert.toggle()
+                        }.frame(width: 0, height: 0)
+                    }
                 }
                 .foregroundColor(Color(.text))
             }
