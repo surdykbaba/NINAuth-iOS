@@ -27,10 +27,14 @@ struct SplashScreenView: View {
             }
         }
         .onAppear {
-            if let _ = user.first {
-                showLoginScreen.toggle()
-            }else {
-                showOnboarding.toggle()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                withAnimation {
+                    if let _ = user.first {
+                        showLoginScreen.toggle()
+                    }else {
+                        showOnboarding.toggle()
+                    }
+                }
             }
         }
     }

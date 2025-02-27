@@ -28,6 +28,9 @@ struct NINAuth_iOSApp: SwiftUI.App {
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
+    var blurEffectView : UIVisualEffectView? = nil
+    var window: UIWindow?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
         let config = Realm.Configuration(
@@ -36,6 +39,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         hideBackButtonText()
         SmileID.initialize(useSandbox: true)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
+        
+        setUpBlurEffectView()
+            
+        NotificationCenter.default.addObserver(self, selector: #selector(toggleScreenBlurForCapture), name: UIScreen.capturedDidChangeNotification, object: nil)
+        window?.makeSecure()
+        
         return true
     }
     
@@ -67,6 +76,19 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+    }
+    
+    func setUpBlurEffectView() {
+        let blurEffect = UIBlurEffect(style: .regular)
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView?.frame = window?.bounds ?? UIScreen.main.bounds
+        blurEffectView?.isHidden = true
+        window?.addSubview(blurEffectView!)
+    }
+
+    @objc func toggleScreenBlurForCapture() {
+        let isCaptured = UIScreen.main.isCaptured
+        blurEffectView?.isHidden = !isCaptured
     }
     
 }

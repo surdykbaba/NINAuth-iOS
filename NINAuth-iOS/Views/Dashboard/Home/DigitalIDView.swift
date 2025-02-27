@@ -17,6 +17,7 @@ struct DigitalIDView: View {
     @State private var showSecurityPINView = false
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {

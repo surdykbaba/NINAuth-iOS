@@ -12,6 +12,7 @@ struct ConsentView: View {
     @State private var selected: ApprovalStatus = .approved
     @StateObject private var viewModel = ConsentViewModel()
     @State private var searchText = ""
+    @State private var showFilter = false
 
     var body: some View {
         ZStack {
@@ -51,6 +52,9 @@ struct ConsentView: View {
             .task {
                 await viewModel.getAllConsents()
             }
+            .sheet(isPresented: $showFilter) {
+                FilterConsentView(display: $showFilter)
+            }
 
         }
         .toolbar {
@@ -76,7 +80,7 @@ struct ConsentView: View {
                     }
                 
                 Button {
-                    
+                    showFilter.toggle()
                 } label: {
                     Image(.consentCalendar)
                         .resizable()

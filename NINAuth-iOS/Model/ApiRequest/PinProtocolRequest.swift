@@ -22,3 +22,7 @@ struct ResetPinRequest: Codable {
     var nin: String?
     var deviceMetadata: DeviceMetadata?
 }
+
+struct SetNewPin: Codable {
+    var newPin: String?
+}

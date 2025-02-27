@@ -12,6 +12,8 @@ class AppState: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
     @Published var verifyStatus = ""
+    @Published var fromForgotPin = false
+    @Published var initialRequestCode = ""
     private let authService: AuthService
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()

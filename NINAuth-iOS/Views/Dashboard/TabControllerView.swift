@@ -55,7 +55,7 @@ struct TabControllerView: View {
         VStack {
             Image(isActive ? imageName : "\(imageName)_black")
                 .resizable()
-                .frame(width: 28, height: 28)
+                .frame(width: 32, height: 32)
                 .mask(
                     RoundedRectangle(cornerRadius: 20, style: .continuous))
             Text(title)

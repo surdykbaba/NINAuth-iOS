@@ -9,6 +9,7 @@ import SwiftUI
 import CodeScanner
 
 struct OnboardingView: View {
+    @EnvironmentObject var appState: AppState
     @State private var showSheet = false
     @State private var requestCode = ""
     private let numberOfFields = 6
@@ -49,6 +50,7 @@ struct OnboardingView: View {
             VStack(spacing: 20) {
                 Button {
                     isPresentingScanner.toggle()
+                    appState.fromForgotPin = false
                 } label: {
                     HStack {
                         Text("scan_qr_code")
@@ -157,4 +159,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
+        .environmentObject(AppState())
 }

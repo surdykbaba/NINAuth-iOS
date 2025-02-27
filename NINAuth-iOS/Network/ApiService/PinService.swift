@@ -51,4 +51,14 @@ struct PinService : PinProtocol {
             return .failure(networkResponse.getErrorBag())
         }
     }
+    
+    func resetNewPin(setNewPin: SetNewPin) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.SET_NEW_PIN, params: setNewPin)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
 }

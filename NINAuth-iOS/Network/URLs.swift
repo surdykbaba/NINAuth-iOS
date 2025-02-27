@@ -49,7 +49,8 @@ enum URLs {
     //MARK: Pin
     static let SET_PIN = "pin/new-user/set"
     static let UPDATE_PIN = "pin/update"
-    static let RESET_PIN = "pin/reset"
+    static let RESET_PIN = "auth/new-session"
+    static let SET_NEW_PIN = "pin/set-new"
     
 }
 
