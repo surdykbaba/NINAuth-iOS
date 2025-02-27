@@ -40,6 +40,7 @@ struct OnboardingView: View {
             VStack(spacing: 10) {
                 Text("verify_identity_and_authorize_data_access")
                     .customFont(.title, fontSize: 18)
+                    .multilineTextAlignment(.center)
                 Text("ensure_your_privacy_manage_and_control")
                     .customFont(.body, fontSize: 16)
                     .multilineTextAlignment(.center)

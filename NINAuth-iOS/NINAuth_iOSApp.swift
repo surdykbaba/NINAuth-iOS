@@ -37,7 +37,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 schemaVersion: 2, deleteRealmIfMigrationNeeded: true)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
-        SmileID.initialize(useSandbox: true)
+        SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         
         setUpBlurEffectView()
