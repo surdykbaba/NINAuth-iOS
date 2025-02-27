@@ -38,9 +38,9 @@ struct DigitalIDView: View {
                                 }
 
                                 Button {
-                                    withAnimation {
-                                        changeView.toggle()
-                                    }
+//                                    withAnimation {
+//                                        changeView.toggle()
+//                                    }
                                 } label: {
                                     showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
                                 }
@@ -63,12 +63,12 @@ struct DigitalIDView: View {
                                     showSecurityPINView = true
                                 })
 
-                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
-                                    showLinkedIDsView = true
-                                    Task {
-                                        await viewModel.getLinkedIDs()
-                                    }
-                                })
+//                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
+//                                    showLinkedIDsView = true
+//                                    Task {
+//                                        await viewModel.getLinkedIDs()
+//                                    }
+//                                })
                             }
                         }
                         .padding()
@@ -83,13 +83,13 @@ struct DigitalIDView: View {
 
             Spacer()
         }
-        moveToLinkedIDsView()
+        //moveToLinkedIDsView()
         moveToGetSecurityPINView()
     }
 
-    func moveToLinkedIDsView() -> some View {
-        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
-    }
+//    func moveToLinkedIDsView() -> some View {
+//        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
+//    }
 
     func moveToGetSecurityPINView() -> some View {
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView){}

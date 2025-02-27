@@ -157,6 +157,10 @@ struct SettingsView: View {
                 NavigationLink(destination: DevicesView()) {
                     SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
+                
+                NavigationLink(destination: LinkedIDsView()) {
+                    SettingsRow(image: "device_mobile", name: "LinkedID")
+                }
             }
         }
         .padding(.horizontal, 20)
