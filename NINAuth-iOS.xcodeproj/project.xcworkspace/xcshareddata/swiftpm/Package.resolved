@@ -1,5 +1,5 @@
 {
-  "originHash" : "9d42b385722301de502454447e0ba1d6d83964d0a5908dea1236bdcc2e8030ee",
+  "originHash" : "660bb67a1093dd0e7aa4cf8af7c11b63e27d3f66358f9747eefb6c8c2646bb4d",
   "pins" : [
     {
       "identity" : "codescanner",
@@ -62,6 +62,15 @@
       "state" : {
         "revision" : "a4d731076e6a52f4366d844c78369ac7c9c6b1c0",
         "version" : "10.49.2"
+      }
+    },
+    {
+      "identity" : "swiftqrcodescanner",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vinodiOS/SwiftQRCodeScanner",
+      "state" : {
+        "revision" : "fddcabcb431cd6110cea0394660082661dbafa7e",
+        "version" : "1.16.0"
       }
     },
     {

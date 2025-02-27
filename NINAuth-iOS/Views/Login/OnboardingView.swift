@@ -93,13 +93,14 @@ struct OnboardingView: View {
         }
         .padding()
         .sheet(isPresented: $isPresentingScanner) {
-            CodeScannerView(codeTypes: [.qr]) { response in
-                if case let .success(result) = response {
-                    scannedCode = result.string
-                    Log.info(scannedCode ?? "nothing")
-                    isPresentingScanner = false
-                }
-            }
+            QRCodeScanner(result: $scannedCode)
+//            CodeScannerView(codeTypes: [.qr]) { response in
+//                if case let .success(result) = response {
+//                    scannedCode = result.string
+//                    Log.info(scannedCode ?? "nothing")
+//                    isPresentingScanner = false
+//                }
+//            }
         }
     }
 
