@@ -36,7 +36,7 @@ struct AuthService: AuthProtocol {
     }
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest)
+        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: false)
         
         switch networkResponse.isSuccess() {
         case true:

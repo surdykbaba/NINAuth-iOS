@@ -8,6 +8,7 @@
 import SwiftUI
 import RealmSwift
 import SmileID
+import Firebase
 
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
@@ -33,6 +34,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
+        FirebaseApp.configure()
+        
         let config = Realm.Configuration(
                 schemaVersion: 2, deleteRealmIfMigrationNeeded: true)
         Realm.Configuration.defaultConfiguration = config

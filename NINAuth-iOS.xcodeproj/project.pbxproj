@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF20EA762D71BC7900C95F43 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CF20EA752D71BC7900C95F43 /* FirebaseAnalytics */; };
+		CF20EA782D71BC7900C95F43 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CF20EA772D71BC7900C95F43 /* FirebaseCrashlytics */; };
 		CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76D2D48F03000DF9470 /* Realm */; };
 		CF6FE7702D48F03000DF9470 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE76F2D48F03000DF9470 /* RealmSwift */; };
 		CF6FE7732D48F0F300DF9470 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = CF6FE7722D48F0F300DF9470 /* SwiftyJSON */; };
@@ -70,7 +72,9 @@
 				CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */,
 				CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */,
 				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
+				CF20EA782D71BC7900C95F43 /* FirebaseCrashlytics in Frameworks */,
 				CFD87C1F2D70989200B537B1 /* SwiftQRCodeScanner in Frameworks */,
+				CF20EA762D71BC7900C95F43 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +117,7 @@
 				7AC075092D46D83200ECC913 /* Frameworks */,
 				7AC0750A2D46D83200ECC913 /* Resources */,
 				CF98AC732D6B9C3600A3011F /* Embed Frameworks */,
+				CF20EA712D71B98400C95F43 /* Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -130,6 +135,8 @@
 				CFFFA8FE2D60F1DE00835FC1 /* SmileID */,
 				CFE4EEAA2D6A352D005C26BA /* EasySkeleton */,
 				CFD87C1E2D70989200B537B1 /* SwiftQRCodeScanner */,
+				CF20EA752D71BC7900C95F43 /* FirebaseAnalytics */,
+				CF20EA772D71BC7900C95F43 /* FirebaseCrashlytics */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -166,6 +173,7 @@
 				CFFFA8FD2D60F1DE00835FC1 /* XCRemoteSwiftPackageReference "ios" */,
 				CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */,
 				CFD87C1D2D70989200B537B1 /* XCRemoteSwiftPackageReference "SwiftQRCodeScanner" */,
+				CF20EA742D71BC7900C95F43 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
@@ -186,6 +194,33 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CF20EA712D71B98400C95F43 /* Firebase Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}.debug.dylib",
+			);
+			name = "Firebase Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7AC075082D46D83200ECC913 /* Sources */ = {
@@ -324,10 +359,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"NINAuth-iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = M8HDF725US;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NINAuth;
@@ -345,6 +382,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.ng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -361,10 +399,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"NINAuth-iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = M8HDF725US;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "NINAuth-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NINAuth;
@@ -382,6 +421,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ninauth.ng;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -415,6 +455,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CF20EA742D71BC7900C95F43 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.9.0;
+			};
+		};
 		CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -466,6 +514,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CF20EA752D71BC7900C95F43 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF20EA742D71BC7900C95F43 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		CF20EA772D71BC7900C95F43 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF20EA742D71BC7900C95F43 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
 		CF6FE76D2D48F03000DF9470 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CF6FE76C2D48F03000DF9470 /* XCRemoteSwiftPackageReference "realm-swift" */;

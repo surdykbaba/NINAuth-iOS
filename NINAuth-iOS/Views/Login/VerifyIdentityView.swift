@@ -37,33 +37,37 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         if case .failed(_) = viewModel.state {
                             displayStatusInfo(imageName: "error", backgroundColor: Color.errorBackground, title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
                         } else {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("verify_your_identity".localized)
-                                    .customFont(.headline, fontSize: 24)
-                                Text("you_will_be_asked_to_take_a_selfie_to_confirm_that_you_are_the_owner_of_the_identity_number.".localized)
-                                    .customFont(.body, fontSize: 17)
-                            }
-                            .padding(.bottom, 40)
+                            if(viewModel.verifyStatus == "failed") {
+                                displayStatusInfo(imageName: "error", backgroundColor: Color.errorBackground, title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
+                            }else {
+                                VStack(alignment: .leading, spacing: 15) {
+                                    Text("verify_your_identity".localized)
+                                        .customFont(.headline, fontSize: 24)
+                                    Text("you_will_be_asked_to_take_a_selfie_to_confirm_that_you_are_the_owner_of_the_identity_number.".localized)
+                                        .customFont(.body, fontSize: 17)
+                                }
+                                .padding(.bottom, 40)
 
-                            Image(.verifyIdentity)
-                                .padding(.bottom, 30)
+                                Image(.verifyIdentity)
+                                    .padding(.bottom, 30)
 
-                            HStack(spacing: 12) {
-                                Image(systemName: "info.circle.fill")
-                                    .frame(width: 24, height: 24)
-                                    .foregroundStyle(Color.verifyInfoBackground)
-                                Text("you_will_be_redirected_to_a_page_to_complete_this_process.".localized)
-                                    .customFont(.subheadline, fontSize: 16)
+                                HStack(spacing: 12) {
+                                    Image(systemName: "info.circle.fill")
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(Color.verifyInfoBackground)
+                                    Text("you_will_be_redirected_to_a_page_to_complete_this_process.".localized)
+                                        .customFont(.subheadline, fontSize: 16)
+                                }
+                                .padding()
+                                .background(Color.verifyInfoBackground.opacity(0.1))
+                                .mask(
+                                    RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                    .stroke()
+                                    .fill(.black.opacity(0.1))
+                                )
                             }
-                            .padding()
-                            .background(Color.verifyInfoBackground.opacity(0.1))
-                            .mask(
-                                RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                .stroke()
-                                .fill(.black.opacity(0.1))
-                            )
 
                         }
 
@@ -91,9 +95,15 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(.white)
                     }else {
-                        Text("continue".localized)
-                        .customFont(.title, fontSize: 18)
-                        .foregroundStyle(.white)
+                        if(viewModel.verifyStatus == "failed") {
+                            Text("retry".localized)
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                        }else {
+                            Text("continue".localized)
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -103,7 +113,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                 .padding()
                 .sheet(isPresented: $presentEnroll, content: {
                     NavigationView {
-                        OrchestratedEnhancedSelfieCaptureScreen(userId: appState.getUserRandomUniqueNumber(), isEnroll: false, allowNewEnroll: false, showAttribution: true, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                        OrchestratedEnhancedSelfieCaptureScreen(userId: appState.getUserRandomUniqueNumber(), isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
                     }
                 })
             }
