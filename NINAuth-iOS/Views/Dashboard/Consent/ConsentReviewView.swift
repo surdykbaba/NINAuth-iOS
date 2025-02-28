@@ -35,15 +35,16 @@ struct ConsentReviewView: View {
                         Text("Consent")
                             .customFont(.headline, fontSize: 24)
                         Text("send_your_data_to_this_organization".localized)
-                            .customFont(.caption, fontSize: 17)
+                            .customFont(.body, fontSize: 17)
                         
                         enterpriseData
                     }
                     .padding(.bottom, 20)
 
                     Text("before_you_proceed_please_review_the_information_you_are_sharing".localized)
-                        .customFont(.caption, fontSize: 17)
+                        .customFont(.body, fontSize: 17)
                         .padding(.bottom, 10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                     VStack(alignment: .leading, spacing: 30) {
                         if let data = consentRequest.consent?.data_requested {
@@ -63,7 +64,7 @@ struct ConsentReviewView: View {
 
                 HStack(spacing: 5) {
                     Button {
-                        approveReview("revoked")
+                        approveReview("rejected")
                     } label: {
                         Text("Reject")
                             .customFont(.title, fontSize: 18)
@@ -146,6 +147,17 @@ struct ConsentReviewView: View {
         ZStack {
             Color.white
             VStack(spacing: 10) {
+                HStack {
+                    EmptyView()
+                    Spacer()
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .frame(width: 15, height: 15, alignment: .trailing)
+                        .padding(.top, 30)
+                        .onTapGesture {
+                            viewModel.consentRevoked.toggle()
+                        }
+                }
                 Image("checkmark_transparent")
                 Text("this_organization_has_been_blocked_from_accessing_your_data".localized)
                     .padding(.bottom, 20)
@@ -157,6 +169,17 @@ struct ConsentReviewView: View {
         ZStack {
             Color.white
             VStack(spacing: 10) {
+                HStack {
+                    EmptyView()
+                    Spacer()
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .frame(width: 15, height: 15, alignment: .trailing)
+                        .padding(.top, 30)
+                        .onTapGesture {
+                            viewModel.consentApprove.toggle()
+                        }
+                }
                 Image("checkmark_transparent")
                 Text("the_selected_data_has_been_shared".localized)
                     .padding(.bottom, 20)
@@ -166,11 +189,8 @@ struct ConsentReviewView: View {
 
     func approveReview(_ status: String) {
         var review = ConsentCreate()
-        review.deviceId = appState.getDeviceID()
         review.requestCode = code
         review.status = status
-        review.consent = consentRequest.consent?.data_requested ?? []
-        review.medium = consentRequest.consent?.medium ?? ""
         if status == "approve" {
             Task {
                 await viewModel.approveConsent(consentCreated: review)

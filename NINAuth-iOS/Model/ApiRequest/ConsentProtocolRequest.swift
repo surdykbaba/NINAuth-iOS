@@ -7,13 +7,15 @@
 
 struct ConsentCreate: Codable {
     var requestCode: String?
-    var deviceId: String?
-    var consent: [String?]?
     var status: String?
-    var medium: String?
 }
 
 struct ConsentCode: Codable {
     var deviceId: String?
     var requestCode: String?
+}
+
+struct ConsentUpdate: Codable {
+    var status: String?
+    var consentId: String?
 }

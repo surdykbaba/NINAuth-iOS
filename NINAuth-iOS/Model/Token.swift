@@ -10,15 +10,13 @@ import RealmSwift
 import SwiftyJSON
 
 class Token: Object, ObjectKeyIdentifiable {
-    @Persisted(primaryKey: true) var access: String?
-    @Persisted var refresh: String? = ""
+    @Persisted(primaryKey: true) var session: String?
     @Persisted var requestCode: String? = ""
 
     convenience init(value: JSON?){
         self.init()
         
-        self.access = value?["access"].string
-        self.refresh = value?["refresh"].string
+        self.session = value?["session"].string
         self.requestCode = value?["requestCode"].string
     }
 }

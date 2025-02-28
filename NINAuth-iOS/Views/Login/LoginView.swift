@@ -9,16 +9,26 @@ import SwiftUI
 import RealmSwift
 import LocalAuthentication
 
+fileprivate enum ActiveAlert {
+    case first, second
+}
+
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
-    @StateObject var viewModel = AuthViewModel()
+    @StateObject private var viewModel = AuthViewModel()
     @State private var loginPin: String = ""
     @FocusState private var isFocused: Bool
     @State private var isValid: Bool = true
     @State private var identificationNumber = ""
     @State private var password: String = ""
     @State private var isFormValid: Bool = false
-    @State private var isUnlocked = false
+    @State private var showSendToForgotPin = false
+    @State private var goForgotPin: Bool = false
+    @State private var biometricsIsOn: Bool = false
+    @State private var showDialog: Bool = false
+    @State private var msg = ""
+    private let mem = MemoryUtil.init()
+    @State private var activeAlert: ActiveAlert = .first
     @ObservedResults(User.self) var user
 
     var body: some View {
@@ -73,7 +83,7 @@ struct LoginView: View {
                                 if(identificationNumber == user.nin) {
                                     loginUser()
                                 }else {
-                                    // TODO: Show user a dialog and refer to reset pin
+                                    showSendToForgotPin.toggle()
                                 }
                             }else {
                                 loginUser()
@@ -83,8 +93,9 @@ struct LoginView: View {
                     .padding(.top, 16)
 
                 Button {
-                    enableBiometrics()
-                    viewModel.isLoggedIn = true
+                    if(biometricsIsOn){
+                        enableBiometrics()
+                    }
                 } label: {
                     HStack {
                         Text("sign_in_with_biometrics".localized)
@@ -95,13 +106,18 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(appState.biometricsIsOn ? Color.button : Color.button.opacity(0.1))
+                .background(biometricsIsOn ? Color.button : Color.button.opacity(0.1))
                 .cornerRadius(4)
                 .padding(.top, 24)
-                .disabled(!appState.biometricsIsOn)
+                .disabled(!biometricsIsOn)
+                .alert(msg, isPresented: $showDialog) {
+                    Button("OK", role: .cancel) { }
+                }
 
                 Spacer()
                 NavigationLink(destination: TabControllerView(), isActive: $viewModel.isLoggedIn) {}.isDetailLink(false)
+                NavigationLink(destination: ForgotPinView(), isActive: $goForgotPin) {}.isDetailLink(false)
+                
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding()
@@ -110,14 +126,19 @@ struct LoginView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        //TODO: Go to forgot Pin View, I can't find it
-//                        NotificationsView()
+                        ForgotPinView()
                     } label: {
                         Text("forgot_pin?".localized)
                             .customFont(.title, fontSize: 18)
                             .foregroundStyle(Color.button)
                     }
                 }
+            }
+            .alert("Your NIN is different, begin authentication to sign in", isPresented: $showSendToForgotPin) {
+                Button("OK", role: .cancel) {
+                    goForgotPin.toggle()
+                }
+                Button("Cancel", role: .cancel) { }
             }
 
             if case .loading = viewModel.state {
@@ -126,6 +147,12 @@ struct LoginView: View {
             }
 
             Spacer()
+        }
+        .onAppear {
+            biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
+            if(user.first == nil) {
+                biometricsIsOn = false
+            }
         }
     }
 
@@ -137,15 +164,18 @@ struct LoginView: View {
             let reason = "We need to activate another means of unlocking your application."
 
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                if success {
-                    isUnlocked = true
-                    // aunthenticated successfully
-                } else {
-                    // there was a problem
+                DispatchQueue.main.async {
+                    if success {
+                        viewModel.isLoggedIn = true
+                    } else {
+                        msg = authenticationError?.localizedDescription ?? "Failed to authenticate."
+                        showDialog.toggle()
+                    }
                 }
             }
         } else {
-            // no biometrics
+            msg = "No Biometrics available on this device."
+            showDialog.toggle()
         }
     }
 
@@ -155,7 +185,7 @@ struct LoginView: View {
         loginRequest.pin = password
         loginRequest.device = DeviceMetadata()
         Task {
-            _ = await viewModel.loginUser(loginUserRequest: loginRequest)
+            await viewModel.loginUser(loginUserRequest: loginRequest)
         }
     }
     
@@ -166,7 +196,7 @@ struct LoginView: View {
         loginRequest.ninId = identificationNumber
         loginRequest.device = DeviceMetadata()
         Task {
-            _ = await viewModel.loginWithNIN(loginWithNIN: loginRequest)
+            await viewModel.loginWithNIN(loginWithNIN: loginRequest)
         }
     }
 }

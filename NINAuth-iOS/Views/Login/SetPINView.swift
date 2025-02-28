@@ -38,8 +38,15 @@ struct SetPINView: View {
                     .frame(maxHeight: 100)
 
                 Button {
-                    Task {
-                        await viewModel.setPin(setPinRequest: SetPinRequest(deviceId: appState.getDeviceID(), pin: newPIN, requestCode: token.first?.requestCode))
+                    if(appState.fromForgotPin) {
+                        Task {
+                            await viewModel.setNewPin(setNewPin: SetNewPin(newPin: newPIN))
+                        }
+                    }else {
+                        Task {
+                            await viewModel.setPin(setPinRequest: SetPinRequest(deviceId: appState.getDeviceID(), pin: newPIN, requestCode: token.first?.requestCode))
+                        }
+                        appState.initialRequestCode = token.first?.requestCode ?? ""
                     }
                 } label: {
                     Text("continue".localized)

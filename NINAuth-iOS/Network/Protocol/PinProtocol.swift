@@ -10,4 +10,8 @@ protocol PinProtocol {
     func setPin(setPinRequest: SetPinRequest) async -> Result<Bool, ErrorBag>
     
     func updatePin(updatePinRequest: UpdatePinRequest) async -> Result<Bool, ErrorBag>
+    
+    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<Bool, ErrorBag>
+    
+    func resetNewPin(setNewPin: SetNewPin) async -> Result<Bool, ErrorBag>
 }

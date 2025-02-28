@@ -17,6 +17,7 @@ struct DigitalIDView: View {
     @State private var showSecurityPINView = false
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
@@ -26,24 +27,27 @@ struct DigitalIDView: View {
                     ScrollView {
                         VStack(alignment: .leading) {
                             VStack(alignment: .center, spacing: 10) {
-                                if let user = user.first, changeView {
-                                    DigitalIDCardView(image: user.image ?? "", surname: user.last_name ?? "", otherNames: user.first_name ?? "", dob: user.date_of_birth ?? "", nationality: "NGA", sex: user.gender ?? "")
+                                if changeView {
+                                    DigitalIDCardView()
                                 } else {
-                                    Image("qr_code")
+                                    Image(uiImage: appState.generateQRCode())
                                         .resizable()
-                                        .frame(width: 250, height: 250)
+                                        .interpolation(.none)
+                                        .frame(width: 250, height: 242)
                                         .frame(maxWidth: .infinity)
                                 }
 
                                 Button {
-                                    changeView.toggle()
+//                                    withAnimation {
+//                                        changeView.toggle()
+//                                    }
                                 } label: {
                                     showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
                                 }
                             }
                             .padding(.bottom, 30)
 
-                            Text("manage_your_identity".localized)
+                            Text("manage_your_identity")
                                 .customFont(.subheadline, fontSize: 17)
                                 .padding(.bottom, 15)
 
@@ -52,19 +56,19 @@ struct DigitalIDView: View {
                                     showShareIDPopover = true
                                 })
                                 .popover(isPresented: $showShareIDPopover) {
-                                    ShareIDView()
+                                    ShareIDView(display: $showShareIDPopover)
                                 }
 
                                 IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
                                     showSecurityPINView = true
                                 })
 
-                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
-                                    showLinkedIDsView = true
-                                    Task {
-                                        await viewModel.getLinkedIDs()
-                                    }
-                                })
+//                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
+//                                    showLinkedIDsView = true
+//                                    Task {
+//                                        await viewModel.getLinkedIDs()
+//                                    }
+//                                })
                             }
                         }
                         .padding()
@@ -79,13 +83,13 @@ struct DigitalIDView: View {
 
             Spacer()
         }
-        moveToLinkedIDsView()
+        //moveToLinkedIDsView()
         moveToGetSecurityPINView()
     }
 
-    func moveToLinkedIDsView() -> some View {
-        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
-    }
+//    func moveToLinkedIDsView() -> some View {
+//        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
+//    }
 
     func moveToGetSecurityPINView() -> some View {
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView){}

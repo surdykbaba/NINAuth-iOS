@@ -9,6 +9,7 @@ import SwiftUI
 import CodeScanner
 
 struct OnboardingView: View {
+    @EnvironmentObject var appState: AppState
     @State private var showSheet = false
     @State private var requestCode = ""
     private let numberOfFields = 6
@@ -16,19 +17,19 @@ struct OnboardingView: View {
     @State private var isValid = true
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
-    @State private var showLoginScreen = false
     @State private var showingAlert = false
+    @State private var goNext = false
 
     var body: some View {
         VStack {
-            Button {
-                showLoginScreen = true
+            NavigationLink {
+                LoginView()
             } label: {
                 Text("login")
                     .customFont(.title, fontSize: 18)
                     .foregroundStyle(Color("buttonColor"))
+                    .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
 
             Spacer()
 
@@ -39,6 +40,7 @@ struct OnboardingView: View {
             VStack(spacing: 10) {
                 Text("verify_identity_and_authorize_data_access")
                     .customFont(.title, fontSize: 18)
+                    .multilineTextAlignment(.center)
                 Text("ensure_your_privacy_manage_and_control")
                     .customFont(.body, fontSize: 16)
                     .multilineTextAlignment(.center)
@@ -49,6 +51,7 @@ struct OnboardingView: View {
             VStack(spacing: 20) {
                 Button {
                     isPresentingScanner.toggle()
+                    appState.fromForgotPin = false
                 } label: {
                     HStack {
                         Text("scan_qr_code")
@@ -82,22 +85,23 @@ struct OnboardingView: View {
             }
             
             Group {
-                if let code = scannedCode {
-                    NavigationLink(destination: CheckIdentityView(code: code), isActive: .constant(true)) {}.isDetailLink(false)
-                }
-                NavigationLink(destination: LoginView(), isActive: $showLoginScreen){}.isDetailLink(false)
+                NavigationLink(destination: CheckIdentityView(code: scannedCode ?? ""), isActive: $goNext) {}.isDetailLink(false)
             }
             .frame(width: 0, height: 0)
         }
         .padding()
+        .onChange(of: scannedCode) { _ in
+            goNext.toggle()
+        }
         .sheet(isPresented: $isPresentingScanner) {
-            CodeScannerView(codeTypes: [.qr]) { response in
-                if case let .success(result) = response {
-                    scannedCode = result.string
-                    Log.info(scannedCode ?? "nothing")
-                    isPresentingScanner = false
-                }
-            }
+            QRCodeScanner(result: $scannedCode)
+//            CodeScannerView(codeTypes: [.qr]) { response in
+//                if case let .success(result) = response {
+//                    scannedCode = result.string
+//                    Log.info(scannedCode ?? "nothing")
+//                    isPresentingScanner = false
+//                }
+//            }
         }
     }
 
@@ -116,6 +120,8 @@ struct OnboardingView: View {
                             showSheet.toggle()
                         }
                 }
+                .padding(.bottom)
+                
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Enter request code")
                         .customFont(.headline, fontSize: 24)
@@ -126,7 +132,6 @@ struct OnboardingView: View {
                     OTPView(numberOfFields: numberOfFields, otp: $requestCode, valid: $isValid)
                         .onChange(of: requestCode) { newOtp in
                             if newOtp.count == numberOfFields && !newOtp.isEmpty{
-                                print(newOtp)
                                 isValid = true
                             }
                         }
@@ -156,4 +161,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
+        .environmentObject(AppState())
 }

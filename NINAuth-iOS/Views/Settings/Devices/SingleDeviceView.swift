@@ -11,6 +11,7 @@ struct SingleDeviceView: View {
     @State var device: Device
     @ObservedObject var viewModel: DeviceViewModel
     @EnvironmentObject private var appState: AppState
+    @State private var showSignOut = false
 
     var body: some View {
             VStack(alignment: .leading) {
@@ -53,9 +54,7 @@ struct SingleDeviceView: View {
                     HStack {
                         Spacer()
                         Button {
-                            Task {
-                                await viewModel.deleteDevice(deviceRequest: DeviceRequest(deviceId: device.device_id))
-                            }
+                            showSignOut.toggle()
                         } label: {
                             Text("sign_out")
                                 .foregroundColor(.black)
@@ -71,6 +70,16 @@ struct SingleDeviceView: View {
             .padding(20)
             .background(.white)
             .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .alert("Sign out?", isPresented: $showSignOut) {
+                Button("OK", role: .destructive) {
+                    Task {
+                        await viewModel.deleteDevice(deviceRequest: DeviceRequest(deviceId: device.device_id))
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("You are about to sign out of device")
+            }
     }
 }
 

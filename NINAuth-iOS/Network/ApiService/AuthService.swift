@@ -18,10 +18,12 @@ struct AuthService: AuthProtocol {
             do {
                 let realm = try await Realm()
                 try await realm.asyncWrite {
-                    let token = Token(value: networkResponse.getJson()?["tokens"])
+                    let token = Token(value: networkResponse.getJson())
                     token.requestCode = registerUserRequest.requestCode
                     realm.deleteAll()
                     realm.add(token)
+                    let mem = MemoryUtil()
+                    mem.setValue(key: mem.authentication_key, value: false)
                 }
                 return .success(true)
             }catch {
@@ -34,7 +36,7 @@ struct AuthService: AuthProtocol {
     }
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest)
+        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: false)
         
         switch networkResponse.isSuccess() {
         case true:
@@ -45,21 +47,20 @@ struct AuthService: AuthProtocol {
     }
     
     @MainActor
-    func login(loginUserRequest: LoginUserRequest) async -> Result<User, ErrorBag> {
+    func login(loginUserRequest: LoginUserRequest) async -> Result<Bool, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.LOGIN, params: loginUserRequest, authoriseHeader: false)
         switch networkResponse.isSuccess() {
         case true:
             do {
                 let realm = try await Realm()
-                var user = User()
                 try await realm.asyncWrite {
-                    let token = Token(value: networkResponse.getJson()?["tokens"])
-                    user = User(value: networkResponse.getJson()?["tokens"]["user"])
+                    let token = Token(value: networkResponse.getJson())
+                    let user = User(value: networkResponse.getJson()?["user"])
                     realm.deleteAll()
                     realm.add(token)
                     realm.add(user)
                 }
-                return .success(user.freeze())
+                return .success(true)
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
@@ -101,21 +102,20 @@ struct AuthService: AuthProtocol {
     }
     
     @MainActor
-    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Result<User, ErrorBag> {
+    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Result<Bool, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.LOGIN_NIN, params: loginWithNIN, authoriseHeader: false)
         switch networkResponse.isSuccess() {
         case true:
             do {
                 let realm = try await Realm()
-                var user = User()
                 try await realm.asyncWrite {
-                    let token = Token(value: networkResponse.getJson()?["tokens"])
-                    user = User(value: networkResponse.getJson()?["tokens"]["user"])
+                    let token = Token(value: networkResponse.getJson())
+                    let user = User(value: networkResponse.getJson()?["user"])
                     realm.deleteAll()
                     realm.add(token)
                     realm.add(user)
                 }
-                return .success(user.freeze())
+                return .success(true)
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())

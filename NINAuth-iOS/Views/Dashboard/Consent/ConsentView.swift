@@ -12,6 +12,7 @@ struct ConsentView: View {
     @State private var selected: ApprovalStatus = .approved
     @StateObject private var viewModel = ConsentViewModel()
     @State private var searchText = ""
+    @State private var showFilter = false
 
     var body: some View {
         ZStack {
@@ -51,11 +52,14 @@ struct ConsentView: View {
             .task {
                 await viewModel.getAllConsents()
             }
+            .sheet(isPresented: $showFilter) {
+                FilterConsentView(display: $showFilter)
+            }
 
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Text("Consents")
+                Text("Consent")
                     .customFont(.headline, fontSize: 24)
             }
         }
@@ -71,9 +75,12 @@ struct ConsentView: View {
                         .stroke()
                         .fill(.gray)
                     )
+                    .onChange(of: searchText) { _ in
+                        viewModel.filterConsent(text: searchText)
+                    }
                 
                 Button {
-                    
+                    showFilter.toggle()
                 } label: {
                     Image(.consentCalendar)
                         .resizable()
@@ -84,7 +91,7 @@ struct ConsentView: View {
             .padding(.vertical, 24)
             
             if (viewModel.consent.consents?.isEmpty == true || viewModel.consent.consents == nil) {
-                Group{
+                VStack(spacing: 20) {
                     Image(.consentSearch)
                         .resizable()
                         .frame(width: 59, height: 54)

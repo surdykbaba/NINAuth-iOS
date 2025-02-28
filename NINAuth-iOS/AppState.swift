@@ -11,9 +11,12 @@ import SwiftUI
 class AppState: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
-    @AppStorage("biometricsIsOn") var biometricsIsOn = false
     @Published var verifyStatus = ""
+    @Published var fromForgotPin = false
+    @Published var initialRequestCode = ""
     private let authService: AuthService
+    private let context = CIContext()
+    private let filter = CIFilter.qrCodeGenerator()
     var timer: Timer? = nil
 
     init() {
@@ -84,5 +87,23 @@ class AppState: ObservableObject {
         }
         timer?.tolerance = 0.3
         RunLoop.current.add(timer!, forMode: .common)
+    }
+    
+    private func getRandomBase64String(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+    }
+    
+    func generateQRCode() -> UIImage {
+        let random = getRandomBase64String(length: 24)
+        filter.message = Data(random.utf8)
+
+        if let outputImage = filter.outputImage {
+            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+                return UIImage(cgImage: cgImage)
+            }
+        }
+
+        return UIImage(systemName: "xmark.circle") ?? UIImage()
     }
 }

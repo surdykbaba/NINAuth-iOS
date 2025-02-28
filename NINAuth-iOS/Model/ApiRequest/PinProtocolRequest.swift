@@ -16,3 +16,13 @@ struct UpdatePinRequest: Codable {
     var oldPin: String?
     var newPin: String?
 }
+
+struct ResetPinRequest: Codable {
+    var deviceId: String?
+    var nin: String?
+    var deviceMetadata: DeviceMetadata?
+}
+
+struct SetNewPin: Codable {
+    var newPin: String?
+}

@@ -48,7 +48,7 @@ class AuthViewModel: ObservableObject  {
         switch result {
         case .success(let res):
             // NOTE: Verify Status is either "passed" or "process"
-            verifyStatus = res["FaceAuthCompleted"].stringValue
+            verifyStatus = res["face_auth_completed"].stringValue
             state = .success
         case .failure(let failure):
             state = .failed(failure)
@@ -64,16 +64,16 @@ class AuthViewModel: ObservableObject  {
         switch result {
         case .success(let res):
             // NOTE: Verify Status is either "passed" or "process"
-            verifyStatus = res["FaceAuthCompleted"].stringValue
+            verifyStatus = res["face_auth_completed"].stringValue
             state = .success
         case .failure(let failure):
             state = .failed(failure)
         }
     }
     
-    func loginUser(loginUserRequest: LoginUserRequest) async -> User? {
+    func loginUser(loginUserRequest: LoginUserRequest) async -> Void {
         guard state != .loading else {
-            return nil
+            return
         }
         state = .loading
         let result = await authService.login(loginUserRequest: loginUserRequest)
@@ -82,16 +82,14 @@ class AuthViewModel: ObservableObject  {
             isLoggedIn = true
             Log.info(userResponse.description)
             state = .success
-            return userResponse
         case .failure(let failure):
             state = .failed(failure)
-            return nil
         }
     }
     
-    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> User? {
+    func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Void {
         guard state != .loading else {
-            return nil
+            return
         }
         state = .loading
         let result = await authService.loginWithNIN(loginWithNIN: loginWithNIN)
@@ -100,10 +98,8 @@ class AuthViewModel: ObservableObject  {
             isLoggedIn = true
             Log.info(userResponse.description)
             state = .success
-            return userResponse
         case .failure(let failure):
             state = .failed(failure)
-            return nil
         }
     }
     
