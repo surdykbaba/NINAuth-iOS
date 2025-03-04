@@ -72,6 +72,7 @@ struct SettingsView: View {
                             .customFont(.caption, fontSize: 18)
                             .foregroundStyle(Color.button)
                     }
+                    .padding(.trailing)
                 }
             }
             .onAppear {
@@ -283,5 +284,4 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(AppState())
 }

@@ -38,6 +38,7 @@ struct HomeView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Text("Home")
                     .customFont(.headline, fontSize: 24)
+                    .padding(.leading)
             }
         }
         .toolbar {
@@ -46,6 +47,7 @@ struct HomeView: View {
                     .resizable()
                     .frame(width: 47, height: 47)
                     .clipShape(Circle())
+                    .padding(.trailing)
             }
         }
         .task {

@@ -9,6 +9,11 @@ import SwiftUI
 
 struct TabControllerView: View {
     @State var selectedTab = 0
+    
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor(named: "ninWhite")
+        UITabBar.appearance().barTintColor = UIColor(named: "ninWhite")
+        }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -44,9 +49,6 @@ struct TabControllerView: View {
                 CustomTabItem(imageName: "settings", title: "Settings", isActive: selectedTab == 2)
             }
 
-        }
-        .onAppear() {
-            UITabBar.appearance().backgroundColor = .white
         }
         .navigationBarBackButtonHidden()
     }

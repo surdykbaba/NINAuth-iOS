@@ -23,14 +23,12 @@ struct NINAuth_iOSApp: SwiftUI.App {
             .navigationViewStyle(.stack)
             .tint(Color.button)
             .environmentObject(appState)
+            .hideWithScreenshot()
         }
     }
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    
-    var blurEffectView : UIVisualEffectView? = nil
-    var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
@@ -43,10 +41,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         
-        setUpBlurEffectView()
-            
-        NotificationCenter.default.addObserver(self, selector: #selector(toggleScreenBlurForCapture), name: UIScreen.capturedDidChangeNotification, object: nil)
-        window?.makeSecure()
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.userDidTakeScreenshotNotification,
+            object: nil,
+            queue: .main) { notification in
+                //executes after screenshot
+                Log.info("I took screen shot")
+        }
         
         return true
     }
@@ -79,19 +80,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
-    }
-    
-    func setUpBlurEffectView() {
-        let blurEffect = UIBlurEffect(style: .regular)
-        blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView?.frame = window?.bounds ?? UIScreen.main.bounds
-        blurEffectView?.isHidden = true
-        window?.addSubview(blurEffectView!)
-    }
-
-    @objc func toggleScreenBlurForCapture() {
-        let isCaptured = UIScreen.main.isCaptured
-        blurEffectView?.isHidden = !isCaptured
     }
     
 }

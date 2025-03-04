@@ -61,6 +61,7 @@ struct ConsentView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Text("Consent")
                     .customFont(.headline, fontSize: 24)
+                    .padding(.leading)
             }
         }
     }
