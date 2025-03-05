@@ -58,6 +58,8 @@ struct ConsentService: ConsentProtocol {
                 return .failure(ErrorBag())
             }
         default:
+            let str = String(decoding: networkResponse.getData() ?? Data(), as: UTF8.self)
+            Log.error(str)
             return .failure(networkResponse.getErrorBag())
         }
     }

@@ -14,7 +14,7 @@ struct Service{
     
     func post<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
         do {
-            var request = NetworkResponseModel .generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
+            var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
@@ -197,7 +197,7 @@ struct NetworkResponseModel {
         }else if isFailed() {
             return getValidationErrorMessage(_data: data as Any)
         }else if isAuthorizationError() {
-            return "Unauthorized request, please log out and login again"
+            return "Unauthorized request"
         }else {
             return "The error is from our server, please try again after some time. Thank you"
         }
@@ -245,10 +245,21 @@ struct NetworkResponseModel {
         var request = URLRequest(url: url!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("*/*", forHTTPHeaderField: "Accept")
-        request.setValue("devicae-id", forHTTPHeaderField: getDeviceID())
+        request.setValue(getDeviceID(), forHTTPHeaderField: "device-id")
         if(authoriseHeader) {
-            request.setValue("Bearer " + getToken(), forHTTPHeaderField: "Authorization")
+            request.setValue("Bearer \(getToken())", forHTTPHeaderField: "Authorization")
         }
+//        if let fields = request.allHTTPHeaderFields {
+//            // get your authorization token here
+//            // it probably is in the headers
+//            for (_, field) in fields.enumerated() {
+//                // ACTIONS REQUIRED FROM YOU:
+//                // do something here to match field's key so that you get the authorization token
+//                #if DEBUG
+//                print(field)
+//                #endif
+//            }
+//        }
         return request
     }
     

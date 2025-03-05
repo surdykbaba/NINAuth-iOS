@@ -25,6 +25,7 @@ struct Consent: Codable, Hashable {
     var status: String?
     var created_at: String?
     var updated_at: String?
+    var request_id: String?
     
     func getDisplayDate() -> String {
         if (updated_at == nil) {

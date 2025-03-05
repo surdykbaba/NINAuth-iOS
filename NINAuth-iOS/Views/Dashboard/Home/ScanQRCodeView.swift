@@ -97,22 +97,25 @@ struct ScanQRCodeView: View {
                         .padding()
                         .sheet(isPresented: $isPresentingScanner) {
                             QRCodeScanner(result: $scannedCode)
-                            //                        CodeScannerView(codeTypes: [.qr]) { response in
-                            //                            if case let .success(result) = response {
-                            //                                scannedCode = result.string
-                            //                                Log.info(scannedCode ?? "nothing")
-                            //                                if let code = scannedCode {
-                            //                                    verifyCode(code)
-                            //                                }
-                            //                            }
-                            //                            isPresentingScanner = false
-                            //                        }
+//                            CodeScannerView(codeTypes: [.qr]) { response in
+//                                if case let .success(result) = response {
+//                                    scannedCode = result.string
+//                                    Log.info(scannedCode ?? "nothing")
+//                                    if let code = scannedCode {
+//                                        verifyCode(code)
+//                                    }
+//                                }
+//                                isPresentingScanner = false
+//                            }
                         }
                         .onChange(of: scannedCode) { _ in
                             if let code = scannedCode {
                                 verifyCode(code)
                             }
                             isPresentingScanner = false
+                        }
+                        .onAppear {
+                            scannedCode = nil
                         }
                         NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: scannedCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)
                     }

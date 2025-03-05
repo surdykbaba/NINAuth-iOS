@@ -91,7 +91,12 @@ struct OnboardingView: View {
         }
         .padding()
         .onChange(of: scannedCode) { _ in
-            goNext.toggle()
+            if let code = scannedCode {
+                goNext.toggle()
+            }
+        }
+        .onAppear {
+            scannedCode = nil
         }
         .sheet(isPresented: $isPresentingScanner) {
             QRCodeScanner(result: $scannedCode)

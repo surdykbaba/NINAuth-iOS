@@ -205,7 +205,6 @@ struct SettingsView: View {
             Color.white
             VStack(alignment: .leading) {
                 HStack {
-                    EmptyView()
                     Spacer()
                     Image(systemName: "xmark")
                         .resizable()

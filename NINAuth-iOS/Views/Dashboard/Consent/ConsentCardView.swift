@@ -35,14 +35,10 @@ struct ConsentCardView: View {
 
                 Spacer()
 
-                AsyncImage(url: URL(string: consent.enterprise?.logo ?? "")) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 50, height: 50)
+                Image(uiImage: consent.enterprise?.logo?.imageFromBase64 ?? UIImage())
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 50, height: 50)
             }
             .frame(maxHeight: 84)
         }

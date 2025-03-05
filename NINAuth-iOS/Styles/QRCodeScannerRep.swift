@@ -13,8 +13,6 @@ struct QRCodeScanner: UIViewControllerRepresentable {
     
     typealias UIViewControllerType = QRCodeScannerController
     
-    let scanner = QRCodeScannerController()
-    
     func makeUIViewController(context: Context) -> QRCodeScannerController {
         var configuration = QRScannerConfiguration()
         configuration.title = "NinAuth QR scanner"
@@ -44,6 +42,7 @@ struct QRCodeScanner: UIViewControllerRepresentable {
         
         
         func qrScanner(_ controller: UIViewController, didScanQRCodeWithResult result: String) {
+            Log.info(result)
             parent.result = result
         }
         

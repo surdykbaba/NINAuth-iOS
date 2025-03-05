@@ -74,11 +74,6 @@ struct ConsentReviewView: View {
                     .padding(.vertical, 18)
                     .background(Color.red)
                     .cornerRadius(4)
-                    .halfSheet(showSheet: $viewModel.consentRevoked) {
-                        rejectedSheet
-                    } onEnd: {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
 
                     Button {
                         approveReview("approved")
@@ -91,11 +86,11 @@ struct ConsentReviewView: View {
                     .padding(.vertical, 18)
                     .background(Color.button)
                     .cornerRadius(4)
-                    .halfSheet(showSheet: $viewModel.consentApprove) {
-                        approvedSheet
-                    } onEnd: {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
+//                    .halfSheet(showSheet: $viewModel.consentApprove) {
+//                        approvedSheet
+//                    } onEnd: {
+//                        self.presentationMode.wrappedValue.dismiss()
+//                    }
 
                 }
             }
@@ -107,6 +102,24 @@ struct ConsentReviewView: View {
                     .scaleEffect(2)
             }
             
+            BottomSheetView(isPresented: $viewModel.consentRevoked) {
+                rejectedSheet
+            }
+            .onChange(of: viewModel.consentRevoked) { _ in
+                if(viewModel.consentRevoked == false) {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            
+            BottomSheetView(isPresented: $viewModel.consentApprove) {
+                approvedSheet
+            }
+            .onChange(of: viewModel.consentApprove) { _ in
+                if(viewModel.consentApprove == false) {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            
 
             Spacer()
         }
@@ -114,14 +127,9 @@ struct ConsentReviewView: View {
     
     var enterpriseData: some View {
         HStack {
-            AsyncImage(url: URL(string: consentRequest.consent?.enterprise?.logo ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 48, height: 48)
+            Image(uiImage: consentRequest.consent?.enterprise?.logo?.imageFromBase64 ?? UIImage())
+                .resizable()
+                .frame(width: 48, height: 48)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(consentRequest.consent?.enterprise?.name ?? "")
@@ -144,54 +152,52 @@ struct ConsentReviewView: View {
     }
 
     var rejectedSheet: some View {
-        ZStack {
-            Color.white
-            VStack(spacing: 10) {
-                HStack {
-                    EmptyView()
-                    Spacer()
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .frame(width: 15, height: 15, alignment: .trailing)
-                        .padding(.top, 30)
-                        .onTapGesture {
-                            viewModel.consentRevoked.toggle()
-                        }
-                }
-                Image("checkmark_transparent")
-                Text("this_organization_has_been_blocked_from_accessing_your_data".localized)
-                    .padding(.bottom, 20)
+        VStack(spacing: 10) {
+            HStack {
+                EmptyView()
+                Spacer()
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 15, height: 15, alignment: .trailing)
+                    .padding(.top, 30)
+                    .onTapGesture {
+                        viewModel.consentRevoked.toggle()
+                    }
             }
+            Image("checkmark_transparent")
+            Text("this_organization_has_been_blocked_from_accessing_your_data")
+                .padding(.bottom, 20)
         }
+        .padding()
+        .background(Color.white)
     }
 
     var approvedSheet: some View {
-        ZStack {
-            Color.white
-            VStack(spacing: 10) {
-                HStack {
-                    EmptyView()
-                    Spacer()
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .frame(width: 15, height: 15, alignment: .trailing)
-                        .padding(.top, 30)
-                        .onTapGesture {
-                            viewModel.consentApprove.toggle()
-                        }
-                }
-                Image("checkmark_transparent")
-                Text("the_selected_data_has_been_shared".localized)
-                    .padding(.bottom, 20)
+        VStack(spacing: 10) {
+            HStack {
+                EmptyView()
+                Spacer()
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 15, height: 15, alignment: .trailing)
+                    .padding(.top, 30)
+                    .onTapGesture {
+                        viewModel.consentApprove.toggle()
+                    }
             }
+            Image("checkmark_transparent")
+            Text("the_selected_data_has_been_shared")
+                .padding(.bottom, 20)
         }
+        .padding()
+        .background(Color.white)
     }
 
     func approveReview(_ status: String) {
         var review = ConsentCreate()
         review.requestCode = code
         review.status = status
-        if status == "approve" {
+        if status == "approved" {
             Task {
                 await viewModel.approveConsent(consentCreated: review)
             }

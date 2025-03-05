@@ -145,15 +145,11 @@ struct ConsentDetailsView: View {
     
     var consentData: some View {
         VStack(spacing: 12) {
-            AsyncImage(url: URL(string: consent.enterprise?.logo ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 72, height: 72)
-            .clipShape(Circle())
+            Image(uiImage: consent.enterprise?.logo?.imageFromBase64 ?? UIImage())
+                .resizable()
+                .frame(width: 72, height: 72)
+                .padding(.bottom, 16)
+            
             Text("Your data was shared with \(consent.enterprise?.name ?? "")")
                 .customFont(.headline, fontSize: 17)
             HStack {
