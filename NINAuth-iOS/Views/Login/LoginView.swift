@@ -9,10 +9,6 @@ import SwiftUI
 import RealmSwift
 import LocalAuthentication
 
-fileprivate enum ActiveAlert {
-    case first, second
-}
-
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = AuthViewModel()
@@ -26,9 +22,9 @@ struct LoginView: View {
     @State private var goForgotPin: Bool = false
     @State private var biometricsIsOn: Bool = false
     @State private var showDialog: Bool = false
+    @State private var errTitle = ""
     @State private var msg = ""
     private let mem = MemoryUtil.init()
-    @State private var activeAlert: ActiveAlert = .first
     @ObservedResults(User.self) var user
 
     var body: some View {
@@ -110,8 +106,10 @@ struct LoginView: View {
                 .cornerRadius(4)
                 .padding(.top, 24)
                 .disabled(!biometricsIsOn)
-                .alert(msg, isPresented: $showDialog) {
+                .alert(errTitle, isPresented: $showDialog) {
                     Button("OK", role: .cancel) { }
+                } message: {
+                    Text(msg)
                 }
 
                 Spacer()
@@ -134,16 +132,27 @@ struct LoginView: View {
                     }
                 }
             }
-            .alert("Your NIN is different, begin authentication to sign in", isPresented: $showSendToForgotPin) {
-                Button("OK", role: .cancel) {
+            .alert("Error", isPresented: $showSendToForgotPin) {
+                Button("OK", role: .destructive) {
                     goForgotPin.toggle()
                 }
                 Button("Cancel", role: .cancel) { }
+            }message: {
+                Text("Your NIN is different, begin authentication to sign in")
             }
 
             if case .loading = viewModel.state {
                 ProgressView()
                     .scaleEffect(2)
+            }
+            
+            if case .failed(let errorBag) = viewModel.state {
+                Color.clear.onAppear() {
+                    errTitle = errorBag.title
+                    msg = errorBag.description
+                    showDialog = true
+                }
+                .frame(width: 0, height: 0)
             }
 
             Spacer()
