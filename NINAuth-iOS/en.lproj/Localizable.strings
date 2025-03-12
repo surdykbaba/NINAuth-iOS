@@ -58,16 +58,16 @@
 "manage_your_identity" = "Manage your identity";
 "share_my_id" = "Share my ID";
 "scan_the_qr_code_to_share_identity_data" = "Scan the QR code to share identity data";
-"get_security_pin" = "Get Security PIN";
-"get_pin_to_access_nimc_digital_services" = "Get PIN to access NIMC digital services";
+"get_security_pin" = "Get Share Code";
+"get_pin_to_access_nimc_digital_services" = "Get code to access NIMC digital services";
 "linked_ids" = "Linked IDs";
 "view_other_functional_ids_linked_to_your_nin" = "View other functional IDs linked to your NIN";
 
 /**GetSecurityPINView*/
-"security_pin" = "Security PIN";
-"enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code" = "Enter the code below with your User ID to access the NINAuth QR code";
-"authentication_pin" = "Authentication PIN";
-"copy_pin" = "Copy PIN";
+"security_pin" = "Security Code";
+"enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code" = "Copy the code below and provide it to the organization requesting your NIN data.";
+"authentication_pin" = "Authentication code";
+"copy_pin" = "Copy Code";
 
 /**LinkedIDsView*/
 "view_other_functional_ids_linked_t_your_NIN" = "View other functional IDs linked to your NIN";

@@ -10,4 +10,6 @@ protocol DeviceProtocol {
     func getDevices() async -> Result<[Device], ErrorBag>
     
     func deleteDevice(deviceRequest: DeviceRequest) async -> Result<Bool, ErrorBag>
+    
+    func getShareCode() async -> Result<String, ErrorBag>
 }

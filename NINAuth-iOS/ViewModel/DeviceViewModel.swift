@@ -13,6 +13,7 @@ class DeviceViewModel: ObservableObject {
     @Published var loadingDevices: Bool = false
     @Published var devices: [Device] = []
     @Published var deviceRemoved: Bool = false
+    @Published var shareCode: String = ""
     
     
     private let deviceService: DeviceService
@@ -51,6 +52,21 @@ class DeviceViewModel: ObservableObject {
             devices.removeAll { $0.device_id == deletedDevice?.device_id }
             deviceRemoved = true
             state = .success
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    func getShareCode() async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result =  await deviceService.getShareCode()
+        switch result {
+        case .success(let code):
+            state = .success
+            shareCode = code
         case .failure(let failure):
             state = .failed(failure)
         }

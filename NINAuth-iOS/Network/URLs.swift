@@ -38,6 +38,7 @@ enum URLs {
     
     //MARK: Devices
     static let DEVICES = "devices"
+    static let SHARE_CODE = "share-code"
     
     
     
