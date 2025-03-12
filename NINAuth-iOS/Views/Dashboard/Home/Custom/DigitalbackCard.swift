@@ -12,6 +12,15 @@ struct DigitalbackCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+                
+                Text("2045 4664 7474 7474".localized)
+                    .customFont(.title, fontSize: 24)
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .offset(x: -25)
+                    .padding(.top, 180)
+            
+            
             
             Spacer()
         }
