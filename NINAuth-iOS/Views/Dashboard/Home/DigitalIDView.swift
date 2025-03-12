@@ -1,19 +1,10 @@
-//
-//  HomeView.swift
-//  NINAuth-iOS
-//
-//  Created by Chioma Amanda Mmegwa  on 05/02/2025.
-//
-
 import SwiftUI
 import RealmSwift
 
 struct DigitalIDView: View {
     @EnvironmentObject var appState: AppState
-    @State private var changeView = true
+    @State private var isFlipped = false
     @State private var showShareIDPopover = false
-    @State private var showSecurityPinView = false
-    @State private var showLinkedIDsView = false
     @State private var showSecurityPINView = false
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
@@ -27,22 +18,27 @@ struct DigitalIDView: View {
                     ScrollView {
                         VStack(alignment: .leading) {
                             VStack(alignment: .center, spacing: 10) {
-                                if changeView {
+                                ZStack {
+                                    DigitalbackCard()
+                                        .opacity(isFlipped ? 1 : 0)
+                                        .rotation3DEffect(
+                                            .degrees(isFlipped ? 0 : -180),
+                                            axis: (x: 0, y: 1, z: 0),
+                                            perspective: 0.8
+                                        )
+                                    
                                     DigitalIDCardView()
-                                } else {
-                                    Image(uiImage: appState.generateQRCode())
-                                        .resizable()
-                                        .interpolation(.none)
-                                        .frame(width: 250, height: 242)
-                                        .frame(maxWidth: .infinity)
+                                        .opacity(isFlipped ? 0 : 1)
+                                        .rotation3DEffect(
+                                            .degrees(isFlipped ? 180 : 0),
+                                            axis: (x: 0, y: 1, z: 0),
+                                            perspective: 0.8
+                                        )
                                 }
-
-                                Button {
-//                                    withAnimation {
-//                                        changeView.toggle()
-//                                    }
-                                } label: {
-                                    showQR(title: changeView ? "show_qr_code".localized : "Show my ID", subtitle: changeView ? "click_to_view_qr_code".localized : "click_to_show_your_id".localized)
+                                .frame(width: 370, height: 242)
+                                .animation(.spring(response: 1.2, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                                .onTapGesture {
+                                    isFlipped.toggle()
                                 }
                             }
                             .padding(.bottom, 30)
@@ -62,13 +58,6 @@ struct DigitalIDView: View {
                                 IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
                                     showSecurityPINView = true
                                 })
-
-//                                IdentityView(icon: "link", title: "linked_ids".localized, subtitle: "view_other_functional_ids_linked_to_your_nin".localized, completion: {
-//                                    showLinkedIDsView = true
-//                                    Task {
-//                                        await viewModel.getLinkedIDs()
-//                                    }
-//                                })
                             }
                         }
                         .padding()
@@ -76,23 +65,15 @@ struct DigitalIDView: View {
                 )
             
             if case .loading = viewModel.state {
-                //TODO: Add your custom loding view here
                 ProgressView()
                     .scaleEffect(2)
             }
-
-            Spacer()
         }
-        //moveToLinkedIDsView()
         moveToGetSecurityPINView()
     }
 
-//    func moveToLinkedIDsView() -> some View {
-//        NavigationLink(destination: LinkedIDsView(), isActive: $showLinkedIDsView){}
-//    }
-
     func moveToGetSecurityPINView() -> some View {
-        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView){}
+        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) {}
     }
 
     func showQR(title: String, subtitle: String) -> some View {

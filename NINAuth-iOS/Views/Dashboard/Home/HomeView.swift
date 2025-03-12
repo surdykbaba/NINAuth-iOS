@@ -2,7 +2,7 @@
 //  HomeView.swift
 //  NINAuth-iOS
 //
-//  Created by Chioma Amanda Mmegwa  on 06/02/2025.
+
 //
 
 import SwiftUI
