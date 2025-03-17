@@ -23,7 +23,7 @@ struct DigitalIDView: View {
                                         .opacity(isFlipped ? 1 : 0)
                                         .rotation3DEffect(
                                             .degrees(isFlipped ? 0 : -180),
-                                            axis: (x: 0, y: 1, z: 0),
+                                            axis: (x: 1, y: 0, z: 0),  // Flip up/down
                                             perspective: 0.8
                                         )
                                     
@@ -31,7 +31,7 @@ struct DigitalIDView: View {
                                         .opacity(isFlipped ? 0 : 1)
                                         .rotation3DEffect(
                                             .degrees(isFlipped ? 180 : 0),
-                                            axis: (x: 0, y: 1, z: 0),
+                                            axis: (x: 1, y: 0, z: 0),  // Flip up/down
                                             perspective: 0.8
                                         )
                                 }

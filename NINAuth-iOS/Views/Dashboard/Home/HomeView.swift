@@ -42,14 +42,14 @@ struct HomeView: View {
             }
         }
         .toolbar {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-//                    .resizable()
-//                    .frame(width: 47, height: 47)
-//                    .clipShape(Circle())
-//                    .padding(.trailing)
-//                    .padding(.top)
-//            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                    .resizable()
+                    .frame(width: 47, height: 47)
+                    .clipShape(Circle())
+                    .padding(.trailing)
+                    .padding(.top)
+            }
         }
         .task {
             if(!appState.initialRequestCode.isEmpty) {
