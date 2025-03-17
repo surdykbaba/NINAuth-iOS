@@ -14,6 +14,7 @@ class DeviceViewModel: ObservableObject {
     @Published var devices: [Device] = []
     @Published var deviceRemoved: Bool = false
     @Published var shareCode: String = ""
+    @Published var consents: [Consent] = []
     
     
     private let deviceService: DeviceService
@@ -67,6 +68,21 @@ class DeviceViewModel: ObservableObject {
         case .success(let code):
             state = .success
             shareCode = code
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    func getLogs() async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result =  await deviceService.getShareLogs()
+        switch result {
+        case .success(let data):
+            state = .success
+            consents = data
         case .failure(let failure):
             state = .failed(failure)
         }

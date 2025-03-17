@@ -46,5 +46,21 @@ struct DeviceService: DeviceProtocol {
         }
     }
     
+    func getShareLogs() async -> Result<[Consent], ErrorBag> {
+        let networkResponse = await Service.init().get(URLs.SHARE_CODE_LOGS)
+        switch networkResponse.isSuccess() {
+        case true:
+            do {
+                let res = try JSONDecoder().decode([Consent].self, from: networkResponse.getJson()?["data"]["share_code_logs"].array?.data() ?? Data())
+                return .success(res)
+            }catch {
+                Log.error(error.localizedDescription)
+                return .failure(ErrorBag())
+            }
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
     
 }

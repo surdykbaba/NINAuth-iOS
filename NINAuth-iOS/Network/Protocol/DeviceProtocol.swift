@@ -12,4 +12,6 @@ protocol DeviceProtocol {
     func deleteDevice(deviceRequest: DeviceRequest) async -> Result<Bool, ErrorBag>
     
     func getShareCode() async -> Result<String, ErrorBag>
+    
+    func getShareLogs() async -> Result<[Consent], ErrorBag>
 }
