@@ -3,6 +3,7 @@ import RealmSwift
 
 struct DigitalIDCardView: View {
     @ObservedResults(User.self) var user
+    @State private var rotateHolographic = 0.0 // Rotation state
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,30 +21,54 @@ struct DigitalIDCardView: View {
                 .offset(x: -35)
                 .padding(.top, 6)
 
-            // HStack containing nimclogo and the two columns for details
+            // HStack containing NIMC logo and details
             HStack(alignment: .top, spacing: 0) {
-                // Nimclogo image on the left
-                Image("nimc_logo")
-                    .resizable()
-                    .frame(width: 41, height: 44) // Adjust size as needed
-                    .padding(.top, 90)
-                    .offset(x: -15)
                 
-                // Left column: original user info
+                // ZStack to create the holographic effect
+                ZStack {
+                    // Blended background
+                    Image("holographic")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .opacity(29) // Soft blending
+
+                    // Rotating holographic effect
+                    Image("holographic")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
+                        .rotationEffect(.degrees(rotateHolographic))
+                        .opacity(0.3) // Reduce intensity to blend better
+                        .onAppear {
+                            withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
+                                rotateHolographic = 360
+                            }
+                        }
+
+                    
+                    // Static NIMC logo on top
+                    Image("Nimc")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                }
+                .padding(.top, 65)
+                .offset(x: -20)
+
+                // Left column: user info
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "SURNAME", subtitle: user.first?.last_name ?? "")
                     doubleTextView(title: "FIRST NAME", subtitle: user.first?.first_name ?? "")
                     doubleTextView(title: "MIDDLE NAME", subtitle: user.first?.middle_name ?? "")
                     doubleTextView(title: "GENDER", subtitle: user.first?.gender  ?? "")
-                    doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
-                // Right column: additional info shifted right by 5 points
+                
+                // Right column: additional info
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
-                    doubleTextView(title: "STATE OF ORIGIN", subtitle: user.first?.gender ?? "")
-                    doubleTextView(title: "LGA", subtitle: user.first?.gender ?? "")
-                    doubleTextView(title: "DATE OF ISSUE", subtitle: user.first?.gender ?? "")
-                    doubleTextView(title: "DATE OF EXPIRY", subtitle: user.first?.gender ?? "")
+                    doubleTextView(title: "STATE OF ORIGIN", subtitle: user.first?.first_name ?? "")
+                    doubleTextView(title: "LGA", subtitle: user.first?.first_name ?? "")
+                    doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
                 .padding(.leading, 13)
             }
@@ -58,14 +83,22 @@ struct DigitalIDCardView: View {
         .background(
             Image("NinID_Front")
                 .resizable()
+                .scaledToFill() // Ensure it fully covers the space
+                
         )
-        // Place the user image in the top trailing corner
+        // User image blended with the background
         .overlay(
             Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
                 .resizable()
+                .scaledToFill()
                 .frame(width: 100, height: 130)
-                .clipped()
-                .padding(),
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .opacity(0.9) // Slight transparency for smooth blending
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1) // Subtle border for smooth transition
+                )
+                .blendMode(.overlay), // Blends smoothly with the background
             alignment: .topTrailing
         )
     }

@@ -15,7 +15,7 @@ struct DigitalbackCard: View {
             VStack {
                 Spacer() // Pushes the first text to the center
                 
-                Text("cvv234") // First text in the center
+                Text("CVV234") // First text in the center
                     .customFont(.body, fontSize: 16)
                     .foregroundColor(.gray)
                     .offset(x: -120)

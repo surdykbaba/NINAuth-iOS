@@ -101,7 +101,7 @@
 
 /**SingleDeviceView*/
 "current_device" = "Current device";
-"sign_out" = "Sign out";
+"sign_out" = "Unlink";
 
 /**DataSharingView*/
 "offline_data_sharing" = "Offline data sharing";

@@ -23,7 +23,7 @@ struct DigitalIDView: View {
                                         .opacity(isFlipped ? 1 : 0)
                                         .rotation3DEffect(
                                             .degrees(isFlipped ? 0 : -180),
-                                            axis: (x: 1, y: 0, z: 0),  // Flip up/down
+                                            axis: (x: 0, y: 1, z: 0),
                                             perspective: 0.8
                                         )
                                     
@@ -31,12 +31,12 @@ struct DigitalIDView: View {
                                         .opacity(isFlipped ? 0 : 1)
                                         .rotation3DEffect(
                                             .degrees(isFlipped ? 180 : 0),
-                                            axis: (x: 1, y: 0, z: 0),  // Flip up/down
+                                            axis: (x: 0, y: 1, z: 0),
                                             perspective: 0.8
                                         )
                                 }
                                 .frame(width: 370, height: 242)
-                                .animation(.spring(response: 1.2, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                                .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
                                 .onTapGesture {
                                     isFlipped.toggle()
                                 }
