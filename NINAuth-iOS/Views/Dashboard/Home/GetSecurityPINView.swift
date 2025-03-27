@@ -15,6 +15,9 @@ struct GetSecurityPINView: View {
     @State private var buttonText = "Copy PIN"
     @State private var isCopied = false
     @StateObject var deviceVM = DeviceViewModel()
+    @State private var errTitle = ""
+    @State private var msg = ""
+    @State private var showDialog: Bool = false
 
     var body: some View {
         ZStack {
@@ -95,6 +98,11 @@ struct GetSecurityPINView: View {
                 )
                 .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(Color(.white)))
+                .alert(errTitle, isPresented: $showDialog) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(msg)
+                }
                 
                 Spacer()
             }
@@ -134,6 +142,15 @@ struct GetSecurityPINView: View {
             if case .loading = deviceVM.state {
                 ProgressView()
                     .scaleEffect(2)
+            }
+            
+            if case .failed(let errorBag) = deviceVM.state {
+                Color.clear.onAppear() {
+                    errTitle = errorBag.title
+                    msg = errorBag.description
+                    showDialog = true
+                }
+                .frame(width: 0, height: 0)
             }
         }
         .background(Color(.bg))
