@@ -2,7 +2,7 @@
 //  Extensions.swift
 //  NINAuth-iOS
 //
-//  Created by Chioma Amanda Mmegwa  on 07/02/2025.
+
 //
 
 import SwiftUI
