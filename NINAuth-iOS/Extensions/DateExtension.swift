@@ -8,7 +8,7 @@
 import Foundation
 
 struct DateFormat {
-    static let UniversalDateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    static let UniversalDateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     static let Dateformat = "dd MMMM yyyy"
     static let yrMonthDayFormat = "yyyy-MM-dd"
     static let dateFormat = "dd MMM yyyy"

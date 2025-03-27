@@ -7,9 +7,9 @@
 
 import Foundation
 import RealmSwift
+import CoreLocation
 
-@MainActor
-class AuthViewModel: ObservableObject  {
+class AuthViewModel: NSObject, ObservableObject  {
     
     @Published private(set) var state: LoadingState = .idle
     @Published var continueReg = false
@@ -17,13 +17,17 @@ class AuthViewModel: ObservableObject  {
     @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
     @Published var logOut = false
+    @Published var userLocation: CLLocation? = nil
+    private let locationManager = CLLocationManager()
+    private var deniedCount = 0
 
     private let authService: AuthService
     
-    init() {
+    override init() {
         authService = AuthService()
     }
     
+    @MainActor
     func registerUser(registerUserRequest: RegisterUserRequest) async -> Void {
         guard state != .loading else {
             return
@@ -39,6 +43,7 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
+    @MainActor
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Void {
         guard state != .loading else {
             return
@@ -55,6 +60,7 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
+    @MainActor
     func getFaceAuthStatus(deviceID: String) async -> Void {
         guard state != .loading else {
             return
@@ -71,22 +77,23 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
-    func loginUser(loginUserRequest: LoginUserRequest) async -> Void {
-        guard state != .loading else {
-            return
-        }
-        state = .loading
-        let result = await authService.login(loginUserRequest: loginUserRequest)
-        switch result {
-        case .success(let userResponse):
-            isLoggedIn = true
-            Log.info(userResponse.description)
-            state = .success
-        case .failure(let failure):
-            state = .failed(failure)
-        }
-    }
+//    func loginUser(loginUserRequest: LoginUserRequest) async -> Void {
+//        guard state != .loading else {
+//            return
+//        }
+//        state = .loading
+//        let result = await authService.login(loginUserRequest: loginUserRequest)
+//        switch result {
+//        case .success(let userResponse):
+//            isLoggedIn = true
+//            Log.info(userResponse.description)
+//            state = .success
+//        case .failure(let failure):
+//            state = .failed(failure)
+//        }
+//    }
     
+    @MainActor
     func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Void {
         guard state != .loading else {
             return
@@ -103,6 +110,7 @@ class AuthViewModel: ObservableObject  {
         }
     }
     
+    @MainActor
     func logoutUser(logOutRequest: LogOutRequest) async -> Void {
         guard state != .loading else {
             return
@@ -125,4 +133,67 @@ class AuthViewModel: ObservableObject  {
             state = .failed(failure)
         }
     }
+}
+
+extension AuthViewModel : CLLocationManagerDelegate {
+    
+    func initiateLocationRequest() {
+        self.locationManager.delegate = self
+        if(hasLocationPermission()) {
+            locationManager.startUpdatingLocation()
+        }else {
+            requestAuthorisation()
+        }
+    }
+    
+    private func requestAuthorisation(always: Bool = false) {
+        if always {
+            self.locationManager.requestAlwaysAuthorization()
+        } else {
+            self.locationManager.requestWhenInUseAuthorization()
+        }
+    }
+    
+    private func hasLocationPermission() -> Bool {
+        var hasPermission = false
+        switch locationManager.authorizationStatus {
+        case .notDetermined, .restricted, .denied:
+            hasPermission = false
+        case .authorizedAlways, .authorizedWhenInUse:
+            hasPermission = true
+        @unknown default:
+            hasPermission = false
+        }
+        return hasPermission
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch(status) {
+        case .notDetermined, .restricted, .denied :
+            deniedCount += 1
+            requestAuthorisation()
+        case .authorizedAlways, .authorizedWhenInUse:
+            Log.info("I have location permission")
+            locationManager.startUpdatingLocation()
+        @unknown default:
+            break
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            locationManager.stopUpdatingLocation()
+            userLocation = location
+            //reverseGeoCodePickLocation(location: location)
+        }
+    }
+    
+//    private func reverseGeoCodePickLocation(location: CLLocation) {
+//        let geocoder = CLGeocoder()
+//        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+//            guard let currentLocPlacemark = placemarks?.first else { return }
+//            Log.info(currentLocPlacemark.country ?? "No country found")
+//            Log.info(currentLocPlacemark.isoCountryCode ?? "No country code found")
+//        }
+//    }
 }

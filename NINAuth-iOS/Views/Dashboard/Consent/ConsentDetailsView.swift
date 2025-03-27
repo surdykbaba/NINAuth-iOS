@@ -60,6 +60,7 @@ struct ConsentDetailsView: View {
                         .background(Color.button)
                         .cornerRadius(4)
                         .background(consent.status == "approved" ? Color.button : Color.button.opacity(0.1))
+                        .disabled(consent.status == "approved" ? false : true)
                         .alert("Revoke?", isPresented: $showingAlert) {
                             Button("Ok", role: .destructive){
                                 Task {
@@ -77,7 +78,7 @@ struct ConsentDetailsView: View {
 //                        }
 
                         HStack {
-                            Text(consent.enterprise_id ?? "")
+                            Text(consent.request_id ?? "")
                             Image(systemName: "square.on.square")
                         }
                         .padding(10)

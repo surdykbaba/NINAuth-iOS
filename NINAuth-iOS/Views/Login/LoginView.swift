@@ -77,12 +77,12 @@ struct LoginView: View {
                                 loginWithNIN()
                             }else if let user = user.first {
                                 if(identificationNumber == user.nin) {
-                                    loginUser()
+                                    loginWithNIN()
                                 }else {
                                     showSendToForgotPin.toggle()
                                 }
                             }else {
-                                loginUser()
+                                loginWithNIN()
                             }
                         }
                     }
@@ -162,6 +162,11 @@ struct LoginView: View {
             if(user.first == nil) {
                 biometricsIsOn = false
             }
+            viewModel.initiateLocationRequest()
+        }
+        .onChange(of: viewModel.userLocation) { _ in
+            appState.latitude = viewModel.userLocation?.coordinate.latitude ?? 0.00
+            appState.longitude = viewModel.userLocation?.coordinate.longitude ?? 0.00
         }
     }
 
@@ -188,22 +193,22 @@ struct LoginView: View {
         }
     }
 
-    func loginUser() {
-        var loginRequest = LoginUserRequest()
-        loginRequest.deviceId = appState.getDeviceID()
-        loginRequest.pin = password
-        loginRequest.device = DeviceMetadata()
-        Task {
-            await viewModel.loginUser(loginUserRequest: loginRequest)
-        }
-    }
+//    func loginUser() {
+//        var loginRequest = LoginUserRequest()
+//        loginRequest.deviceId = appState.getDeviceID()
+//        loginRequest.pin = password
+//        loginRequest.device = DeviceMetadata()
+//        Task {
+//            await viewModel.loginUser(loginUserRequest: loginRequest)
+//        }
+//    }
     
     func loginWithNIN() {
         var loginRequest = LoginWithNIN()
         loginRequest.deviceId = appState.getDeviceID()
         loginRequest.pin = password
         loginRequest.ninId = identificationNumber
-        loginRequest.device = DeviceMetadata()
+        loginRequest.device = DeviceMetadata(lat: appState.latitude, lng:appState.longitude)
         Task {
             await viewModel.loginWithNIN(loginWithNIN: loginRequest)
         }

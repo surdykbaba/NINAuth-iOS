@@ -9,6 +9,7 @@ struct Device: Codable {
     var id: String?
     var user_id: String?
     var device_id: String?
+    var system_device_id: String?
     var metadata: DeviceMetadata?
     var created_at: String?
     var deleted_at: DeleteAt?

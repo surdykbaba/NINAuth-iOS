@@ -95,6 +95,38 @@ struct Service{
         }
     }
     
+    func put<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
+        do {
+            var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
+            request.httpMethod = "PUT"
+            let jsonData = try? JSONEncoder().encode(params)
+            request.httpBody = jsonData
+            #if DEBUG
+            try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
+            #endif
+        
+            let (data, response) = try await URLSession.shared.data(for: request)
+            let httpResponse = response as? HTTPURLResponse
+            let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
+            if(networkResponse.isSuccess()) {
+                if(networkResponse.statusCode != 204) {
+                    let jsonValue = try JSON(data: data)
+                    #if DEBUG
+                    print(jsonValue)
+                    #endif
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                }else {
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
+                }
+            }else {
+                return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
+            }
+        }catch {
+            Log.error("\(urlString) -->\(error.localizedDescription)")
+            return NetworkResponseModel(statusCode: 0, data: nil, errorMessage: error.localizedDescription)
+        }
+    }
+    
     func delete<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)

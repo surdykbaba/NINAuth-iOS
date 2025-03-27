@@ -104,7 +104,7 @@ struct CheckIdentityView: View {
             registerUserRequest.deviceId = appState.getDeviceID()
             registerUserRequest.requestCode = code
             registerUserRequest.ninId = identificationNumber
-            registerUserRequest.deviceMetadata = DeviceMetadata()
+            registerUserRequest.deviceMetadata = DeviceMetadata(lat: appState.latitude, lng:appState.longitude)
             Task {
                 await viewModel.registerUser(registerUserRequest: registerUserRequest)
             }

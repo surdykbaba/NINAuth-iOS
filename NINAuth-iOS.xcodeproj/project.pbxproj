@@ -370,6 +370,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = NINAuth;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to activate another means of unlocking your application.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "NinAuth needs your location permission to protect you from identity fraud";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -409,6 +410,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = NINAuth;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to enable QR scanning and facial authentication";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to activate another means of unlocking your application.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "NinAuth needs your location permission to protect you from identity fraud";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

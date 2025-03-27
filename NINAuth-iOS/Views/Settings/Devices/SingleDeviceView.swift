@@ -41,6 +41,13 @@ struct SingleDeviceView: View {
             }
 
             Divider()
+            
+            HStack {
+                Image("coordinates")
+                Text(device.system_device_id ?? "")
+            }
+            .foregroundColor(Color.grayTextBackground)
+            .customFont(.headline, fontSize: 17)
 
             HStack {
                 Image("clock")

@@ -59,7 +59,7 @@ struct SetPINView: View {
                 .cornerRadius(4)
                 .disabled(!isValid)
 
-                NavigationLink(destination: LoginView(), isActive: $viewModel.pinIsSet) {}.isDetailLink(false)
+                NavigationLink(destination: TabControllerView(), isActive: $viewModel.pinIsSet) {}.isDetailLink(false)
 
                 Spacer()
             }

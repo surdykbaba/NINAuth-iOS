@@ -92,6 +92,7 @@ struct OnboardingView: View {
         .padding()
         .onChange(of: scannedCode) { _ in
             if let code = scannedCode {
+                appState.initialRequestCode = code
                 goNext.toggle()
             }
         }

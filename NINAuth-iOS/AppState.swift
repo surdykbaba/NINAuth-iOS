@@ -14,6 +14,8 @@ class AppState: ObservableObject {
     @Published var verifyStatus = ""
     @Published var fromForgotPin = false
     @Published var initialRequestCode = ""
+    @Published var latitude: Double = 0
+    @Published var longitude: Double = 0
     private let authService: AuthService
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()
