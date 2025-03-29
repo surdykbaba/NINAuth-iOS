@@ -95,6 +95,9 @@ struct ConsentReviewView: View {
                 }
             }
             .padding()
+            .onAppear {
+                appState.initialRequestCode = ""
+            }
             
             if case .loading = viewModel.state {
                 //TODO: Add your custom loding view here
