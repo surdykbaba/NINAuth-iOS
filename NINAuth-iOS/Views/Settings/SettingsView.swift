@@ -183,7 +183,7 @@ struct SettingsView: View {
                 Button {
                     showSignOut = true
                 } label: {
-                    SettingsRow(image: "logout", name: "LogOut")
+                    SettingsRow(image: "Sign out", name: "Sign out")
                 }
                 .alert("Sign out?", isPresented: $showSignOut) {
                     Button("OK", role: .destructive) {
