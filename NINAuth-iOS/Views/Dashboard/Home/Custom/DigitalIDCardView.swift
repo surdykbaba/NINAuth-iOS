@@ -92,14 +92,8 @@ struct DigitalIDCardView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 100, height: 130)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .opacity(0.9) // Slight transparency for smooth blending
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1) // Subtle border for smooth transition
-                )
-                .blendMode(.overlay), // Blends smoothly with the background
-            alignment: .topTrailing
+                .clipShape(RoundedRectangle(cornerRadius: 12)),
+            alignment: .bottomTrailing
         )
     }
 
