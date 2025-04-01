@@ -8,7 +8,7 @@ struct DigitalbackCard: View {
         ZStack {
             Image("NinBack")
                 .resizable()
-                .scaledToFill()
+                
                 .frame(height: 242)
                 .clipped()
 
@@ -26,13 +26,12 @@ struct DigitalbackCard: View {
                 Text("2045 4664 7474 7474".localized) // Second text at the bottom
                     .customFont(.title, fontSize: 24)
                     .foregroundColor(.gray)
-                    .offset(x: -25)
+                    .offset(x: -20)
                     .padding(.bottom, 20) // Adjust as needed
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(height: 242)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: 370, maxHeight: 242, alignment: .leading)
     }
 }
 
