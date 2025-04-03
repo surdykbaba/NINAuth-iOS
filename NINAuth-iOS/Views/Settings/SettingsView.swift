@@ -37,7 +37,30 @@ struct SettingsView: View {
                     
                     Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
                         .customFont(.title, fontSize: 24)
-                        .padding(.bottom, 60)
+                        .padding(.bottom, 30)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("ID Integrity index: 550")
+                            .customFont(.body, fontSize: 16)
+                        
+                        GeometryReader { geometry in
+                            NinAuthSlider(screenWidth: geometry.size.width)
+                        }
+                        .padding(.bottom)
+                        
+                        Text("What does my ID integrity index mean?")
+                            .padding(.top, 20)
+                            .customFont(.body, fontSize: 14)
+                    }
+                    .padding()
+                    .mask(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke()
+                        .fill(.gray.opacity(0.2))
+                    )
+                    .padding(.bottom, 30)
 
                     legalAndComplaince
                     

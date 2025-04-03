@@ -6,37 +6,35 @@ struct DigitalIDCardView: View {
     @State private var rotateHolographic = 0.0 // Rotation state
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .center, spacing: 0) {
             
-            Text("federal_republic_of_nigeria".localized)
+            Text("federal_republic_of_nigeria")
                 .customFont(.title, fontSize: 14)
                 .foregroundColor(Color.button)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .offset(x: -25)
                 .padding(.top, 20)
 
-            Text("national_identity_card".localized)
+            Text("national_identity_card")
                 .customFont(.title, fontSize: 12)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .offset(x: -35)
-                .padding(.top, 6)
+                .padding(.top, 4)
 
             // HStack containing NIMC logo and details
-            HStack(alignment: .top, spacing: 0) {
+            HStack(alignment: .bottom, spacing: 0) {
                 
                 // ZStack to create the holographic effect
                 ZStack {
                     // Blended background
                     Image("holographic")
                         .resizable()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 50, height: 50)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .opacity(29) // Soft blending
 
                     // Rotating holographic effect
                     Image("holographic")
                         .resizable()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 50, height: 50)
                         .clipShape(Circle())
                         .rotationEffect(.degrees(rotateHolographic))
                         .opacity(0.3) // Reduce intensity to blend better
@@ -45,15 +43,15 @@ struct DigitalIDCardView: View {
                                 rotateHolographic = 360
                             }
                         }
-
                     
                     // Static NIMC logo on top
                     Image("Nimc")
                         .resizable()
-                        .frame(width: 40, height: 40)
+                        .frame(width: 45, height: 45)
                 }
-                .padding(.top, 65)
-                .offset(x: -20)
+                .offset(y: 20)
+                .padding(.leading, 16)
+                .padding(.trailing, 14)
 
                 // Left column: user info
                 VStack(alignment: .leading, spacing: 4) {
@@ -70,13 +68,16 @@ struct DigitalIDCardView: View {
                     doubleTextView(title: "LGA", subtitle: user.first?.first_name ?? "")
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
-                .padding(.leading, 13)
+                .padding(.leading, 16)
+                
+                Spacer()
             }
             .padding(.top, 16)
+            .frame(maxWidth: .infinity)
             
             Spacer()
         }
-        .padding(.leading, 40)
+        //.padding(.leading, 40)
         .padding(.top, 10)
         .frame(height: 242)
         .frame(maxWidth: .infinity, maxHeight: 242, alignment: .leading)
@@ -91,7 +92,7 @@ struct DigitalIDCardView: View {
             Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
                 .resizable()
                 .scaledToFill()
-                .frame(width: 100, height: 130)
+                .frame(width: 90, height: 107)
                 .clipShape(RoundedRectangle(cornerRadius: 12)),
             alignment: .bottomTrailing
         )
@@ -101,11 +102,13 @@ struct DigitalIDCardView: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
                 .customFont(.body, fontSize: 9)
-                .foregroundColor(Color(red: 65/255, green: 66/255, blue: 60/255))
+                .foregroundColor(Color(.cardLabel))
                 .padding(.top, 1)
             Text(subtitle)
                 .customFont(.body, fontSize: 12)
+                .foregroundColor(Color(.text))
         }
+        .multilineTextAlignment(.leading)
     }
 }
 

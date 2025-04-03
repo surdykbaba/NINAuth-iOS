@@ -20,16 +20,17 @@ struct HomeView: View {
             Color.secondaryGrayBackground
                 .ignoresSafeArea()
             VStack {
-                Picker("", selection: $selected) {
-                    ForEach(PickerOptions.allCases, id: \.self) {
-                        Text($0.rawValue)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .frame(height: 60)
-                .padding()
-
-                ChosenPickerView(option: selected)
+//                Picker("", selection: $selected) {
+//                    ForEach(PickerOptions.allCases, id: \.self) {
+//                        Text($0.rawValue)
+//                    }
+//                }
+//                .pickerStyle(.segmented)
+//                .frame(height: 60)
+//                .padding()
+//
+//                ChosenPickerView(option: selected)
+                DigitalIDView()
             }
             
             NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: token.first?.requestCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)
