@@ -11,157 +11,183 @@ import CodeScanner
 struct OnboardingView: View {
     @EnvironmentObject var appState: AppState
     @State private var showSheet = false
-    @State private var requestCode = ""
-    private let numberOfFields = 6
-    @FocusState var isFocused: Bool
     @State private var isValid = true
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
     @State private var showingAlert = false
     @State private var goNext = false
+    @State private var identificationNumber = ""
 
     var body: some View {
-        VStack {
-            NavigationLink {
-                LoginView()
-            } label: {
-                Text("login")
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(Color("buttonColor"))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-
-            Spacer()
-
-            Image("nigerian_coat_of_arms")
-
-            Spacer()
-
-            VStack(spacing: 10) {
-                Text("verify_identity_and_authorize_data_access")
-                    .customFont(.title, fontSize: 18)
-                    .multilineTextAlignment(.center)
-                Text("ensure_your_privacy_manage_and_control")
-                    .customFont(.body, fontSize: 16)
-                    .multilineTextAlignment(.center)
-            }
-
-            Spacer()
-
-            VStack(spacing: 20) {
-                Button {
-                    isPresentingScanner.toggle()
-                    appState.fromForgotPin = false
+        ZStack {
+            VStack {
+                NavigationLink {
+                    LoginView()
                 } label: {
-                    HStack {
-                        Text("scan_qr_code")
-                        Image(systemName: "qrcode")
-                    }
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(.white)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 18)
-                .background(Color.button)
-                .cornerRadius(4)
-                Button {
-                    showSheet.toggle()
-                } label: {
-                    Text("i_have_a_request_code")
+                    Text("login")
                         .customFont(.title, fontSize: 18)
-                        .foregroundStyle(Color.button)
+                        .foregroundStyle(Color("buttonColor"))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .halfSheet(showSheet: $showSheet) {
-                    requestCodeView
-                } onEnd: {
-                    Log.info("Dismissed Sheet")
-                }.alert("Invalid pin", isPresented: $showingAlert) {
-                    Button("Ok"){
-                        showSheet = false
+                
+                Spacer()
+                
+                Image("nigerian_coat_of_arms")
+                
+                Spacer()
+                
+                VStack(spacing: 10) {
+                    Text("verify_identity_and_authorize_data_access")
+                        .customFont(.title, fontSize: 18)
+                        .multilineTextAlignment(.center)
+                    Text("ensure_your_privacy_manage_and_control")
+                        .customFont(.body, fontSize: 16)
+                        .multilineTextAlignment(.center)
+                }
+                
+                Spacer()
+                
+                VStack(spacing: 20) {
+                    Button {
+                        isPresentingScanner.toggle()
+                        appState.fromForgotPin = false
+                    } label: {
+                        HStack {
+                            Text("scan_qr_code")
+                            Image(systemName: "qrcode")
+                        }
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
                     }
-                } message: {
-                    Text("Please scan QR code")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Color.button)
+                    .cornerRadius(4)
+                    Button {
+                        showSheet.toggle()
+                    } label: {
+                        Text("sign_up_with_nin")
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(Color.button)
+                    }
+                    .alert("Invalid pin", isPresented: $showingAlert) {
+                        Button("Ok"){
+                            showSheet = false
+                        }
+                    } message: {
+                        Text("Please scan QR code")
+                    }
+//                    .halfSheet(showSheet: $showSheet) {
+//                        requestCodeView
+//                    } onEnd: {
+//                        Log.info("Dismissed Sheet")
+//                    }
                 }
+                
+                Group {
+                    NavigationLink(destination: CheckIdentityView(code: scannedCode ?? ""), isActive: $goNext) {}.isDetailLink(false)
+                }
+                .frame(width: 0, height: 0)
+            }
+            .padding()
+            .onChange(of: scannedCode) { _ in
+                if let code = scannedCode {
+                    appState.initialRequestCode = code
+                    goNext.toggle()
+                }
+            }
+            .onAppear {
+                scannedCode = nil
+            }
+            .sheet(isPresented: $isPresentingScanner) {
+                QRCodeScanner(result: $scannedCode)
+                //            CodeScannerView(codeTypes: [.qr]) { response in
+                //                if case let .success(result) = response {
+                //                    scannedCode = result.string
+                //                    Log.info(scannedCode ?? "nothing")
+                //                    isPresentingScanner = false
+                //                }
+                //            }
             }
             
-            Group {
-                NavigationLink(destination: CheckIdentityView(code: scannedCode ?? ""), isActive: $goNext) {}.isDetailLink(false)
+            BottomSheetView(isPresented: $showSheet) {
+                requestCodeView
             }
-            .frame(width: 0, height: 0)
-        }
-        .padding()
-        .onChange(of: scannedCode) { _ in
-            if let code = scannedCode {
-                appState.initialRequestCode = code
-                goNext.toggle()
-            }
-        }
-        .onAppear {
-            scannedCode = nil
-        }
-        .sheet(isPresented: $isPresentingScanner) {
-            QRCodeScanner(result: $scannedCode)
-//            CodeScannerView(codeTypes: [.qr]) { response in
-//                if case let .success(result) = response {
-//                    scannedCode = result.string
-//                    Log.info(scannedCode ?? "nothing")
-//                    isPresentingScanner = false
-//                }
-//            }
         }
     }
 
     var requestCodeView: some View {
-        ZStack {
-            Color.white
-            VStack(alignment: .leading) {
-                HStack {
-                    EmptyView()
-                    Spacer()
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .frame(width: 15, height: 15, alignment: .trailing)
-                        .padding(.top, 30)
-                        .onTapGesture {
-                            showSheet.toggle()
-                        }
-                }
-                .padding(.bottom)
-                
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Enter request code")
-                        .customFont(.headline, fontSize: 24)
-                    Text("Enter the 6-digit code provided by the organization.")
-                        .customFont(.body, fontSize: 17)
-                        .padding(.bottom, 40)
+        VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 15, height: 15, alignment: .trailing)
+                    .padding(.top, 0)
+                    .onTapGesture {
+                        showSheet.toggle()
+                    }
+            }
+            .padding(.vertical)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("enter_your_national_identification_number")
+                    .customFont(.headline, fontSize: 24)
+                Text("your_info_is_secure")
+                    .customFont(.body, fontSize: 16)
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom)
 
-                    OTPView(numberOfFields: numberOfFields, otp: $requestCode, valid: $isValid)
-                        .onChange(of: requestCode) { newOtp in
-                            if newOtp.count == numberOfFields && !newOtp.isEmpty{
-                                isValid = true
+                VStack(alignment: .leading) {
+                    Text("national_identification_number")
+                        .customFont(.subheadline, fontSize: 16)
+                    TextField("12345678910", text: $identificationNumber)
+                        .keyboardType(.numberPad)
+                        .customTextField()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke()
+                            .fill(isValid ? .gray : .red)
+                        )
+                        .onAppear(perform: {
+                            isValid = true
+                        })
+                        .onChange(of: identificationNumber) { _ in
+                            if(identificationNumber.count > 11) {
+                                identificationNumber = String(identificationNumber.prefix(11))
                             }
                         }
-                        .focused($isFocused)
-
-                    Button {
-                        showingAlert = true
-                    } label: {
-                        Text("Continue")
-                            .customFont(.title, fontSize: 18)
-                            .foregroundStyle(.white)
+                    if !isValid {
+                        Text("nin_must_be_11_digits_long".localized)
+                            .customFont(.subheadline, fontSize: 16)
+                            .foregroundColor(.red)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(isValid ? Color.button : Color.button.opacity(0.2))
-                    .cornerRadius(4)
-                    .disabled(!isValid)
-
                 }
+                .padding(.bottom, 60)
+                .padding(.top, 20)
+
+                Button {
+                    if(identificationNumber.count != 11) {
+                        isValid = false
+                    }else {
+                        isValid = true
+                    }
+                    //showingAlert = true
+                } label: {
+                    Text("Continue")
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .cornerRadius(4)
+                .background(Color.button)
+//                .disabled(!isValid)
+                .padding(.bottom, 30)
             }
-            .padding()
-            .padding(.bottom, 30)
         }
-        .ignoresSafeArea()
+        .padding()
+        .background(Color(.white))
     }
 }
 

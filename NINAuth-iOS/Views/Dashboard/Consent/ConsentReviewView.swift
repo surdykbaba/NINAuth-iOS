@@ -107,6 +107,7 @@ struct ConsentReviewView: View {
             
             BottomSheetView(isPresented: $viewModel.consentRevoked) {
                 rejectedSheet
+                    .padding(.bottom, 50)
             }
             .onChange(of: viewModel.consentRevoked) { _ in
                 if(viewModel.consentRevoked == false) {
@@ -116,6 +117,7 @@ struct ConsentReviewView: View {
             
             BottomSheetView(isPresented: $viewModel.consentApprove) {
                 approvedSheet
+                    .padding(.bottom, 50)
             }
             .onChange(of: viewModel.consentApprove) { _ in
                 if(viewModel.consentApprove == false) {
@@ -170,6 +172,7 @@ struct ConsentReviewView: View {
             Image("checkmark_transparent")
             Text("this_organization_has_been_blocked_from_accessing_your_data")
                 .padding(.bottom, 20)
+                .multilineTextAlignment(.center)
         }
         .padding()
         .background(Color.white)
@@ -191,6 +194,7 @@ struct ConsentReviewView: View {
             Image("checkmark_transparent")
             Text("the_selected_data_has_been_shared")
                 .padding(.bottom, 20)
+                .multilineTextAlignment(.center)
         }
         .padding()
         .background(Color.white)

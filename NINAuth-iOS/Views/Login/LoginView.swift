@@ -125,6 +125,7 @@ struct LoginView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         ForgotPinView()
+                            .padding(.trailing)
                     } label: {
                         Text("forgot_pin?".localized)
                             .customFont(.title, fontSize: 18)

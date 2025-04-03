@@ -27,7 +27,6 @@ struct BottomSheetView<Content: View>: View {
                     VStack {
                         //contentView
                         content
-                            .padding(.bottom, 50)
                     }
                     .frame(maxWidth: .infinity)
                     //.frame(maxHeight: geometry.size.height - 50)
@@ -36,7 +35,7 @@ struct BottomSheetView<Content: View>: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .ignoresSafeArea()
+            .edgesIgnoringSafeArea(.all)
             .animation(.easeInOut, value: isPresented)
         }
     }

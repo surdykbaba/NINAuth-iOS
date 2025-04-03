@@ -20,7 +20,7 @@ struct SetPINView: View {
     var body: some View {
         ZStack {
             VStack(alignment: .leading) {
-                Text("set_a_login_pin".localized)
+                Text("set_a_login_pin")
                     .customFont(.subheadline, fontSize: 24)
                     .padding(.bottom, 5)
 

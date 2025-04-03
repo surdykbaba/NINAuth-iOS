@@ -26,7 +26,7 @@ struct CheckIdentityView: View {
                     .padding(.bottom, 30)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("national_identification_number".localized)
+                    Text("national_identification_number")
                         .customFont(.subheadline, fontSize: 16)
                     TextField("12345678910", text: $identificationNumber)
                         .keyboardType(.numberPad)
