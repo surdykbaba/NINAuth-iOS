@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 struct ArchSlider: View {
-    @State private var value: Double = 7
-    private let thumbOffset: CGFloat = 20 // Slightly below the arc
+    @State var value: Double = 5
+    private let thumbInset: CGFloat = 20
     
     var body: some View {
         VStack {
@@ -22,9 +22,12 @@ struct ArchSlider: View {
                     ArcShape()
                         .stroke(
                             LinearGradient(
-                            gradient: Gradient(colors: [.red, .green]),
-                            startPoint: .leading,
-                            endPoint: .trailing
+                                gradient: Gradient(stops: [
+                                    .init(color: .red, location: 0.1),  // Red takes 30%
+                                    .init(color: Color(.greenProgress), location: 1.0) // Green takes 70%
+                                ]),
+                                startPoint: .leading,
+                                endPoint: .trailing
                             ),
                             style: StrokeStyle(lineWidth: 12, lineCap: .round)
                         )
@@ -32,15 +35,16 @@ struct ArchSlider: View {
                     
                     ThumbView(rotationAngle: thumbRotationAngle())
                         .position(thumbPosition(in: geometry.size))
-//                        .gesture(DragGesture()
-//                            .onChanged { gesture in
-//                                updateValue(from: gesture.location, in: geometry.size)
-//                            }
-//                        )
+                        .gesture(DragGesture()
+                            .onChanged { gesture in
+                                updateValue(from: gesture.location, in: geometry.size)
+                            }
+                        )
                     
                     VStack {
                         Text("\(550)")
                             .customFont(.largeTitle, fontSize: 56)
+                            .padding(.top)
                         
                         Text("ID INTEGRITY INDEX")
                     }
@@ -59,8 +63,8 @@ struct ArchSlider: View {
         let normalizedValue = value / 10
         let angle = Angle.degrees(180 * normalizedValue)
 
-        let x = width / 2 + radius * cos(angle.radians - .pi)
-        let y = radius + radius * sin(angle.radians - .pi) + thumbOffset
+        let x = width / 2 + (radius - thumbInset) * cos(angle.radians - .pi)
+        let y = radius + (radius - thumbInset) * sin(angle.radians - .pi)
         
         return CGPoint(x: x, y: y)
     }
@@ -80,7 +84,6 @@ struct ArchSlider: View {
         let dy = location.y - center.y
         let angle = atan2(dy, dx)
         
-        //var newValue = (1 - (angle + .pi) / .pi) * 10
         var newValue = (angle / .pi) * 10
         newValue = max(0, min(10, newValue))
         
@@ -107,15 +110,10 @@ struct ThumbView: View {
     
     var body: some View {
         ZStack {
-            Circle()
-                .fill(Color.blue)
-                .frame(width: 40, height: 40)
-                .shadow(radius: 5)
-            
             Image(systemName: "arrowtriangle.up.fill") // Arrow icon
                 .resizable()
-                .frame(width: 20, height: 20)
-                .foregroundColor(.white)
+                .frame(width: 22, height: 15)
+                .foregroundColor(Color(.greenProgress))
                 .rotationEffect(rotationAngle)
         }
     }

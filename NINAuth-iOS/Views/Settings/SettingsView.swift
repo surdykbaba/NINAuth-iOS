@@ -24,80 +24,89 @@ struct SettingsView: View {
     @State private var isValid = true
     @State private var goToUpdatePin = false
     private let mem = MemoryUtil.init()
+    @State private var showSheet = false
+    @State private var goToLinkID = false
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
+        ZStack {
+            ScrollView(showsIndicators: false) {
                 VStack {
-                    Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-                        .resizable()
-                        .frame(width: 96, height: 96)
-                        .clipShape(Circle())
-                        .padding(.bottom, 16)
-                    
-                    Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
-                        .customFont(.title, fontSize: 24)
+                    VStack {
+                        Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                            .resizable()
+                            .frame(width: 96, height: 96)
+                            .clipShape(Circle())
+                            .padding(.bottom, 16)
+                        
+                        Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
+                            .customFont(.title, fontSize: 24)
+                            .padding(.bottom, 30)
+                        
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("ID Integrity index: 550")
+                                .customFont(.body, fontSize: 16)
+                            
+                            NinAuthSlider(value: 3)
+                                .padding(.bottom)
+                            
+                            Text("What does my ID integrity index mean?")
+                                .padding(.top, 20)
+                                .customFont(.body, fontSize: 14)
+                        }
+                        .padding()
+                        .mask(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .stroke()
+                                .fill(.gray.opacity(0.2))
+                        )
                         .padding(.bottom, 30)
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("ID Integrity index: 550")
-                            .customFont(.body, fontSize: 16)
                         
-                        NinAuthSlider(value: 3)
-                        .padding(.bottom)
+                        legalAndComplaince
                         
-                        Text("What does my ID integrity index mean?")
-                            .padding(.top, 20)
-                            .customFont(.body, fontSize: 14)
+                        security
+                            .padding(.top, 44)
+                        
+                        others
+                            .padding(.top, 44)
+                            .padding(.bottom)
+                        
+                        NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
+                        
+                        if case .failed(let errorBag) = viewModel.state {
+                            Color.clear.onAppear {
+                                msg = errorBag.description
+                                showAlert.toggle()
+                            }.frame(width: 0, height: 0)
+                        }
                     }
-                    .padding()
-                    .mask(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke()
-                        .fill(.gray.opacity(0.2))
-                    )
-                    .padding(.bottom, 30)
-
-                    legalAndComplaince
-                    
-                    security
-                        .padding(.top, 44)
-                    
-                    others
-                        .padding(.top, 44)
-                        .padding(.bottom)
-                    
-                    NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
-                    
-                    if case .failed(let errorBag) = viewModel.state {
-                        Color.clear.onAppear {
-                            msg = errorBag.description
-                            showAlert.toggle()
-                        }.frame(width: 0, height: 0)
+                    .foregroundColor(Color(.text))
+                }
+                .padding()
+                .padding(.top, 20)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            NotificationsView()
+                        } label: {
+                            Image(systemName: "bell.badge")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.red, .black)
+                                .customFont(.caption, fontSize: 18)
+                                .foregroundStyle(Color.button)
+                        }
+                        .padding(.trailing)
                     }
                 }
-                .foregroundColor(Color(.text))
-            }
-            .padding()
-            .padding(.top, 20)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        NotificationsView()
-                    } label: {
-                        Image(systemName: "bell.badge")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.red, .black)
-                            .customFont(.caption, fontSize: 18)
-                            .foregroundStyle(Color.button)
-                    }
-                    .padding(.trailing)
+                .onAppear {
+                    biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
                 }
             }
-            .onAppear {
-                biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
+            
+            BottomSheetView(isPresented: $showSheet) {
+                LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID)
+                    .background(Color(.white))
             }
         }
     }
@@ -180,9 +189,14 @@ struct SettingsView: View {
                     SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
                 
-                NavigationLink(destination: LinkedIDsView()) {
+                Button {
+                    showSheet.toggle()
+                } label: {
                     SettingsRow(image: "device_mobile", name: "LinkedID")
                 }
+
+                NavigationLink(destination: LinkedIDsView(), isActive: $goToLinkID) {}.isDetailLink(false)
+                    .frame(width: 0, height: 0)
             }
         }
         .padding(.horizontal, 20)

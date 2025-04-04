@@ -10,7 +10,8 @@ import SwiftUI
 import SwiftUI
 
 struct LinkedIDsModalView: View {
-    @Environment(\.presentationMode) var presentationMode // For dismissing the modal
+    @Binding var showSheet: Bool
+    @Binding var goToLinkID: Bool
     
     var body: some View {
         VStack(spacing: 20) {
@@ -19,7 +20,7 @@ struct LinkedIDsModalView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    presentationMode.wrappedValue.dismiss()
+                    showSheet.toggle()
                 }) {
                     Image(systemName: "xmark")
                         .foregroundColor(.black)
@@ -28,7 +29,7 @@ struct LinkedIDsModalView: View {
             }
             
             // Circular ID Integrity Index
-            CircularIntegrityView(score: 550)
+            ArchSlider(value: 7.0)
             
             // Integrity Index Explanation Box
             HStack(alignment: .top, spacing: 10) {
@@ -56,7 +57,7 @@ struct LinkedIDsModalView: View {
                     LinkedIDItem(title: "International Passport")
                 }
                 
-                Spacer() 
+                Spacer()
             }
             
             // Button to Link More IDs
@@ -72,43 +73,9 @@ struct LinkedIDsModalView: View {
                     .cornerRadius(4)
             }
             .padding(.top, 10)
-
-            Spacer()
+            .padding(.bottom)
         }
         .padding()
-    }
-}
-
-// Circular Progress View for ID Integrity Index
-struct CircularIntegrityView: View {
-    var score: Int
-    
-    var body: some View {
-        ZStack {
-            // Background Arc
-            Circle()
-                .trim(from: 0.2, to: 1) 
-                .stroke(Color.red.opacity(0.3), lineWidth: 15)
-                .rotationEffect(.degrees(135))
-            
-            // Foreground Arc
-            Circle()
-                .trim(from: 0.2, to: CGFloat(score) / 1000)
-                .stroke(score > 700 ? Color.green : Color.orange, lineWidth: 15)
-                .rotationEffect(.degrees(130))
-            
-            // Score Display
-            VStack {
-                Text("\(score)")
-                    .font(.largeTitle)
-                    .bold()
-                
-                Text("ID INTEGRITY INDEX")
-                    .font(.caption)
-                    .foregroundColor(.black)
-            }
-        }
-        .frame(width: 150, height: 150)
     }
 }
 
@@ -130,6 +97,6 @@ struct LinkedIDItem: View {
 // Preview
 struct LinkedIDsModalView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkedIDsModalView()
+        LinkedIDsModalView(showSheet: .constant(true), goToLinkID: .constant(false))
     }
 }
