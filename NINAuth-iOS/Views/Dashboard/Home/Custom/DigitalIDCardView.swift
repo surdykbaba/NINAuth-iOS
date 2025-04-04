@@ -29,15 +29,15 @@ struct DigitalIDCardView: View {
                         .resizable()
                         .frame(width: 50, height: 50)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .opacity(29) // Soft blending
+                        .opacity(29)
 
                     // Rotating holographic effect
                     Image("holographic")
                         .resizable()
-                        .frame(width: 50, height: 50)
+                        .frame(width: 53, height: 52)
                         .clipShape(Circle())
                         .rotationEffect(.degrees(rotateHolographic))
-                        .opacity(0.3) // Reduce intensity to blend better
+                        .opacity(0.2)
                         .onAppear {
                             withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
                                 rotateHolographic = 360
@@ -64,11 +64,13 @@ struct DigitalIDCardView: View {
                 // Right column: additional info
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
-                    doubleTextView(title: "STATE OF ORIGIN", subtitle: user.first?.first_name ?? "")
-                    doubleTextView(title: "LGA", subtitle: user.first?.first_name ?? "")
+                    doubleTextView(title: "STATE OF ORIGIN", subtitle: "LAGOS")
+                    doubleTextView(title: "LGA", subtitle: "SURULERE")
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
                 .padding(.leading, 16)
+                
+                
                 
                 Spacer()
             }
@@ -82,9 +84,9 @@ struct DigitalIDCardView: View {
         .frame(height: 242)
         .frame(maxWidth: .infinity, maxHeight: 242, alignment: .leading)
         .background(
-            Image("NinID_Front")
+            Image("NinID_Front_new")
                 .resizable()
-                .scaledToFill() // Ensure it fully covers the space
+                .scaledToFill()
                 
         )
         // User image blended with the background
@@ -92,10 +94,11 @@ struct DigitalIDCardView: View {
             Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
                 .resizable()
                 .scaledToFill()
-                .frame(width: 90, height: 107)
-                .clipShape(RoundedRectangle(cornerRadius: 12)),
+                .frame(width: 89, height: 107)
+                .offset(y: -30),
             alignment: .bottomTrailing
         )
+
     }
 
     func doubleTextView(title: String, subtitle: String) -> some View {
@@ -105,7 +108,7 @@ struct DigitalIDCardView: View {
                 .foregroundColor(Color(.cardLabel))
                 .padding(.top, 1)
             Text(subtitle)
-                .customFont(.body, fontSize: 12)
+                .customFont(.title, fontSize: 12)
                 .foregroundColor(Color(.text))
         }
         .multilineTextAlignment(.leading)
