@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ninauth.ng</string>
+	<string>com.ng.ninauth</string>
 	<key>PROJECT_ID</key>
 	<string>ninauth-mobile</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:231523097194:ios:3ad147ae80064cbe774813</string>
+	<string>1:231523097194:ios:49abb5fdd8471868774813</string>
 </dict>
 </plist>

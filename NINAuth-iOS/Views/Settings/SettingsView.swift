@@ -43,9 +43,7 @@ struct SettingsView: View {
                         Text("ID Integrity index: 550")
                             .customFont(.body, fontSize: 16)
                         
-                        GeometryReader { geometry in
-                            NinAuthSlider(screenWidth: geometry.size.width)
-                        }
+                        NinAuthSlider(value: 3)
                         .padding(.bottom)
                         
                         Text("What does my ID integrity index mean?")
