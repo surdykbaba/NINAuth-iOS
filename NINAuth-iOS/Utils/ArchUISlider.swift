@@ -9,13 +9,14 @@ import Foundation
 import SwiftUI
 
 struct ArchSlider: View {
-    @State private var value: Double = 10
+    @State private var value: Double = 7
+    private let thumbOffset: CGFloat = 20 // Slightly below the arc
     
     var body: some View {
         VStack {
             GeometryReader { geometry in
                 let width = geometry.size.width
-                let radius = width / 2
+                let radius = width / 2 - 20
                 
                 ZStack {
                     ArcShape()
@@ -56,18 +57,17 @@ struct ArchSlider: View {
         let width = size.width
         let radius = width / 2 - 20
         let normalizedValue = value / 10
-        let angle = Angle.degrees(180 * (1 - normalizedValue))
+        let angle = Angle.degrees(180 * normalizedValue)
 
-        let x = width / 2 + radius * cos(angle.radians)
-//        let x = width / 2 + radius * cos(angle.radians - .pi)
-        let y = radius + radius * sin(angle.radians - .pi)
+        let x = width / 2 + radius * cos(angle.radians - .pi)
+        let y = radius + radius * sin(angle.radians - .pi) + thumbOffset
         
         return CGPoint(x: x, y: y)
     }
     
     private func thumbRotationAngle() -> Angle {
         let normalizedValue = value / 10 // Convert 0-10 range to 0-1
-        return Angle.degrees(180 * normalizedValue - 90) // Adjusted so the arrow follows the arc
+        return Angle.degrees(180 * normalizedValue - 90)
     }
     
     
@@ -80,7 +80,8 @@ struct ArchSlider: View {
         let dy = location.y - center.y
         let angle = atan2(dy, dx)
         
-        var newValue = (1 - (angle + .pi) / .pi) * 10 
+        //var newValue = (1 - (angle + .pi) / .pi) * 10
+        var newValue = (angle / .pi) * 10
         newValue = max(0, min(10, newValue))
         
         value = newValue
