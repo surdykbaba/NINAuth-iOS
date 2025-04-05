@@ -9,6 +9,7 @@ import SwiftUI
 import RealmSwift
 
 struct UpdateContactInfoView: View {
+    @StateObject private var viewModel = AuthViewModel()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentTimer = 60
     @State private var email: String = ""
@@ -144,6 +145,9 @@ struct UpdateContactInfoView: View {
                 phone = user.first?.phone_number ?? ""
             }
             
+            NavigationLink(destination: TabControllerView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+                .frame(width: 0, height: 0)
+            
             BottomSheetView(isPresented: $showDialog) {
                 updateMobileNumber
             }
@@ -221,7 +225,19 @@ struct UpdateContactInfoView: View {
                 .padding(.top, 20)
 
                 Button {
-                    
+                    if(isOTPValid) {
+                        var ids = [UserkeyPair]()
+                        if(!phone.isEmpty) {
+                            ids.append(UserkeyPair(key: "Phone Number", value: phone))
+                        }
+                        if(!email.isEmpty) {
+                            ids.append(UserkeyPair(key: "Email", value: email))
+                        }
+                        let userInfo = UpdateUserInfo(ids: ids, medium: preferredContact.lowercased())
+                        Task {
+                            await viewModel.updateInfo(updateUserInfo: userInfo)
+                        }
+                    }
                 } label: {
                     Text("Resend OTP 00:\(currentTimer)")
                         .customFont(.title, fontSize: 18)

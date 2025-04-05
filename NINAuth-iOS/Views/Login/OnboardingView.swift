@@ -10,6 +10,7 @@ import CodeScanner
 
 struct OnboardingView: View {
     @EnvironmentObject var appState: AppState
+    @StateObject private var viewModel = AuthViewModel()
     @State private var showSheet = false
     @State private var isValid = true
     @State private var isPresentingScanner = false
@@ -77,11 +78,6 @@ struct OnboardingView: View {
                     } message: {
                         Text("Please scan QR code")
                     }
-//                    .halfSheet(showSheet: $showSheet) {
-//                        requestCodeView
-//                    } onEnd: {
-//                        Log.info("Dismissed Sheet")
-//                    }
                 }
                 
                 Group {
@@ -98,6 +94,11 @@ struct OnboardingView: View {
             }
             .onAppear {
                 scannedCode = nil
+                viewModel.initiateLocationRequest()
+            }
+            .onChange(of: viewModel.userLocation) { _ in
+                appState.latitude = viewModel.userLocation?.coordinate.latitude ?? 0.00
+                appState.longitude = viewModel.userLocation?.coordinate.longitude ?? 0.00
             }
             .sheet(isPresented: $isPresentingScanner) {
                 QRCodeScanner(result: $scannedCode)
@@ -110,8 +111,16 @@ struct OnboardingView: View {
                 //            }
             }
             
+            NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+                .frame(width: 0, height: 0)
+            
             BottomSheetView(isPresented: $showSheet) {
                 requestCodeView
+            }
+            
+            if case .loading = viewModel.state {
+                ProgressView()
+                    .scaleEffect(2)
             }
         }
     }
@@ -171,8 +180,10 @@ struct OnboardingView: View {
                         isValid = false
                     }else {
                         isValid = true
+                        Task {
+                            await viewModel.registerWithNIN(registerWithNIN: RegisterWithNIN(deviceId: appState.getDeviceID(), ninId: identificationNumber, deviceMetadata: DeviceMetadata(lat: appState.latitude, lng:appState.longitude)))
+                        }
                     }
-                    //showingAlert = true
                 } label: {
                     Text("Continue")
                         .customFont(.title, fontSize: 18)
@@ -182,7 +193,6 @@ struct OnboardingView: View {
                 .padding(.vertical, 18)
                 .cornerRadius(4)
                 .background(Color.button)
-//                .disabled(!isValid)
                 .padding(.bottom, 30)
             }
         }

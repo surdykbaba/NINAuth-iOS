@@ -133,6 +133,38 @@ class AuthViewModel: NSObject, ObservableObject  {
             state = .failed(failure)
         }
     }
+    
+    @MainActor
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.registerWithNIN(registerWithNIN: registerWithNIN)
+        switch result {
+        case .success(_):
+            continueReg = true
+            state = .success
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    @MainActor
+    func updateInfo(updateUserInfo: UpdateUserInfo) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.updateUserInfo(updateUserInfo: updateUserInfo)
+        switch result {
+        case .success(_):
+            state = .success
+            continueReg = true
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
 }
 
 extension AuthViewModel : CLLocationManagerDelegate {

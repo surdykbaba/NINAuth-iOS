@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ArchSlider: View {
     @State var value: Double = 5
+    @State var displayValue: Int = 550
     private let thumbInset: CGFloat = 20
     
     var body: some View {
@@ -42,7 +43,7 @@ struct ArchSlider: View {
                         )
                     
                     VStack {
-                        Text("\(550)")
+                        Text("\(displayValue)")
                             .customFont(.largeTitle, fontSize: 56)
                             .padding(.top)
                         

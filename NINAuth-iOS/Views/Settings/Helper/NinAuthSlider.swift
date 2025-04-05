@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NinAuthSlider: View {
-    var value: Double = 3.0
+    @Binding var value: Double
     var low: Int = 250
     var high: Int = 750
     
@@ -60,5 +60,5 @@ struct NinAuthSlider: View {
 }
 
 #Preview {
-    NinAuthSlider()
+    NinAuthSlider(value: .constant(6.0))
 }

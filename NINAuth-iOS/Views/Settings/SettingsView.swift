@@ -10,11 +10,12 @@ import RealmSwift
 import LocalAuthentication
 
 struct SettingsView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var linkVM = LinkedIDViewModel()
     @State private var biometricsIsOn = true
     @ObservedResults(User.self) var user
     @State private var showSignOut = false
-    @EnvironmentObject private var appState: AppState
     @State private var showAlert: Bool = false
     @State private var showPin = false
     @State private var msg = ""
@@ -46,7 +47,7 @@ struct SettingsView: View {
                             Text("ID Integrity index: 550")
                                 .customFont(.body, fontSize: 16)
                             
-                            NinAuthSlider(value: 3)
+                            NinAuthSlider(value: $linkVM.score)
                                 .padding(.bottom)
                             
                             Text("What does my ID integrity index mean?")
@@ -103,9 +104,12 @@ struct SettingsView: View {
                     biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
                 }
             }
+            .task {
+                await linkVM.getScore(deviceID: appState.getDeviceID())
+            }
             
             BottomSheetView(isPresented: $showSheet) {
-                LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID)
+                LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID, score: $linkVM.score, scoreToDisplay: $linkVM.displayedScore)
                     .background(Color(.white))
             }
         }
@@ -318,4 +322,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(AppState())
 }

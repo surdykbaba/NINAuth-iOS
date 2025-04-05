@@ -125,4 +125,37 @@ struct AuthService: AuthProtocol {
         }
     }
     
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.REGISTER_WITH_NIN, params: registerWithNIN, authoriseHeader: false)
+        switch networkResponse.isSuccess() {
+        case true:
+            do {
+                let realm = try await Realm()
+                try await realm.asyncWrite {
+                    let token = Token(value: networkResponse.getJson())
+                    realm.deleteAll()
+                    realm.add(token)
+                    let mem = MemoryUtil()
+                    mem.setValue(key: mem.authentication_key, value: false)
+                }
+                return .success(true)
+            }catch {
+                Log.error(error.localizedDescription)
+                return .failure(ErrorBag())
+            }
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.UPDATE_USER_INFO, params: updateUserInfo)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
 }

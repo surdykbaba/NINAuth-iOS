@@ -12,6 +12,8 @@ import SwiftUI
 struct LinkedIDsModalView: View {
     @Binding var showSheet: Bool
     @Binding var goToLinkID: Bool
+    @Binding var score: Double
+    @Binding var scoreToDisplay: Int
     
     var body: some View {
         VStack(spacing: 20) {
@@ -29,7 +31,7 @@ struct LinkedIDsModalView: View {
             }
             
             // Circular ID Integrity Index
-            ArchSlider(value: 7.0)
+            ArchSlider(value: score, displayValue: scoreToDisplay)
             
             // Integrity Index Explanation Box
             HStack(alignment: .top, spacing: 10) {
@@ -97,6 +99,6 @@ struct LinkedIDItem: View {
 // Preview
 struct LinkedIDsModalView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkedIDsModalView(showSheet: .constant(true), goToLinkID: .constant(false))
+        LinkedIDsModalView(showSheet: .constant(true), goToLinkID: .constant(false), score: .constant(6), scoreToDisplay: .constant(600))
     }
 }

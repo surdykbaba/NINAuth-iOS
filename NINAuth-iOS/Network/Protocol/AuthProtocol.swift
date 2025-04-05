@@ -18,5 +18,9 @@ protocol AuthProtocol {
     func getFaceAuthStatus(deviceID: String) async -> Result<JSON, ErrorBag>
     
     func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Result<Bool, ErrorBag>
+    
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<Bool, ErrorBag>
+    
+    func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag>
 
 }
