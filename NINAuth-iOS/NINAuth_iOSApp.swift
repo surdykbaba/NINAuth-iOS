@@ -9,6 +9,7 @@ import SwiftUI
 import RealmSwift
 import SmileID
 import Firebase
+import FirebaseMessaging
 
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
@@ -49,7 +50,41 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 Log.info("I took screen shot")
         }
         
+        UNUserNotificationCenter.current().delegate = self
+
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+          options: authOptions,
+          completionHandler: { _, _ in }
+        )
+        application.registerForRemoteNotifications()
+        Messaging.messaging().delegate = self
         return true
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        Log.info("willPresent")
+        let userInfo = notification.request.content.userInfo
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        completionHandler([[.list, .banner, .sound]])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        Log.info("didReceive response")
+        let userInfo = response.notification.request.content.userInfo
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Log.info("The token on fresh launch \(deviceToken)")
+        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        if !token.isEmpty {
+            //TODO: Do whatever you want to do with token
+        }
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        Log.error(error.localizedDescription)
     }
     
     func hideBackButtonText() {
@@ -82,4 +117,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
     }
     
+}
+
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        let tokenDict = ["token": fcmToken ?? ""]
+        Log.info(fcmToken ?? "")
+        NotificationCenter.default.post(
+          name: Notification.Name("FCMToken"),
+          object: nil,
+          userInfo: tokenDict)
+        if let token = fcmToken {
+            //TODO: do with token as you please
+        }
+    }
 }
