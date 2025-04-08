@@ -54,16 +54,21 @@ struct DigitalIDCardView: View {
                 .padding(.trailing, 14)
 
                 // Left column: user info
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
                     doubleTextView(title: "SURNAME", subtitle: user.first?.last_name ?? "")
                     doubleTextView(title: "FIRST NAME", subtitle: user.first?.first_name ?? "")
                     doubleTextView(title: "MIDDLE NAME", subtitle: user.first?.middle_name ?? "")
-                    doubleTextView(title: "GENDER", subtitle: user.first?.gender  ?? "")
+                    doubleTextView(title: "GENDER",  subtitle: user.first?.gender?.lowercased() == "m" ? "Male" :
+                                    user.first?.gender?.lowercased() == "f" ? "Female" : ""
+                      )
                 }
                 
                 // Right column: additional info
-                VStack(alignment: .leading, spacing: 4) {
-                    doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
+                VStack(alignment: .leading, spacing: 8) {
+                    doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin.map {
+                        String(repeating: "*", count: max($0.count - 4, 0)) + $0.suffix(4)
+                    } ?? ""
+                )
                     doubleTextView(title: "STATE OF ORIGIN", subtitle: "LAGOS")
                     doubleTextView(title: "LGA", subtitle: "SURULERE")
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
