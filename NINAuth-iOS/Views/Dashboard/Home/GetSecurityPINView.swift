@@ -76,7 +76,7 @@ struct GetSecurityPINView: View {
                                 .resizable()
                                 .frame(width: 83, height: 83)
                             
-                            Text("This code has been used")
+                            Text("This code hasn't been used")
                                 .customFont(.body, fontSize: 16)
                             
                             Text("Companies will appear here once they use this code to verify your NIN data")

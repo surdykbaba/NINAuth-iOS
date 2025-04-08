@@ -8,6 +8,9 @@ struct DigitalIDView: View {
     @State private var showSecurityPINView = false
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
+    @StateObject private var consentVM = ConsentViewModel()
+    @State private var isPresentingScanner = false
+    @State private var scannedCode: String?
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -48,12 +51,13 @@ struct DigitalIDView: View {
                                 .padding(.bottom, 15)
 
                             VStack(spacing: 12) {
-                                IdentityView(icon: "barcode", title: "share_my_id".localized, subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
-                                    showShareIDPopover = true
+                                IdentityView(icon: "barcode", title: "Scan QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
+                                    isPresentingScanner.toggle()
+                                   // showShareIDPopover = true
                                 })
-                                .popover(isPresented: $showShareIDPopover) {
-                                    ShareIDView(display: $showShareIDPopover)
-                                }
+//                                .popover(isPresented: $showShareIDPopover) {
+//                                    ShareIDView(display: $showShareIDPopover)
+//                                }
 
                                 IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
                                     showSecurityPINView = true
@@ -61,6 +65,17 @@ struct DigitalIDView: View {
                             }
                         }
                         .padding()
+                    }.sheet(isPresented: $isPresentingScanner) {
+                        QRCodeScanner(result: $scannedCode)
+                    }
+                    .onChange(of: scannedCode) { _ in
+                        if let code = scannedCode {
+                            verifyCode(code)
+                        }
+                        isPresentingScanner = false
+                    }
+                    .onAppear {
+                        scannedCode = nil
                     }
                 )
             
@@ -69,11 +84,9 @@ struct DigitalIDView: View {
                     .scaleEffect(2)
             }
         }
-        moveToGetSecurityPINView()
-    }
-
-    func moveToGetSecurityPINView() -> some View {
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) {}
+        
+        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) {}
     }
 
     func showQR(title: String, subtitle: String) -> some View {
@@ -90,6 +103,15 @@ struct DigitalIDView: View {
         .cornerRadius(10)
         .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
             .fill(.white))
+    }
+    
+    func verifyCode(_ code: String) {
+        var consentCode = ConsentCode()
+        consentCode.deviceId = appState.getDeviceID()
+        consentCode.requestCode = code
+        Task {
+            await consentVM.verifyConsent(consentCode: consentCode)
+        }
     }
 }
 

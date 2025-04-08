@@ -113,7 +113,17 @@ struct UpdateContactInfoView: View {
                 
                 // Continue Button
                 Button(action: {
-                    // Handle continue action
+                    var ids = [UserkeyPair]()
+                    if(!phone.isEmpty) {
+                        ids.append(UserkeyPair(key: "Phone Number", value: phone))
+                    }
+                    if(!email.isEmpty) {
+                        ids.append(UserkeyPair(key: "Email", value: email))
+                    }
+                    let userInfo = UpdateUserInfo(ids: ids, medium: preferredContact.lowercased())
+                    Task {
+                        await viewModel.updateInfo(updateUserInfo: userInfo)
+                    }
                 }) {
                     Text("Continue")
                         .font(.headline)
@@ -226,22 +236,18 @@ struct UpdateContactInfoView: View {
 
                 Button {
                     if(isOTPValid) {
-                        var ids = [UserkeyPair]()
-                        if(!phone.isEmpty) {
-                            ids.append(UserkeyPair(key: "Phone Number", value: phone))
-                        }
-                        if(!email.isEmpty) {
-                            ids.append(UserkeyPair(key: "Email", value: email))
-                        }
-                        let userInfo = UpdateUserInfo(ids: ids, medium: preferredContact.lowercased())
-                        Task {
-                            await viewModel.updateInfo(updateUserInfo: userInfo)
-                        }
+                        
                     }
                 } label: {
-                    Text("Resend OTP 00:\(currentTimer)")
-                        .customFont(.title, fontSize: 18)
-                        .foregroundStyle(.white)
+                    if(otp.count == 6) {
+                        Text("Continue")
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                    }else{
+                        Text("Resend OTP 00:\(currentTimer)")
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)

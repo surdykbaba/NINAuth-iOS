@@ -50,9 +50,18 @@ struct SettingsView: View {
                             NinAuthSlider(value: $linkVM.score)
                                 .padding(.bottom)
                             
-                            Text("What does my ID integrity index mean?")
-                                .padding(.top, 20)
-                                .customFont(.body, fontSize: 14)
+                            Button {
+                                showSheet.toggle()
+                            } label: {
+                                HStack {
+                                    Text("What does my ID integrity index mean?")
+                                        .customFont(.body, fontSize: 14)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(Color("buttonColor"))
+                                }
+                            }
+                            .padding(.top, 20)
                         }
                         .padding()
                         .mask(
@@ -111,6 +120,7 @@ struct SettingsView: View {
             BottomSheetView(isPresented: $showSheet) {
                 LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID, score: $linkVM.score, scoreToDisplay: $linkVM.displayedScore)
                     .background(Color(.white))
+                    .padding(.bottom, 50)
             }
         }
     }
@@ -193,9 +203,7 @@ struct SettingsView: View {
                     SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
                 
-                Button {
-                    showSheet.toggle()
-                } label: {
+                NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "device_mobile", name: "LinkedID")
                 }
 

@@ -53,7 +53,7 @@ class AuthViewModel: NSObject, ObservableObject  {
         switch result {
         case .success(let res):
             // NOTE: Verify Status is either "passed" or "process"
-            verifyStatus = res["face_auth_completed"].stringValue
+            verifyStatus = res["face_auth_completed"].stringValue.lowercased()
             state = .success
         case .failure(let failure):
             state = .failed(failure)
@@ -70,7 +70,7 @@ class AuthViewModel: NSObject, ObservableObject  {
         switch result {
         case .success(let res):
             // NOTE: Verify Status is either "passed" or "process"
-            verifyStatus = res["face_auth_completed"].stringValue
+            verifyStatus = res["face_auth_completed"].stringValue.lowercased()
             state = .success
         case .failure(let failure):
             state = .failed(failure)
