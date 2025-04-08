@@ -18,6 +18,7 @@ struct OnboardingView: View {
     @State private var showingAlert = false
     @State private var goNext = false
     @State private var identificationNumber = ""
+    @FocusState private var nameIsFocused: Bool
 
     var body: some View {
         ZStack {
@@ -153,6 +154,7 @@ struct OnboardingView: View {
                     TextField("12345678910", text: $identificationNumber)
                         .keyboardType(.numberPad)
                         .customTextField()
+                        .focused($nameIsFocused)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .stroke()
@@ -164,6 +166,10 @@ struct OnboardingView: View {
                         .onChange(of: identificationNumber) { _ in
                             if(identificationNumber.count > 11) {
                                 identificationNumber = String(identificationNumber.prefix(11))
+                            }
+                            
+                            if(identificationNumber.count == 11) {
+                                nameIsFocused = false
                             }
                         }
                     if !isValid {
