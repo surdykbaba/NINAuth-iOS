@@ -19,6 +19,8 @@ struct OnboardingView: View {
     @State private var goNext = false
     @State private var identificationNumber = ""
     @FocusState private var nameIsFocused: Bool
+    @State private var errTitle = ""
+    @State private var showDialog = false
 
     var body: some View {
         ZStack {
@@ -123,6 +125,14 @@ struct OnboardingView: View {
                 ProgressView()
                     .scaleEffect(2)
             }
+            
+            if case .failed(let errorBag) = viewModel.state {
+                Color.clear.onAppear() {
+                    errTitle = errorBag.description
+                    showDialog.toggle()
+                }
+                .frame(width: 0, height: 0)
+            }
         }
     }
 
@@ -204,6 +214,11 @@ struct OnboardingView: View {
         }
         .padding()
         .background(Color(.white))
+        .alert("Error", isPresented: $showDialog) {
+            Button("OK", role: .cancel) {}
+        }message: {
+            Text(errTitle)
+        }
     }
 }
 
