@@ -21,6 +21,9 @@ struct DigitalIDView: View {
                     ScrollView {
                         VStack(alignment: .leading) {
                             VStack(alignment: .center, spacing: 10) {
+                                Image(.banner)
+                                    .resizable()
+                                    .frame(maxWidth: 370)
                                 ZStack {
                                     DigitalbackCard()
                                         .opacity(isFlipped ? 1 : 0)
@@ -38,7 +41,7 @@ struct DigitalIDView: View {
                                             perspective: 0.8
                                         )
                                 }
-                                .frame(width: 370, height: 242)
+                                .frame(height: 242)
                                 .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
                                 .onTapGesture {
                                     isFlipped.toggle()

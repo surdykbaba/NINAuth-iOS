@@ -12,12 +12,15 @@ import UIKit
 
 struct Service{
     
-    func post<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true) async -> NetworkResponseModel {
+    func post<T: Codable>(_ urlString: String, params: T?, authoriseHeader: Bool = true, increaseTimeout: Bool = false) async -> NetworkResponseModel {
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
+            if(increaseTimeout) {
+                request.timeoutInterval = 120
+            }
             #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
             #endif

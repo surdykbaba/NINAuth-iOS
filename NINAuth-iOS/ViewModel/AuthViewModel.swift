@@ -57,6 +57,7 @@ class AuthViewModel: NSObject, ObservableObject  {
             state = .success
         case .failure(let failure):
             state = .failed(failure)
+            verifyStatus = "failed"
         }
     }
     

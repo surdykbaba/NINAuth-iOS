@@ -20,38 +20,40 @@ struct DigitalIDCardView: View {
                 .padding(.top, 4)
 
             // HStack containing NIMC logo and details
-            HStack(alignment: .bottom, spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
                 
                 // ZStack to create the holographic effect
-                ZStack {
-                    // Blended background
-                    Image("holographic")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .opacity(29)
-
-                    // Rotating holographic effect
-                    Image("holographic")
-                        .resizable()
-                        .frame(width: 53, height: 52)
-                        .clipShape(Circle())
-                        .rotationEffect(.degrees(rotateHolographic))
-                        .opacity(0.2)
-                        .onAppear {
-                            withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
-                                rotateHolographic = 360
+                VStack {
+                    Spacer()
+                    ZStack {
+                        // Blended background
+                        Image("holographic")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .opacity(29)
+                        
+                        // Rotating holographic effect
+                        Image("holographic")
+                            .resizable()
+                            .frame(width: 53, height: 52)
+                            .clipShape(Circle())
+                            .rotationEffect(.degrees(rotateHolographic))
+                            .opacity(0.2)
+                            .onAppear {
+                                withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
+                                    rotateHolographic = 360
+                                }
                             }
-                        }
-                    
-                    // Static NIMC logo on top
-                    Image("Nimc")
-                        .resizable()
-                        .frame(width: 45, height: 45)
+                        
+                        // Static NIMC logo on top
+                        Image("Nimc")
+                            .resizable()
+                            .frame(width: 45, height: 45)
+                    }
                 }
-                .offset(y: 20)
-                .padding(.leading, 16)
-                .padding(.trailing, 14)
+                .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom)
+                //.padding(.leading, 4)
 
                 // Left column: user info
                 VStack(alignment: .leading, spacing: 4) {
@@ -60,17 +62,17 @@ struct DigitalIDCardView: View {
                     doubleTextView(title: "MIDDLE NAME", subtitle: user.first?.middle_name ?? "")
                     doubleTextView(title: "GENDER", subtitle: user.first?.gender  ?? "")
                 }
+                .frame(maxWidth: 100)
                 
                 // Right column: additional info
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
-                    doubleTextView(title: "STATE OF ORIGIN", subtitle: "LAGOS")
-                    doubleTextView(title: "LGA", subtitle: "SURULERE")
+                    doubleTextView(title: "STATE OF ORIGIN", subtitle: "")
+                    doubleTextView(title: "LGA", subtitle: "")
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
                 .padding(.leading, 16)
-                
-                
+                .frame(maxWidth: 150)
                 
                 Spacer()
             }
@@ -79,15 +81,17 @@ struct DigitalIDCardView: View {
             
             Spacer()
         }
-        //.padding(.leading, 40)
         .padding(.top, 10)
         .frame(height: 242)
+        //.padding(.horizontal, 8)
         .frame(maxWidth: .infinity, maxHeight: 242, alignment: .leading)
         .background(
             Image("NinID_Front_new")
                 .resizable()
-                .scaledToFill()
-                
+                //.scaledToFill()
+                .frame(width: 375, height: 242)
+                .clipped()
+                //.padding(.horizontal, 8)
         )
         // User image blended with the background
         .overlay(
@@ -95,7 +99,7 @@ struct DigitalIDCardView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 89, height: 107)
-                .offset(y: -30),
+                .offset(y: -20),
             alignment: .bottomTrailing
         )
 

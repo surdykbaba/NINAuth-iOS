@@ -77,7 +77,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                             NavigationLink(destination: VerificationStatusView(verificationStatus: .done), isActive: .constant(true)) {}.isDetailLink(false)
                         }
 
-                        if (viewModel.verifyStatus == "processing") {
+                        if (viewModel.verifyStatus == "processing" || viewModel.verifyStatus == "failed") {
                             NavigationLink(destination: VerificationStatusView(verificationStatus: .inProgress), isActive: .constant(true)) {}.isDetailLink(false)
                         }
                     }

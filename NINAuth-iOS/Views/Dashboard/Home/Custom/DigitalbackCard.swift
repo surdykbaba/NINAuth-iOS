@@ -8,11 +8,10 @@ struct DigitalbackCard: View {
         ZStack {
             Image("NinID_Back_new")
                 .resizable()
-                
                 .frame(height: 242)
                 .clipped()
 
-                    }
+        }
         .frame(maxWidth: 370, maxHeight: 242, alignment: .leading)
     }
 }

@@ -36,7 +36,7 @@ struct AuthService: AuthProtocol {
     }
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: false)
+        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: true, increaseTimeout: true)
         
         switch networkResponse.isSuccess() {
         case true:
@@ -92,7 +92,7 @@ struct AuthService: AuthProtocol {
     }
     
     func getFaceAuthStatus(deviceID: String) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().get(URLs.FACE_AUTH_STATUS + deviceID, authoriseHeader: false)
+        let networkResponse = await Service.init().get(URLs.FACE_AUTH_STATUS + deviceID, authoriseHeader: true)
         switch networkResponse.isSuccess() {
         case true:
             return .success(networkResponse.getJson()!)

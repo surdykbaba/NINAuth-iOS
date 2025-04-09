@@ -67,7 +67,7 @@ class AppState: ObservableObject {
                 switch result {
                 case .success(let res):
                     // NOTE: Verify Status is either "passed" or "process"
-                    verifyStatus = res["FaceAuthCompleted"].stringValue
+                    verifyStatus = res["status"].stringValue
                     state = .success
                     if(verifyStatus == "passed") {
                         timer?.invalidate()
