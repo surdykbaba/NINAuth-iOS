@@ -22,5 +22,8 @@ protocol AuthProtocol {
     func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<Bool, ErrorBag>
     
     func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag>
-
+    
+    func sendOTP(sendOTPRequest: SendOTPRequest) async -> Result<Bool, ErrorBag>
+    
+    func validateOTP(validateOTP: ValidateOTP) async -> Result<Bool, ErrorBag>
 }

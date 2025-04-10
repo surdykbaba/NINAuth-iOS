@@ -11,13 +11,14 @@ struct LinkedIDsView: View {
     @StateObject var viewModel = LinkedIDViewModel()
 
     var body: some View {
-        if #available(iOS 16.0, *) {
-            bodyView
-                .toolbarBackground(.bg, for: .navigationBar)
-                .toolbarRole(.editor)
-        }else {
-            bodyView
-        }
+        bodyView
+//        if #available(iOS 16.0, *) {
+//            bodyView
+//                .toolbarBackground(.bg, for: .navigationBar)
+//                .toolbarRole(.editor)
+//        }else {
+//            bodyView
+//        }
     }
     
     var bodyView: some View {

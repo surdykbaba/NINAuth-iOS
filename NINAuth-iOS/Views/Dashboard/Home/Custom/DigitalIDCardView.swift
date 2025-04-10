@@ -95,11 +95,14 @@ struct DigitalIDCardView: View {
         )
         // User image blended with the background
         .overlay(
-            Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-                .resizable()
-                .scaledToFill()
-                .frame(width: 89, height: 107)
-                .offset(y: -20),
+            VStack {
+                Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 89, height: 107)
+            }.frame(width: 89, height: 107)
+                .background(Color.white)
+                .padding(.bottom, 20),
             alignment: .bottomTrailing
         )
 

@@ -18,6 +18,9 @@ class AuthViewModel: NSObject, ObservableObject  {
     @Published private(set) var requestCode: String?
     @Published var logOut = false
     @Published var userLocation: CLLocation? = nil
+    @Published var otpTriggered = false
+    @Published var otpValidated = false
+    @Published var isLogging = false
     private let locationManager = CLLocationManager()
     private var deniedCount = 0
 
@@ -117,23 +120,37 @@ class AuthViewModel: NSObject, ObservableObject  {
             return
         }
         state = .loading
+        isLogging = true
         let result = await authService.logout(logOutRequest: logOutRequest)
         switch result {
         case .success(_):
-            do {
-                let realm = try await Realm()
-                try? realm.write {
-                    realm.deleteAll()
-                }
-            }catch {
-                Log.info(error.localizedDescription)
-            }
+//            do {
+//                let realm = try await Realm()
+//                try? realm.write {
+//                    realm.deleteAll()
+//                }
+//            }catch {
+//                Log.info(error.localizedDescription)
+//            }
+            isLogging = false
             logOut = true
             state = .success
         case .failure(let failure):
             state = .failed(failure)
+            isLogging = false
         }
     }
+    
+//    func deleteUserData() {
+//        do {
+//            let realm = try! Realm()
+//            try! realm.write {
+//                realm.deleteAll()
+//            }
+//        }catch {
+//            Log.info(error.localizedDescription)
+//        }
+//    }
     
     @MainActor
     func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Void {
@@ -162,6 +179,38 @@ class AuthViewModel: NSObject, ObservableObject  {
         case .success(_):
             state = .success
             continueReg = true
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    @MainActor
+    func triggerOTP(sendOTPRequest: SendOTPRequest) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.sendOTP(sendOTPRequest: sendOTPRequest)
+        switch result {
+        case .success(_):
+            state = .success
+            otpTriggered = true
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    @MainActor
+    func validateOTP(validateOTP: ValidateOTP) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.validateOTP(validateOTP: validateOTP)
+        switch result {
+        case .success(_):
+            state = .success
+            otpValidated = true
         case .failure(let failure):
             state = .failed(failure)
         }

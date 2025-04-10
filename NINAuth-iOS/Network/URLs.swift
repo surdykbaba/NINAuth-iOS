@@ -27,7 +27,8 @@ enum URLs {
     static let START_SESSION = "integration/enterprise/online/session/create"
     static let REGISTER_WITH_NIN = "auth/register-with-nin"
     static let UPDATE_USER_INFO = "auth/update-user-info"
-    
+    static let OTP = "otp"
+    static let OTP_VALIDATE = "otp/validate"
     
     
     //MARK: Consent

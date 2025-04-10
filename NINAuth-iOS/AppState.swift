@@ -16,6 +16,8 @@ class AppState: ObservableObject {
     @Published var initialRequestCode = ""
     @Published var latitude: Double = 0
     @Published var longitude: Double = 0
+    @Published var main = UUID()
+    @Published var userClickedLogout = false
     private let authService: AuthService
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()

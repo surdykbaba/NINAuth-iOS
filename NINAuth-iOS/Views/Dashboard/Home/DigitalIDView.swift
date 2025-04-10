@@ -15,72 +15,101 @@ struct DigitalIDView: View {
 
     var body: some View {
         ZStack {
-            Color.secondaryGrayBackground
-                .ignoresSafeArea()
-                .overlay(
-                    ScrollView {
-                        VStack(alignment: .leading) {
-                            VStack(alignment: .center, spacing: 10) {
-                                Image(.banner)
-                                    .resizable()
-                                    .frame(maxWidth: 370)
-                                ZStack {
-                                    DigitalbackCard()
-                                        .opacity(isFlipped ? 1 : 0)
-                                        .rotation3DEffect(
-                                            .degrees(isFlipped ? 0 : -180),
-                                            axis: (x: 0, y: 1, z: 0),
-                                            perspective: 0.8
-                                        )
+            ScrollView {
+                VStack(alignment: .leading) {
+                    VStack(alignment: .center, spacing: 10) {
+                        ZStack {
+                            ForEach(0..<2, id: \.self) { index in
+                                HStack(spacing: 20) {
+                                    Image(systemName: "lightbulb.fill")
+                                        .foregroundColor(Color("buttonColor"))
                                     
-                                    DigitalIDCardView()
-                                        .opacity(isFlipped ? 0 : 1)
-                                        .rotation3DEffect(
-                                            .degrees(isFlipped ? 180 : 0),
-                                            axis: (x: 0, y: 1, z: 0),
-                                            perspective: 0.8
-                                        )
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text("Safeguard your identity")
+                                            .bold()
+                                            .customFont(.headline, fontSize: 16)
+                                        
+                                        Text("Click here to learn how to keep your identity safe.")
+                                            .customFont(.body, fontSize: 13)
+                                    }
+                                    .multilineTextAlignment(.leading)
+
+                                    Spacer()
+                                    
+                                    Image(systemName: "xmark")
                                 }
-                                .frame(height: 242)
-                                .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(.black)
+                                .padding()
+                                .cornerRadius(10)
+                                .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(.white))
+                                .shadow(color: Color("transparentGreenBackground"), radius: 10)
+                                .offset(y: CGFloat(index) * 20)
                                 .onTapGesture {
-                                    isFlipped.toggle()
+                                    
                                 }
                             }
-                            .padding(.bottom, 30)
+                        }
+                        .padding(.bottom, 28)
+                        
+                        ZStack {
+                            DigitalbackCard()
+                                .opacity(isFlipped ? 1 : 0)
+                                .rotation3DEffect(
+                                    .degrees(isFlipped ? 0 : -180),
+                                    axis: (x: 0, y: 1, z: 0),
+                                    perspective: 0.8
+                                )
+                            
+                            DigitalIDCardView()
+                                .opacity(isFlipped ? 0 : 1)
+                                .rotation3DEffect(
+                                    .degrees(isFlipped ? 180 : 0),
+                                    axis: (x: 0, y: 1, z: 0),
+                                    perspective: 0.8
+                                )
+                        }
+                        .frame(height: 242)
+                        .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                        .onTapGesture {
+                            isFlipped.toggle()
+                        }
+                    }
+                    .padding(.bottom, 30)
 
-                            Text("manage_your_identity")
-                                .customFont(.subheadline, fontSize: 17)
-                                .padding(.bottom, 15)
+                    Text("manage_your_identity")
+                        .customFont(.subheadline, fontSize: 17)
+                        .padding(.bottom, 15)
 
-                            VStack(spacing: 12) {
-                                IdentityView(icon: "barcode", title: "Scan QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
-                                    isPresentingScanner.toggle()
-                                   // showShareIDPopover = true
-                                })
+                    VStack(spacing: 12) {
+                        IdentityView(icon: "barcode", title: "Scan QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
+                            isPresentingScanner.toggle()
+                           // showShareIDPopover = true
+                        })
 //                                .popover(isPresented: $showShareIDPopover) {
 //                                    ShareIDView(display: $showShareIDPopover)
 //                                }
 
-                                IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
-                                    showSecurityPINView = true
-                                })
-                            }
-                        }
-                        .padding()
-                    }.sheet(isPresented: $isPresentingScanner) {
-                        QRCodeScanner(result: $scannedCode)
+                        IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
+                            showSecurityPINView = true
+                        })
                     }
-                    .onChange(of: scannedCode) { _ in
-                        if let code = scannedCode {
-                            verifyCode(code)
-                        }
-                        isPresentingScanner = false
-                    }
-                    .onAppear {
-                        scannedCode = nil
-                    }
-                )
+                }
+                .padding()
+            }.sheet(isPresented: $isPresentingScanner) {
+                QRCodeScanner(result: $scannedCode)
+            }
+            .onChange(of: scannedCode) { _ in
+                if let code = scannedCode {
+                    verifyCode(code)
+                }
+                isPresentingScanner = false
+            }
+            .onAppear {
+                scannedCode = nil
+            }
+            .background(Color.secondaryGrayBackground)
             
             if case .loading = viewModel.state {
                 ProgressView()

@@ -58,7 +58,16 @@ struct LoginWithNIN: Codable {
 }
 
 struct LogOutRequest: Codable {
-    var deviceId: String?
+    var sessionId: String?
+}
+
+struct SendOTPRequest: Codable {
+    var receiverId: String?
+    var medium: String? = "sms"
+}
+
+struct ValidateOTP: Codable {
+    var otp: String?
 }
 
 struct StartSessionRequest: Codable {

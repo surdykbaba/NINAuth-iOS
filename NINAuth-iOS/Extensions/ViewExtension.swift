@@ -21,6 +21,11 @@ extension View {
                 HalfSheetHelper(sheetView: sheetView(), showSheet: showSheet, onEnd: onEnd)
             )
     }
+    
+    func stacked(at position: Int, in total: Int) -> some View {
+        let offset = Double(total - position)
+        return self.offset(y: offset * -10)
+    }
 }
 
 struct RoundedCorner: Shape {

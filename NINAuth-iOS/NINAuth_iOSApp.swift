@@ -20,6 +20,7 @@ struct NINAuth_iOSApp: SwiftUI.App {
         WindowGroup {
             NavigationView {
                 SplashScreenView()
+                    .id(appState.main)
             }
             .navigationViewStyle(.stack)
             .tint(Color.button)
@@ -100,7 +101,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         navigationBarAppearance.shadowImage = UIImage()
         navigationBarAppearance.backgroundImage = UIImage()
         navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .clear
+        navigationBarAppearance.backgroundColor = .ninWhite
         navigationBarAppearance.shadowColor = .clear
         // Title font color
         navigationBarAppearance.titleTextAttributes = [
@@ -109,6 +110,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         navigationBarAppearance.largeTitleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor(named: "text")!,
                 NSAttributedString.Key.font: UIFont(name: "PlusJakartaSans-Medium", size: 24)!]
+        // set back image
+        navigationBarAppearance.setBackIndicatorImage(UIImage(named: "back_button"), transitionMaskImage: UIImage(named: "back_button"))
+
         
 
         //Not sure you'll need both of these, but feel free to adjust to your needs.

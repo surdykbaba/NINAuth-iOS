@@ -12,7 +12,7 @@ import UniformTypeIdentifiers
 struct GetSecurityPINView: View {
     //let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentTimer = 60
-    @State private var buttonText = "Copy PIN"
+    @State private var buttonText = "Copy Code"
     @State private var isCopied = false
     @StateObject var deviceVM = DeviceViewModel()
     @State private var errTitle = ""
@@ -23,7 +23,7 @@ struct GetSecurityPINView: View {
         ZStack {
             VStack {
                 VStack(alignment: .leading) {
-                    Text("security_pin")
+                    Text("Share Code")
                         .padding(.bottom, 10)
                         .customFont(.headline, fontSize: 24)
                     
@@ -41,18 +41,18 @@ struct GetSecurityPINView: View {
 //                    Text("authentication_pin".localized)
 //                        .customFont(.body, fontSize: 14)
                     
-                    HStack {
-                        Text("30 days left")
-                            .foregroundColor(.green)
-                        Image(systemName: "clock.fill")
-                            .foregroundColor(.green)
-                    }
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 10)
-                    .background(RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(Color.button.opacity(0.1)))
+//                    HStack {
+//                        Text("30 days left")
+//                            .foregroundColor(.green)
+//                        Image(systemName: "clock.fill")
+//                            .foregroundColor(.green)
+//                    }
+//                    .padding(.vertical, 5)
+//                    .padding(.horizontal, 10)
+//                    .background(RoundedRectangle(cornerRadius: 4, style: .continuous)
+//                        .fill(Color.button.opacity(0.1)))
                 }
-                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(maxWidth: .infinity, maxHeight: 300, alignment: .center)
                 .padding(.vertical)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10, style: .continuous)

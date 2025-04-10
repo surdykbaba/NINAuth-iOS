@@ -73,7 +73,7 @@ struct AuthService: AuthProtocol {
     func logout(logOutRequest: LogOutRequest) async -> Result<Bool, ErrorBag> {
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: URLs.LOGOUT, authoriseHeader: true)
-            request.httpMethod = APIVerb.POST.rawValue
+            request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(logOutRequest)
             request.httpBody = jsonData
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -150,6 +150,26 @@ struct AuthService: AuthProtocol {
     
     func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.UPDATE_USER_INFO, params: updateUserInfo)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func sendOTP(sendOTPRequest: SendOTPRequest) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.OTP, params: sendOTPRequest)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func validateOTP(validateOTP: ValidateOTP) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.OTP_VALIDATE, params: validateOTP)
         switch networkResponse.isSuccess() {
         case true:
             return .success(true)

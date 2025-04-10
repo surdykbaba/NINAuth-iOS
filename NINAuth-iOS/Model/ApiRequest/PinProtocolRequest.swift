@@ -19,7 +19,7 @@ struct UpdatePinRequest: Codable {
 
 struct ResetPinRequest: Codable {
     var deviceId: String?
-    var nin: String?
+    var ninId: String?
     var deviceMetadata: DeviceMetadata?
 }
 

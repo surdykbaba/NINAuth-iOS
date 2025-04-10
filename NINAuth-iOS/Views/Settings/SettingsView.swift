@@ -15,6 +15,7 @@ struct SettingsView: View {
     @StateObject private var linkVM = LinkedIDViewModel()
     @State private var biometricsIsOn = true
     @ObservedResults(User.self) var user
+    @ObservedResults(Token.self) var token
     @State private var showSignOut = false
     @State private var showAlert: Bool = false
     @State private var showPin = false
@@ -122,6 +123,11 @@ struct SettingsView: View {
                     .background(Color(.white))
                     .padding(.bottom, 50)
             }
+            
+            if viewModel.isLogging == true {
+                ProgressView()
+                    .scaleEffect(2)
+            }
         }
     }
     
@@ -209,6 +215,15 @@ struct SettingsView: View {
 
                 NavigationLink(destination: LinkedIDsView(), isActive: $goToLinkID) {}.isDetailLink(false)
                     .frame(width: 0, height: 0)
+                
+                if(viewModel.logOut) {
+                    Color.clear.onAppear {
+                        appState.userClickedLogout = true
+                        appState.main = UUID()
+                    }
+                }
+//                NavigationLink(destination: OnboardingView(), isActive: $viewModel.logOut) {}.isDetailLink(false)
+//                    .frame(width: 0, height: 0)
             }
         }
         .padding(.horizontal, 20)
@@ -230,12 +245,12 @@ struct SettingsView: View {
                 Button {
                     showSignOut = true
                 } label: {
-                    SettingsRow(image: "Sign out", name: "Sign out")
+                    SettingsRow(image: "logout", name: "Sign out")
                 }
                 .alert("Sign out?", isPresented: $showSignOut) {
                     Button("OK", role: .destructive) {
                         Task {
-                            await viewModel.logoutUser(logOutRequest: LogOutRequest(deviceId: appState.getDeviceID()))
+                            await viewModel.logoutUser(logOutRequest: LogOutRequest(sessionId: token.first?.session))
                         }
                     }
                     Button("Cancel", role: .cancel) { }
