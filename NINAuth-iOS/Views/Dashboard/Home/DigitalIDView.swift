@@ -35,8 +35,6 @@ struct DigitalIDView: View {
                                     .multilineTextAlignment(.leading)
 
                                     Spacer()
-                                    
-                                    Image(systemName: "xmark")
                                 }
                                 .frame(maxWidth: .infinity)
                                 .foregroundColor(.black)
