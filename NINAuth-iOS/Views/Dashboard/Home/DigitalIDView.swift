@@ -31,9 +31,10 @@ struct DigitalIDView: View {
                                         
                                         Text("Click here to learn how to keep your identity safe.")
                                             .customFont(.body, fontSize: 13)
+                                            .foregroundColor(.secondary)
                                     }
                                     .multilineTextAlignment(.leading)
-
+                                    
                                     Spacer()
                                 }
                                 .frame(maxWidth: .infinity)
@@ -41,12 +42,13 @@ struct DigitalIDView: View {
                                 .padding()
                                 .cornerRadius(10)
                                 .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .fill(.white))
+                                    .fill(index == 0 ? Color("another_bg") : Color.white))
                                 .shadow(color: Color("transparentGreenBackground"), radius: 10)
                                 .offset(y: CGFloat(index) * 20)
                                 .onTapGesture {
                                     
                                 }
+                                .padding(.horizontal, index == 0 ? 16 : 0)
                             }
                         }
                         .padding(.bottom, 28)

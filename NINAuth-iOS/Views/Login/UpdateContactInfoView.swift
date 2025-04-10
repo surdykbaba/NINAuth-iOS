@@ -16,6 +16,7 @@ struct UpdateContactInfoView: View {
     @State private var preferredContact: String = "SMS"
     @ObservedResults(User.self) var user
     @State private var phone = ""
+    @State private var phone2 = ""
     @State private var showDialog = false
     @State private var isPhoneValid: Bool = true
     @State private var isFormValid: Bool = true
@@ -146,10 +147,14 @@ struct UpdateContactInfoView: View {
                     NavigationLink {
                         TabControllerView()
                     } label: {
-                        Text("Skip this step")
-                            .customFont(.subheadline, fontSize: 18)
-                            .foregroundStyle(Color.button)
-                            .padding(.trailing)
+                        HStack {
+                            Text("Skip this step")
+                                .customFont(.subheadline, fontSize: 18)
+                                .foregroundStyle(Color.button)
+                            
+                            Image(.skip)
+                        }
+                        .padding(.trailing)
                     }
                     .isDetailLink(false)
                 }
@@ -186,6 +191,7 @@ struct UpdateContactInfoView: View {
             if(viewModel.otpValidated == true) {
                 Color.clear.onAppear {
                     viewModel.otpTriggered = false
+                    phone = phone2
                 }
                 .frame(width: 0, height: 0)
             }else {
@@ -238,7 +244,7 @@ struct UpdateContactInfoView: View {
                 VStack(alignment: .leading) {
                     Text("Mobile number")
                         .customFont(.subheadline, fontSize: 16)
-                    TextField("12345678910", text: $phone)
+                    TextField("12345678910", text: $phone2)
                         .keyboardType(.numberPad)
                         .customTextField()
                         .overlay(
@@ -257,13 +263,13 @@ struct UpdateContactInfoView: View {
                 .padding(.top, 20)
 
                 Button {
-                    if(phone.count > 10) {
+                    if(phone2.count > 10) {
                         Task {
-                            await viewModel.triggerOTP(sendOTPRequest: SendOTPRequest(receiverId: phone, medium: "sms"))
+                            await viewModel.triggerOTP(sendOTPRequest: SendOTPRequest(receiverId: phone2, medium: "sms"))
                         }
                     }
                 } label: {
-                    if(phone.count > 10) {
+                    if(phone2.count > 10) {
                         Text("Continue")
                             .customFont(.title, fontSize: 18)
                             .foregroundStyle(.white)
@@ -300,6 +306,7 @@ struct UpdateContactInfoView: View {
                     .padding(.top, 0)
                     .onTapGesture {
                         showDialog.toggle()
+                        viewModel.otpTriggered = false
                         timer.upstream.connect().cancel()
                         currentTimer = 60
                     }
@@ -327,7 +334,7 @@ struct UpdateContactInfoView: View {
                             .fill(isOTPValid ? .gray : .red)
                         )
                     
-                    Text("Enter OTP sent to \(phone)")
+                    Text("Enter OTP sent to \(phone2)")
                 }
                 .padding(.bottom, 18)
                 .padding(.top, 20)

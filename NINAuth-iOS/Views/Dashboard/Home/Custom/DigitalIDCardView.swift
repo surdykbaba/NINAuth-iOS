@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftUIGIF
 import RealmSwift
 
 struct DigitalIDCardView: View {
@@ -26,8 +25,8 @@ struct DigitalIDCardView: View {
                 // ZStack to create the holographic effect
                 VStack {
                     Spacer()
-                    GIFImage(name: "ninc")
-                            .frame(height: 50)
+                    GifImage("ninc")
+                        .frame(width: 50, height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom)
