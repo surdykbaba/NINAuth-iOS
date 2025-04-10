@@ -24,12 +24,12 @@ struct DigitalIDView: View {
         (
             title: "Safeguard your digital identity",
             subtitle: "Click here to learn how to keep your identity safe.",
-            icon: "drivers_license"
+            icon: "bulb"
         ),
         (
             title: "Verify your ID securely",
             subtitle: "Ensure your credentials are verified safely.",
-            icon: "drivers_license"
+            icon: "Shield"
         ),
     ]
 
