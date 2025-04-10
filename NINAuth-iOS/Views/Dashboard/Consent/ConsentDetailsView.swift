@@ -20,13 +20,14 @@ struct ConsentDetailsView: View {
     @State private var showingAlert = false
     
     var body: some View {
-        if #available(iOS 16.0, *) {
-            mainBody
-                .toolbarBackground(.bg, for: .navigationBar)
-                .toolbarRole(.editor)
-        }else {
-            mainBody
-        }
+        mainBody
+//        if #available(iOS 16.0, *) {
+//            mainBody
+//                .toolbarBackground(.bg, for: .navigationBar)
+//                .toolbarRole(.editor)
+//        }else {
+//            mainBody
+//        }
     }
     
     var mainBody: some View {

@@ -1,18 +1,11 @@
 {
   "images" : [
     {
-<<<<<<< HEAD
-      "filename" : "NinID_Back_new.png",
-=======
->>>>>>> main
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-<<<<<<< HEAD
-=======
-      "filename" : "CARD BACK.png",
->>>>>>> main
+      "filename" : "Frame 1171276882.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },

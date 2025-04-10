@@ -9,6 +9,7 @@ import SwiftUI
 import RealmSwift
 
 struct UpdateContactInfoView: View {
+    @StateObject private var viewModel = AuthViewModel()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentTimer = 60
     @State private var email: String = ""
@@ -20,6 +21,9 @@ struct UpdateContactInfoView: View {
     @State private var isFormValid: Bool = true
     @State private var isOTPValid: Bool = true
     @State private var otp: String = ""
+    @State private var errTitle = ""
+    @State private var msg = ""
+    @State private var showAlert = false
     
     var body: some View {
         ZStack {
@@ -112,7 +116,17 @@ struct UpdateContactInfoView: View {
                 
                 // Continue Button
                 Button(action: {
-                    // Handle continue action
+                    var ids = [UserkeyPair]()
+                    if(!phone.isEmpty) {
+                        ids.append(UserkeyPair(key: "Phone Number", value: phone))
+                    }
+                    if(!email.isEmpty) {
+                        ids.append(UserkeyPair(key: "Email", value: email))
+                    }
+                    let userInfo = UpdateUserInfo(ids: ids, medium: preferredContact.lowercased())
+                    Task {
+                        await viewModel.updateInfo(updateUserInfo: userInfo)
+                    }
                 }) {
                     Text("Continue")
                         .font(.headline)
@@ -143,6 +157,14 @@ struct UpdateContactInfoView: View {
             .onAppear {
                 phone = user.first?.phone_number ?? ""
             }
+            .alert(errTitle, isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(msg)
+            }
+            
+            NavigationLink(destination: TabControllerView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+                .frame(width: 0, height: 0)
             
             BottomSheetView(isPresented: $showDialog) {
                 updateMobileNumber
@@ -152,6 +174,39 @@ struct UpdateContactInfoView: View {
                     timer.upstream.connect().cancel()
                     currentTimer = 60
                 }
+            }
+            
+            BottomSheetView(isPresented: $viewModel.otpTriggered) {
+                enterOTP
+                    .onAppear{
+                        showDialog = false
+                    }
+            }
+            
+            if(viewModel.otpValidated == true) {
+                Color.clear.onAppear {
+                    viewModel.otpTriggered = false
+                }
+                .frame(width: 0, height: 0)
+            }else {
+                Color.clear.onAppear {
+                    phone = user.first?.phone_number ?? ""
+                }
+                .frame(width: 0, height: 0)
+            }
+            
+            if case .loading = viewModel.state {
+                ProgressView()
+                    .scaleEffect(2)
+            }
+            
+            if case .failed(let errorBag) = viewModel.state {
+                Color.clear.onAppear() {
+                    errTitle = errorBag.title
+                    msg = errorBag.description
+                    showAlert = true
+                }
+                .frame(width: 0, height: 0)
             }
         }
     }
@@ -197,35 +252,26 @@ struct UpdateContactInfoView: View {
                             .customFont(.subheadline, fontSize: 14)
                             .foregroundColor(.red)
                     }
-                    
-                    Text("Enter OTP")
-                        .customFont(.subheadline, fontSize: 16)
-                        .padding(.top, 16)
-                    TextField("123456", text: $otp)
-                        .keyboardType(.numberPad)
-                        .customTextField()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke()
-                            .fill(isOTPValid ? .gray : .red)
-                        )
-
-                        
-                    if !isOTPValid {
-                        Text("OTP Invalid")
-                            .customFont(.subheadline, fontSize: 14)
-                            .foregroundColor(.red)
-                    }
                 }
                 .padding(.bottom, 18)
                 .padding(.top, 20)
 
                 Button {
-                    
+                    if(phone.count > 10) {
+                        Task {
+                            await viewModel.triggerOTP(sendOTPRequest: SendOTPRequest(receiverId: phone, medium: "sms"))
+                        }
+                    }
                 } label: {
-                    Text("Resend OTP 00:\(currentTimer)")
-                        .customFont(.title, fontSize: 18)
-                        .foregroundStyle(.white)
+                    if(phone.count > 10) {
+                        Text("Continue")
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                    }else{
+                        Text("Resend OTP 00:\(currentTimer)")
+                            .customFont(.title, fontSize: 18)
+                            .foregroundStyle(.white)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
@@ -238,6 +284,70 @@ struct UpdateContactInfoView: View {
                 if currentTimer > 0 {
                     currentTimer -= 1
                 }
+            }
+        }
+        .padding()
+        .background(Color(.white))
+    }
+    
+    var enterOTP: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 15, height: 15, alignment: .trailing)
+                    .padding(.top, 0)
+                    .onTapGesture {
+                        showDialog.toggle()
+                        timer.upstream.connect().cancel()
+                        currentTimer = 60
+                    }
+            }
+            .padding(.vertical)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Update Mobile Number")
+                    .customFont(.headline, fontSize: 24)
+                Text("your_info_is_secure")
+                    .customFont(.body, fontSize: 16)
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom)
+
+                VStack(alignment: .leading) {
+                    Text("Enter OTP")
+                        .customFont(.subheadline, fontSize: 16)
+                        .padding(.top, 16)
+                    TextField("123456", text: $otp)
+                        .keyboardType(.numberPad)
+                        .customTextField()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .stroke()
+                            .fill(isOTPValid ? .gray : .red)
+                        )
+                    
+                    Text("Enter OTP sent to \(phone)")
+                }
+                .padding(.bottom, 18)
+                .padding(.top, 20)
+
+                Button {
+                    if(otp.count > 3) {
+                        Task {
+                            await viewModel.validateOTP(validateOTP: ValidateOTP(otp: otp))
+                        }
+                    }
+                } label: {
+                    Text("Continue")
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .cornerRadius(4)
+                .background(Color.button)
+                .padding(.bottom, 30)
             }
         }
         .padding()

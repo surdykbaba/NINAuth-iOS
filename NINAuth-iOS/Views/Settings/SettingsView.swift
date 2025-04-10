@@ -10,11 +10,13 @@ import RealmSwift
 import LocalAuthentication
 
 struct SettingsView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = AuthViewModel()
+    @StateObject private var linkVM = LinkedIDViewModel()
     @State private var biometricsIsOn = true
     @ObservedResults(User.self) var user
+    @ObservedResults(Token.self) var token
     @State private var showSignOut = false
-    @EnvironmentObject private var appState: AppState
     @State private var showAlert: Bool = false
     @State private var showPin = false
     @State private var msg = ""
@@ -24,82 +26,107 @@ struct SettingsView: View {
     @State private var isValid = true
     @State private var goToUpdatePin = false
     private let mem = MemoryUtil.init()
+    @State private var showSheet = false
+    @State private var goToLinkID = false
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
+        ZStack {
+            ScrollView(showsIndicators: false) {
                 VStack {
-                    Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-                        .resizable()
-                        .frame(width: 96, height: 96)
-                        .clipShape(Circle())
-                        .padding(.bottom, 16)
-                    
-                    Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
-                        .customFont(.title, fontSize: 24)
-                        .padding(.bottom, 30)
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("ID Integrity index: 550")
-                            .customFont(.body, fontSize: 16)
+                    VStack {
+                        Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                            .resizable()
+                            .frame(width: 96, height: 96)
+                            .clipShape(Circle())
+                            .padding(.bottom, 16)
                         
-                        GeometryReader { geometry in
-                            NinAuthSlider(screenWidth: geometry.size.width)
-                        }
-                        .padding(.bottom)
+                        Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
+                            .customFont(.title, fontSize: 24)
+                            .padding(.bottom, 30)
                         
-                        Text("What does my ID integrity index mean?")
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("ID Integrity index: 550")
+                                .customFont(.body, fontSize: 16)
+                            
+                            NinAuthSlider(value: $linkVM.score)
+                                .padding(.bottom)
+                            
+                            Button {
+                                showSheet.toggle()
+                            } label: {
+                                HStack {
+                                    Text("What does my ID integrity index mean?")
+                                        .customFont(.body, fontSize: 14)
+                                    
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(Color("buttonColor"))
+                                }
+                            }
                             .padding(.top, 20)
-                            .customFont(.body, fontSize: 14)
+                        }
+                        .padding()
+                        .mask(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .stroke()
+                                .fill(.gray.opacity(0.2))
+                        )
+                        .padding(.bottom, 30)
+                        
+                        legalAndComplaince
+                        
+                        security
+                            .padding(.top, 44)
+                        
+                        others
+                            .padding(.top, 44)
+                            .padding(.bottom)
+                        
+                        NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
+                        
+                        if case .failed(let errorBag) = viewModel.state {
+                            Color.clear.onAppear {
+                                msg = errorBag.description
+                                showAlert.toggle()
+                            }.frame(width: 0, height: 0)
+                        }
                     }
-                    .padding()
-                    .mask(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke()
-                        .fill(.gray.opacity(0.2))
-                    )
-                    .padding(.bottom, 30)
-
-                    legalAndComplaince
-                    
-                    security
-                        .padding(.top, 44)
-                    
-                    others
-                        .padding(.top, 44)
-                        .padding(.bottom)
-                    
-                    NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
-                    
-                    if case .failed(let errorBag) = viewModel.state {
-                        Color.clear.onAppear {
-                            msg = errorBag.description
-                            showAlert.toggle()
-                        }.frame(width: 0, height: 0)
+                    .foregroundColor(Color(.text))
+                }
+                .padding()
+                .padding(.top, 20)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            NotificationsView()
+                        } label: {
+                            Image(systemName: "bell.badge")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(.red, .black)
+                                .customFont(.caption, fontSize: 18)
+                                .foregroundStyle(Color.button)
+                        }
+                        .padding(.trailing)
                     }
                 }
-                .foregroundColor(Color(.text))
-            }
-            .padding()
-            .padding(.top, 20)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        NotificationsView()
-                    } label: {
-                        Image(systemName: "bell.badge")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.red, .black)
-                            .customFont(.caption, fontSize: 18)
-                            .foregroundStyle(Color.button)
-                    }
-                    .padding(.trailing)
+                .onAppear {
+                    biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
                 }
             }
-            .onAppear {
-                biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
+            .task {
+                await linkVM.getScore(deviceID: appState.getDeviceID())
+            }
+            
+            BottomSheetView(isPresented: $showSheet) {
+                LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID, score: $linkVM.score, scoreToDisplay: $linkVM.displayedScore)
+                    .background(Color(.white))
+                    .padding(.bottom, 50)
+            }
+            
+            if viewModel.isLogging == true {
+                ProgressView()
+                    .scaleEffect(2)
             }
         }
     }
@@ -185,6 +212,18 @@ struct SettingsView: View {
                 NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "device_mobile", name: "LinkedID")
                 }
+
+                NavigationLink(destination: LinkedIDsView(), isActive: $goToLinkID) {}.isDetailLink(false)
+                    .frame(width: 0, height: 0)
+                
+                if(viewModel.logOut) {
+                    Color.clear.onAppear {
+                        appState.userClickedLogout = true
+                        appState.main = UUID()
+                    }
+                }
+//                NavigationLink(destination: OnboardingView(), isActive: $viewModel.logOut) {}.isDetailLink(false)
+//                    .frame(width: 0, height: 0)
             }
         }
         .padding(.horizontal, 20)
@@ -206,12 +245,12 @@ struct SettingsView: View {
                 Button {
                     showSignOut = true
                 } label: {
-                    SettingsRow(image: "Sign out", name: "Sign out")
+                    SettingsRow(image: "logout", name: "Sign out")
                 }
                 .alert("Sign out?", isPresented: $showSignOut) {
                     Button("OK", role: .destructive) {
                         Task {
-                            await viewModel.logoutUser(logOutRequest: LogOutRequest(deviceId: appState.getDeviceID()))
+                            await viewModel.logoutUser(logOutRequest: LogOutRequest(sessionId: token.first?.session))
                         }
                     }
                     Button("Cancel", role: .cancel) { }
@@ -306,4 +345,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(AppState())
 }

@@ -12,6 +12,22 @@ struct RegisterUserRequest: Codable {
     var deviceMetadata: DeviceMetadata?
 }
 
+struct RegisterWithNIN: Codable {
+    var deviceId: String?
+    var ninId: String?
+    var deviceMetadata: DeviceMetadata?
+}
+
+struct UpdateUserInfo: Codable {
+    var ids: [UserkeyPair]?
+    var medium: String? = "sms"
+}
+
+struct UserkeyPair: Codable {
+    var key: String?
+    var value: String?
+}
+
 struct DeviceMetadata: Codable {
     var os: String? = "IOS"
     var lat: Double?
@@ -42,7 +58,16 @@ struct LoginWithNIN: Codable {
 }
 
 struct LogOutRequest: Codable {
-    var deviceId: String?
+    var sessionId: String?
+}
+
+struct SendOTPRequest: Codable {
+    var receiverId: String?
+    var medium: String? = "sms"
+}
+
+struct ValidateOTP: Codable {
+    var otp: String?
 }
 
 struct StartSessionRequest: Codable {

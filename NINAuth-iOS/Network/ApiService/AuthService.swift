@@ -36,7 +36,7 @@ struct AuthService: AuthProtocol {
     }
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: false)
+        let networkResponse = await Service.init().post(URLs.REGISTER_USER_SELFIE, params: registerUserSelfieRequest, authoriseHeader: true, increaseTimeout: true)
         
         switch networkResponse.isSuccess() {
         case true:
@@ -73,7 +73,7 @@ struct AuthService: AuthProtocol {
     func logout(logOutRequest: LogOutRequest) async -> Result<Bool, ErrorBag> {
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: URLs.LOGOUT, authoriseHeader: true)
-            request.httpMethod = APIVerb.POST.rawValue
+            request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(logOutRequest)
             request.httpBody = jsonData
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -92,7 +92,7 @@ struct AuthService: AuthProtocol {
     }
     
     func getFaceAuthStatus(deviceID: String) async -> Result<JSON, ErrorBag> {
-        let networkResponse = await Service.init().get(URLs.FACE_AUTH_STATUS + deviceID, authoriseHeader: false)
+        let networkResponse = await Service.init().get(URLs.FACE_AUTH_STATUS + deviceID, authoriseHeader: true)
         switch networkResponse.isSuccess() {
         case true:
             return .success(networkResponse.getJson()!)
@@ -120,6 +120,59 @@ struct AuthService: AuthProtocol {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
             }
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.REGISTER_WITH_NIN, params: registerWithNIN, authoriseHeader: false)
+        switch networkResponse.isSuccess() {
+        case true:
+            do {
+                let realm = try await Realm()
+                try await realm.asyncWrite {
+                    let token = Token(value: networkResponse.getJson())
+                    realm.deleteAll()
+                    realm.add(token)
+                    let mem = MemoryUtil()
+                    mem.setValue(key: mem.authentication_key, value: false)
+                }
+                return .success(true)
+            }catch {
+                Log.error(error.localizedDescription)
+                return .failure(ErrorBag())
+            }
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.UPDATE_USER_INFO, params: updateUserInfo)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func sendOTP(sendOTPRequest: SendOTPRequest) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.OTP, params: sendOTPRequest)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func validateOTP(validateOTP: ValidateOTP) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.OTP_VALIDATE, params: validateOTP)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
         default:
             return .failure(networkResponse.getErrorBag())
         }

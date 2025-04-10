@@ -10,6 +10,7 @@ import CodeScanner
 
 struct OnboardingView: View {
     @EnvironmentObject var appState: AppState
+    @StateObject private var viewModel = AuthViewModel()
     @State private var showSheet = false
     @State private var isValid = true
     @State private var isPresentingScanner = false
@@ -17,6 +18,9 @@ struct OnboardingView: View {
     @State private var showingAlert = false
     @State private var goNext = false
     @State private var identificationNumber = ""
+    @FocusState private var nameIsFocused: Bool
+    @State private var errTitle = ""
+    @State private var showDialog = false
 
     var body: some View {
         ZStack {
@@ -77,11 +81,6 @@ struct OnboardingView: View {
                     } message: {
                         Text("Please scan QR code")
                     }
-//                    .halfSheet(showSheet: $showSheet) {
-//                        requestCodeView
-//                    } onEnd: {
-//                        Log.info("Dismissed Sheet")
-//                    }
                 }
                 
                 Group {
@@ -98,6 +97,11 @@ struct OnboardingView: View {
             }
             .onAppear {
                 scannedCode = nil
+                viewModel.initiateLocationRequest()
+            }
+            .onChange(of: viewModel.userLocation) { _ in
+                appState.latitude = viewModel.userLocation?.coordinate.latitude ?? 0.00
+                appState.longitude = viewModel.userLocation?.coordinate.longitude ?? 0.00
             }
             .sheet(isPresented: $isPresentingScanner) {
                 QRCodeScanner(result: $scannedCode)
@@ -110,8 +114,24 @@ struct OnboardingView: View {
                 //            }
             }
             
+            NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+                .frame(width: 0, height: 0)
+            
             BottomSheetView(isPresented: $showSheet) {
                 requestCodeView
+            }
+            
+            if case .loading = viewModel.state {
+                ProgressView()
+                    .scaleEffect(2)
+            }
+            
+            if case .failed(let errorBag) = viewModel.state {
+                Color.clear.onAppear() {
+                    errTitle = errorBag.description
+                    showDialog.toggle()
+                }
+                .frame(width: 0, height: 0)
             }
         }
     }
@@ -144,6 +164,7 @@ struct OnboardingView: View {
                     TextField("12345678910", text: $identificationNumber)
                         .keyboardType(.numberPad)
                         .customTextField()
+                        .focused($nameIsFocused)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .stroke()
@@ -155,6 +176,10 @@ struct OnboardingView: View {
                         .onChange(of: identificationNumber) { _ in
                             if(identificationNumber.count > 11) {
                                 identificationNumber = String(identificationNumber.prefix(11))
+                            }
+                            
+                            if(identificationNumber.count == 11) {
+                                nameIsFocused = false
                             }
                         }
                     if !isValid {
@@ -171,8 +196,10 @@ struct OnboardingView: View {
                         isValid = false
                     }else {
                         isValid = true
+                        Task {
+                            await viewModel.registerWithNIN(registerWithNIN: RegisterWithNIN(deviceId: appState.getDeviceID(), ninId: identificationNumber, deviceMetadata: DeviceMetadata(lat: appState.latitude, lng:appState.longitude)))
+                        }
                     }
-                    //showingAlert = true
                 } label: {
                     Text("Continue")
                         .customFont(.title, fontSize: 18)
@@ -182,12 +209,16 @@ struct OnboardingView: View {
                 .padding(.vertical, 18)
                 .cornerRadius(4)
                 .background(Color.button)
-//                .disabled(!isValid)
                 .padding(.bottom, 30)
             }
         }
         .padding()
         .background(Color(.white))
+        .alert("Error", isPresented: $showDialog) {
+            Button("OK", role: .cancel) {}
+        }message: {
+            Text(errTitle)
+        }
     }
 }
 

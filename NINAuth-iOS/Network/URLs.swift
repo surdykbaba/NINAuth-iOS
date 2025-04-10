@@ -25,7 +25,10 @@ enum URLs {
     static let FACE_AUTH_STATUS = "auth/face-auth-status/"
     static let RE_GENERATE_CODE = "integration/enterprise/online/session/regenerate/"
     static let START_SESSION = "integration/enterprise/online/session/create"
-    
+    static let REGISTER_WITH_NIN = "auth/register-with-nin"
+    static let UPDATE_USER_INFO = "auth/update-user-info"
+    static let OTP = "otp"
+    static let OTP_VALIDATE = "otp/validate"
     
     
     //MARK: Consent
@@ -45,6 +48,7 @@ enum URLs {
     
     //MARK: LinkedID
     static let LINKEDID = "ids"
+    static let GET_SCORE = "devices/"
     
     
     

@@ -52,7 +52,7 @@ struct ForgotPinView: View {
                 Button {
                     if(isFormValid) {
                         Task {
-                            await viewModel.forgotPin(resetPinRequest: ResetPinRequest(deviceId: appState.getDeviceID(), nin: identificationNumber, deviceMetadata: DeviceMetadata(lat: appState.latitude, lng:appState.longitude)))
+                            await viewModel.forgotPin(resetPinRequest: ResetPinRequest(deviceId: appState.getDeviceID(), ninId: identificationNumber, deviceMetadata: DeviceMetadata(lat: appState.latitude, lng:appState.longitude)))
                         }
                     }
                 } label: {

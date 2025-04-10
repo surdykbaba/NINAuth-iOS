@@ -24,4 +24,15 @@ struct LinkedIDService: LinkedIDProtocol {
             return .failure(networkResponse.getErrorBag())
         }
     }
+    
+    func getScore(deviceID: String) async -> Result<Int, ErrorBag> {
+        let networkResponse = await Service.init().get(URLs.GET_SCORE + "\(deviceID)/score")
+        switch networkResponse.isSuccess() {
+        case true:
+            let score = networkResponse.getJson()?["score"].int ?? 0
+            return .success(score)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
 }
