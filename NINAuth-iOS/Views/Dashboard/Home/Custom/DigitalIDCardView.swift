@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIGIF
 import RealmSwift
 
 struct DigitalIDCardView: View {
@@ -25,32 +26,9 @@ struct DigitalIDCardView: View {
                 // ZStack to create the holographic effect
                 VStack {
                     Spacer()
-                    ZStack {
-                        // Blended background
-                        Image("holographic")
-                            .resizable()
-                            .frame(width: 50, height: 50)
+                    GIFImage(name: "ninc")
+                            .frame(height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .opacity(29)
-                        
-                        // Rotating holographic effect
-                        Image("holographic")
-                            .resizable()
-                            .frame(width: 53, height: 52)
-                            .clipShape(Circle())
-                            .rotationEffect(.degrees(rotateHolographic))
-                            .opacity(0.2)
-                            .onAppear {
-                                withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
-                                    rotateHolographic = 360
-                                }
-                            }
-                        
-                        // Static NIMC logo on top
-                        Image("Nimc")
-                            .resizable()
-                            .frame(width: 45, height: 45)
-                    }
                 }
                 .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom)
                 //.padding(.leading, 4)
