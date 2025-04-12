@@ -13,11 +13,13 @@ struct DigitalIDCardView: View {
                 .foregroundColor(Color.button)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 20)
+                .padding(.trailing,5)
 
             Text("national_identity_card")
                 .customFont(.title, fontSize: 12)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 4)
+                .padding(.trailing,5)
 
             HStack(alignment: .top, spacing: 0) {
                 VStack {
@@ -25,13 +27,13 @@ struct DigitalIDCardView: View {
                     ZStack {
                         Image("holographic")
                             .resizable()
-                            .frame(width: 50, height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .frame(width: 35, height: 35)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
                             .opacity(29)
                         
                         Image("holographic")
                             .resizable()
-                            .frame(width: 53, height: 52)
+                            .frame(width: 35, height: 35)
                             .clipShape(Circle())
                             .rotationEffect(.degrees(rotateHolographic))
                             .opacity(0.29)
@@ -43,12 +45,12 @@ struct DigitalIDCardView: View {
                         
                         Image("Nimc")
                             .resizable()
-                            .frame(width: 45, height: 45)
+                            .frame(width: 30, height: 30)
                     }
                 }
                 .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom,)
                 .offset(x: 5)
-                .offset(y: -5)
+                .offset(y: -10)
                 
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -58,9 +60,21 @@ struct DigitalIDCardView: View {
                     doubleTextView(title: "GENDER", subtitle: user.first?.gender ?? "")
                 }
                 .frame(maxWidth: 100)
+                .padding(.trailing,5)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
+                    doubleTextView(
+                            title: "NATIONAL IDENTITY NUMBER",
+                            subtitle: {
+                                let nin = user.first?.nin ?? ""
+                                if nin.count >= 11 {
+                                    let masked = String(repeating: "*", count: 7) + nin.suffix(4)
+                                    return masked
+                                } else {
+                                    return nin
+                                }
+                            }()
+                        )
                     doubleTextView(
                         title: "STATE OF ORIGIN",
                         subtitle: (user.first?.origin_state?.isEmpty == false ? user.first?.origin_state : "N/A") ?? "N/A"
@@ -72,11 +86,12 @@ struct DigitalIDCardView: View {
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
                 .padding(.leading, 16)
+                .padding(.trailing,5)
                 .frame(maxWidth: 150)
 
                 Spacer()
             }
-            .padding(.top, 16)
+            .padding(.top, 19)
             .frame(maxWidth: .infinity)
 
             Spacer()
@@ -87,7 +102,7 @@ struct DigitalIDCardView: View {
         .background(
             Image("NinID_Front_new")
                 .resizable()
-                .frame(width: 372, height: 242)
+                .frame(width: 360, height: 230)
                 .clipped()
         )
         .overlay(
@@ -95,13 +110,13 @@ struct DigitalIDCardView: View {
                 Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
                     .resizable()
                     .scaledToFill()
-                    .cornerRadius(8)
-                    .frame(width: 89, height: 107)
+                    .cornerRadius(5)
+                    .frame(width: 89, height: 70)
             }
-            .frame(width: 89, height: 107)
+            .frame(width: 79, height: 97)
             .background(Color.white)
-            .padding(.bottom, 20)
-            .padding(.trailing, 4),
+            .padding(.bottom, 34)
+            .padding(.trailing,),
             alignment: .bottomTrailing
         )
         .environment(\.dynamicTypeSize, .medium)
@@ -110,11 +125,11 @@ struct DigitalIDCardView: View {
     func doubleTextView(title: String, subtitle: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
-                .customFont(.body, fontSize: 8)
+                .customFont(.body, fontSize:9)
                 .foregroundColor(Color(.cardLabel))
                 .padding(.top, 1)
             Text(subtitle)
-                .customFont(.title, fontSize: 10)
+                .customFont(.title, fontSize: 12)
                 .foregroundColor(Color(.text))
         }
         .multilineTextAlignment(.leading)

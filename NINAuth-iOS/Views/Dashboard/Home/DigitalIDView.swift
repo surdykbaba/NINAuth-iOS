@@ -36,12 +36,12 @@ struct DigitalIDView: View {
 
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(bannerData[index].title)
-                                            .font(.system(size: 15, weight: .semibold))
+                                            .font(.system(size: 17, weight: .semibold))
                                             .foregroundColor(.primary)
                                             .fixedSize(horizontal: false, vertical: true)
 
                                         Text(bannerData[index].subtitle)
-                                            .font(.system(size: 13))
+                                            .font(.system(size: 15))
                                             .foregroundColor(.secondary)
                                             .lineLimit(1)
                                             .fixedSize(horizontal: false, vertical: true)
@@ -50,7 +50,7 @@ struct DigitalIDView: View {
                                     Spacer()
                                 }
                                 .padding()
-                                .frame(width: 345, height: 81)
+                                .frame(width: 358, height: 81)
                                 .background(Color.white)
                                 .cornerRadius(14)
                                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
@@ -63,6 +63,7 @@ struct DigitalIDView: View {
                             }
                         }
                         .frame(height: 100)
+                        
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                         .onReceive(bannerTimer) { _ in
                             withAnimation {
@@ -86,7 +87,7 @@ struct DigitalIDView: View {
                             isFlipped.toggle()
                         }
                     }
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 15)
 
                     Text("manage_your_identity")
                         .font(.system(size: 17))
@@ -103,7 +104,6 @@ struct DigitalIDView: View {
                     }
                 }
                 .padding()
-                .environment(\.dynamicTypeSize, .medium)
             }
             .background(Color(UIColor.secondarySystemBackground))
             .sheet(isPresented: $isPresentingScanner) {
