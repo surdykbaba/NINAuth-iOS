@@ -1,36 +1,25 @@
 import SwiftUI
 import RealmSwift
-import UIKit // For UIApplication
+import UIKit
 
 struct DigitalIDView: View {
     @EnvironmentObject var appState: AppState
     @State private var isFlipped = false
-    @State private var showShareIDPopover = false
     @State private var showSecurityPINView = false
     @State private var showBannerAlert = false
-    @State private var bannerTappedIndex: Int = 0
+    @State private var bannerTappedIndex = 0
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
     @StateObject private var consentVM = ConsentViewModel()
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
     @State private var currentIndex = 0
-    @Environment(\.colorScheme) var colorScheme
 
     let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
 
-    // Updated banner data with custom asset names for icons
     let bannerData = [
-        (
-            title: "Safeguard your digital identity",
-            subtitle: "Click here to learn how to keep your identity safe.",
-            icon: "bulb"
-        ),
-        (
-            title: "Verify your ID securely",
-            subtitle: "Ensure your credentials are verified safely.",
-            icon: "Shield"
-        ),
+        (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield"),
+        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb")
     ]
 
     var body: some View {
@@ -41,31 +30,30 @@ struct DigitalIDView: View {
                         TabView(selection: $currentIndex) {
                             ForEach(0..<bannerData.count, id: \.self) { index in
                                 HStack(spacing: 12) {
-                                   
                                     Image(bannerData[index].icon)
                                         .resizable()
                                         .frame(width: 30, height: 30)
-                                        .foregroundColor(.green)
 
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(bannerData[index].title)
                                             .font(.system(size: 15, weight: .semibold))
-                                            .foregroundColor(Color(.label))
+                                            .foregroundColor(.primary)
+                                            .fixedSize(horizontal: false, vertical: true)
 
                                         Text(bannerData[index].subtitle)
                                             .font(.system(size: 13))
-                                            .foregroundColor(Color(.secondaryLabel))
+                                            .foregroundColor(.secondary)
                                             .lineLimit(1)
-                                            .layoutPriority(1)
+                                            .fixedSize(horizontal: false, vertical: true)
                                     }
 
                                     Spacer()
                                 }
                                 .padding()
-                                .frame(width: 360, height: 81)
+                                .frame(width: 345, height: 81)
                                 .background(Color.white)
                                 .cornerRadius(14)
-                                .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 2)
+                                .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
                                 .padding(.horizontal)
                                 .onTapGesture {
                                     bannerTappedIndex = index
@@ -81,6 +69,7 @@ struct DigitalIDView: View {
                                 currentIndex = (currentIndex + 1) % bannerData.count
                             }
                         }
+                        .environment(\.dynamicTypeSize, .medium)
 
                         ZStack {
                             DigitalbackCard()
@@ -100,21 +89,23 @@ struct DigitalIDView: View {
                     .padding(.bottom, 30)
 
                     Text("manage_your_identity")
-                        .customFont(.subheadline, fontSize: 17)
+                        .font(.system(size: 17))
                         .padding(.bottom, 15)
 
                     VStack(spacing: 12) {
-                        IdentityView(icon: "barcode", title: "Scan QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
+                        IdentityView(icon: "barcode", title: "Scan a QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized) {
                             isPresentingScanner.toggle()
-                        })
+                        }
 
-                        IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
+                        IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized) {
                             showSecurityPINView = true
-                        })
+                        }
                     }
                 }
                 .padding()
+                .environment(\.dynamicTypeSize, .medium)
             }
+            .background(Color(UIColor.secondarySystemBackground))
             .sheet(isPresented: $isPresentingScanner) {
                 QRCodeScanner(result: $scannedCode)
             }
@@ -124,31 +115,46 @@ struct DigitalIDView: View {
                 }
                 isPresentingScanner = false
             }
-            .onAppear {
-                scannedCode = nil
-            }
-            .background(Color.secondaryGrayBackground)
 
             if case .loading = viewModel.state {
                 ProgressView().scaleEffect(2)
             }
         }
-        .alert(isPresented: $showBannerAlert) {
-            Alert(
-                title: Text("Leave this page?"),
-                message: Text("You're about to view more information."),
-                primaryButton: .default(Text("Continue")) {
-                    // Navigate to the privacy policy link when "Continue" is tapped
-                    if let url = URL(string: "https://ninauth.com/privacy-policy") {
-                        UIApplication.shared.open(url)
+        .sheet(isPresented: $showBannerAlert) {
+            if #available(iOS 16.0, *) {
+                LeaveAppAlertSheetView(
+                    onConfirm: {
+                        showBannerAlert = false
+                        openBannerURL()
+                    },
+                    onCancel: {
+                        showBannerAlert = false
                     }
-                },
-                secondaryButton: .cancel()
-            )
+                )
+                .presentationDetents([.height(250)])
+                .presentationDragIndicator(.visible)
+            } else {
+                LeaveAppAlertSheetView(
+                    onConfirm: {
+                        showBannerAlert = false
+                        openBannerURL()
+                    },
+                    onCancel: {
+                        showBannerAlert = false
+                    }
+                )
+            }
         }
+        .environment(\.dynamicTypeSize, .medium)
 
-        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) {}
-        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) {}
+        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }
+        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) { EmptyView() }
+    }
+
+    func openBannerURL() {
+        if let url = URL(string: "https://ninauth.com/privacy-policy") {
+            UIApplication.shared.open(url)
+        }
     }
 
     func verifyCode(_ code: String) {
@@ -160,7 +166,8 @@ struct DigitalIDView: View {
         }
     }
 }
-
 #Preview {
-    DigitalIDView().environmentObject(AppState())
+    DigitalIDView()
+        .environment(\.dynamicTypeSize, .medium)
 }
+

@@ -56,7 +56,7 @@ struct LinkedIDsModalView: View {
                     
                     LinkedIDItem(title: "Phone Number")
                     LinkedIDItem(title: "Tax Identification Number")
-                    LinkedIDItem(title: "International Passport")
+                    LinkedIDItem(title: "Bank Verification Number")
                 }
                 
                 Spacer()

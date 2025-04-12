@@ -10,11 +10,11 @@ import SwiftUI
 struct NotificationsView: View {
     var body: some View {
         VStack {
-            Text("No notifications")
+            Text("No notifications available")
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
-        .navigationTitle(Text("Notifications"))
+        //.navigationTitle(Text("Notifications"))
         .navigationBarTitleDisplayMode(.large)
         .background(Color(.bg))
 

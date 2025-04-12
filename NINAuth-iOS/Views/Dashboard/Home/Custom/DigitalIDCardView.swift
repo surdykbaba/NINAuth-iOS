@@ -3,7 +3,7 @@ import RealmSwift
 
 struct DigitalIDCardView: View {
     @ObservedResults(User.self) var user
-    @State private var rotateHolographic = 0.0 // Rotation state
+    @State private var rotateHolographic = 0.0
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -19,109 +19,110 @@ struct DigitalIDCardView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 4)
 
-            // HStack containing NIMC logo and details
             HStack(alignment: .top, spacing: 0) {
-                
-                // ZStack to create the holographic effect
                 VStack {
                     Spacer()
                     ZStack {
-                        // Blended background
                         Image("holographic")
                             .resizable()
                             .frame(width: 50, height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .opacity(29)
                         
-                        // Rotating holographic effect
                         Image("holographic")
                             .resizable()
                             .frame(width: 53, height: 52)
                             .clipShape(Circle())
                             .rotationEffect(.degrees(rotateHolographic))
-                            .opacity(0.2)
+                            .opacity(0.29)
                             .onAppear {
                                 withAnimation(Animation.linear(duration: 6).repeatForever(autoreverses: false)) {
                                     rotateHolographic = 360
                                 }
                             }
                         
-                        // Static NIMC logo on top
                         Image("Nimc")
                             .resizable()
                             .frame(width: 45, height: 45)
                     }
                 }
-                .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom)
-                //.padding(.leading, 4)
+                .frame(maxWidth: 53, maxHeight: .infinity, alignment: .bottom,)
+                .offset(x: 5)
+                .offset(y: -5)
+                
 
-                // Left column: user info
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "SURNAME", subtitle: user.first?.last_name ?? "")
                     doubleTextView(title: "FIRST NAME", subtitle: user.first?.first_name ?? "")
                     doubleTextView(title: "MIDDLE NAME", subtitle: user.first?.middle_name ?? "")
-                    doubleTextView(title: "GENDER", subtitle: user.first?.gender  ?? "")
+                    doubleTextView(title: "GENDER", subtitle: user.first?.gender ?? "")
                 }
                 .frame(maxWidth: 100)
-                
-                // Right column: additional info
+
                 VStack(alignment: .leading, spacing: 4) {
                     doubleTextView(title: "NATIONAL IDENTITY NUMBER", subtitle: user.first?.nin ?? "")
-                    doubleTextView(title: "STATE OF ORIGIN", subtitle: "")
-                    doubleTextView(title: "LGA", subtitle: "")
+                    doubleTextView(
+                        title: "STATE OF ORIGIN",
+                        subtitle: (user.first?.origin_state?.isEmpty == false ? user.first?.origin_state : "N/A") ?? "N/A"
+                    )
+                    doubleTextView(
+                        title: "LGA",
+                        subtitle: (user.first?.origin_local_government?.isEmpty == false ? user.first?.origin_local_government : "N/A") ?? "N/A"
+                    )
                     doubleTextView(title: "DATE OF BIRTH", subtitle: user.first?.getDOB() ?? "")
                 }
                 .padding(.leading, 16)
                 .frame(maxWidth: 150)
-                
+
                 Spacer()
             }
             .padding(.top, 16)
             .frame(maxWidth: .infinity)
-            
+
             Spacer()
         }
         .padding(.top, 10)
         .frame(height: 242)
-        //.padding(.horizontal, 8)
         .frame(maxWidth: .infinity, maxHeight: 242, alignment: .leading)
         .background(
             Image("NinID_Front_new")
                 .resizable()
-                //.scaledToFill()
-                .frame(width: 375, height: 242)
+                .frame(width: 372, height: 242)
                 .clipped()
-                //.padding(.horizontal, 8)
         )
-        // User image blended with the background
         .overlay(
             VStack {
                 Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
                     .resizable()
                     .scaledToFill()
+                    .cornerRadius(8)
                     .frame(width: 89, height: 107)
-            }.frame(width: 89, height: 107)
-                .background(Color.white)
-                .padding(.bottom, 20),
+            }
+            .frame(width: 89, height: 107)
+            .background(Color.white)
+            .padding(.bottom, 20)
+            .padding(.trailing, 4),
             alignment: .bottomTrailing
         )
-
+        .environment(\.dynamicTypeSize, .medium)
     }
 
     func doubleTextView(title: String, subtitle: String) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(title)
-                .customFont(.body, fontSize: 9)
+                .customFont(.body, fontSize: 8)
                 .foregroundColor(Color(.cardLabel))
                 .padding(.top, 1)
             Text(subtitle)
-                .customFont(.title, fontSize: 12)
+                .customFont(.title, fontSize: 10)
                 .foregroundColor(Color(.text))
         }
         .multilineTextAlignment(.leading)
+        .environment(\.dynamicTypeSize, .medium)
     }
 }
 
 #Preview {
     DigitalIDCardView()
+        .environment(\.dynamicTypeSize, .medium)
 }
