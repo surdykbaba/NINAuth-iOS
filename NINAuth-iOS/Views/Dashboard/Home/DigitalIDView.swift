@@ -90,8 +90,9 @@ struct DigitalIDView: View {
                     .padding(.bottom, 15)
 
                     Text("manage_your_identity")
-                        .font(.system(size: 17))
+                        .font(.system(size: 17, weight: .medium))
                         .padding(.bottom, 15)
+                        
 
                     VStack(spacing: 12) {
                         IdentityView(icon: "barcode", title: "Scan a QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized) {
@@ -104,6 +105,7 @@ struct DigitalIDView: View {
                     }
                 }
                 .padding()
+                
             }
             .background(Color(UIColor.secondarySystemBackground))
             .sheet(isPresented: $isPresentingScanner) {

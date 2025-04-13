@@ -111,9 +111,9 @@ struct DigitalIDCardView: View {
                     .resizable()
                     .scaledToFill()
                     .cornerRadius(5)
-                    .frame(width: 89, height: 70)
+                    .frame(width: 89, height: 60)
             }
-            .frame(width: 79, height: 97)
+            .frame(width: 79, height: 77)
             .background(Color.white)
             .padding(.bottom, 34)
             .padding(.trailing,),
