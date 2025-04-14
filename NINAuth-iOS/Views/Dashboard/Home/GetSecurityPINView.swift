@@ -1,16 +1,8 @@
-//
-//  NINAuthCodeView.swift
-//  NINAuth-iOS
-//
-//  Created by Chioma Amanda Mmegwa  on 05/02/2025.
-//
-
 import SwiftUI
 import Combine
 import UniformTypeIdentifiers
 
 struct GetSecurityPINView: View {
-    //let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentTimer = 60
     @State private var buttonText = "Copy Code"
     @State private var isCopied = false
@@ -26,62 +18,75 @@ struct GetSecurityPINView: View {
                     Text("Share Code")
                         .padding(.bottom, 10)
                         .customFont(.headline, fontSize: 24)
-                    
+
                     Text("enter_the_code_below_with_your_user_id_to_access_the_ninauth_qr_code")
                         .customFont(.body, fontSize: 16)
                         .padding(.bottom, 24)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+
+                // Secure Code Box
                 VStack(alignment: .center, spacing: 10) {
-                    Text(deviceVM.shareCode)
-                        .lineSpacing(20)
-                        .customFont(.headline, fontSize: 40)
-                    
-//                    Text("authentication_pin".localized)
-//                        .customFont(.body, fontSize: 14)
-                    
-//                    HStack {
-//                        Text("30 days left")
-//                            .foregroundColor(.green)
-//                        Image(systemName: "clock.fill")
-//                            .foregroundColor(.green)
-//                    }
-//                    .padding(.vertical, 5)
-//                    .padding(.horizontal, 10)
-//                    .background(RoundedRectangle(cornerRadius: 4, style: .continuous)
-//                        .fill(Color.button.opacity(0.1)))
+                    HStack(spacing: 8) {
+                        Text(deviceVM.shareCode)
+                            .lineSpacing(20)
+                            .customFont(.headline, fontSize: 40)
+
+                        Button(action: {
+                            copyToClipboard()
+                        }) {
+                            Image(systemName: "doc.on.doc")
+                                .foregroundColor((Color.button))
+                        }
+                    }
+
+                    Text("Your secure code expire in 29 days")
+                        .font(.system(size: 14))
+                        .foregroundColor(.green)
+                        .padding(.top, 4)
+
+                    Button(action: {
+                        // TODO: Add LinkedIDViewModel logic later
+                    }) {
+                        Text("Reset")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 8)
+                            .background(Color.button)
+                            .cornerRadius(4)
+                            .frame(height:32)
+                            .frame(width:106)
+                    }
                 }
                 .frame(height: 150)
-                .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
+                .frame(maxWidth: .infinity)
                 .padding(.vertical)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray.opacity(0.2), lineWidth: 1)
                 )
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Color(.white)))
-//                .onReceive(timer) { time in
-//                    if currentTimer > 0 {
-//                        currentTimer -= 1
-//                    }
-//                }
-                Spacer()
-                
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.white)
+                )
+
+                // Usage History or Consent Log
                 VStack {
-                    if (deviceVM.consents.isEmpty == true) {
+                    if deviceVM.consents.isEmpty {
                         VStack(spacing: 20) {
                             Text("USAGE HISTORY")
                                 .foregroundColor(Color(.textGrey))
                                 .customFont(.subheadline, fontSize: 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+
                             Image(.logEmpty)
                                 .resizable()
                                 .frame(width: 83, height: 83)
-                            
+
                             Text("This code hasn't been used")
                                 .customFont(.body, fontSize: 16)
-                            
+
                             Text("Companies will appear here once they use this code to verify your NIN data")
                                 .multilineTextAlignment(.center)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -90,24 +95,21 @@ struct GetSecurityPINView: View {
                                 .padding(.bottom)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
-                    }else {
+                    } else {
                         consentData
                     }
                 }
                 .padding()
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10)
                         .stroke(.gray.opacity(0.2), lineWidth: 1)
                 )
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Color(.white)))
+                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 .alert(errTitle, isPresented: $showDialog) {
                     Button("OK", role: .cancel) { }
                 } message: {
                     Text(msg)
                 }
-                
-                //Spacer()
             }
             .padding()
             .overlay {
@@ -116,39 +118,25 @@ struct GetSecurityPINView: View {
                         .customFont(.subheadline, fontSize: 16)
                         .foregroundStyle(Color(.text))
                         .padding()
-                        .background(Color(.white).cornerRadius(20))
+                        .background(Color.white.cornerRadius(20))
                         .padding(.bottom)
                         .shadow(radius: 5)
                         .transition(.move(edge: .bottom))
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
             }
-//            .safeAreaInset(edge: .bottom) {
-//                Button {
-//                    copyToClipboard()
-//                } label: {
-//                    Text(buttonText)
-//                        .customFont(.title, fontSize: 18)
-//                        .foregroundStyle(.white)
-//                }
-//                .frame(maxWidth: .infinity)
-//                .padding(.vertical, 18)
-//                .background(Color.button)
-//                .cornerRadius(4)
-//                .padding()
-//            }
             .task {
                 await deviceVM.getShareCode()
-//                await deviceVM.getLogs(code: deviceVM.shareCode)
             }
-            
+
+            // Loading & Error State
             if case .loading = deviceVM.state {
                 ProgressView()
                     .scaleEffect(2)
             }
-            
+
             if case .failed(let errorBag) = deviceVM.state {
-                Color.clear.onAppear() {
+                Color.clear.onAppear {
                     errTitle = errorBag.title
                     msg = errorBag.description
                     showDialog = true
@@ -158,7 +146,7 @@ struct GetSecurityPINView: View {
         }
         .background(Color(.bg))
     }
-    
+
     var consentData: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 30) {
@@ -173,7 +161,6 @@ struct GetSecurityPINView: View {
                                 HStack(spacing: 10) {
                                     Text(consent.enterprise?.name ?? "")
                                         .customFont(.headline, fontSize: 17)
-//                                    Image(systemName: "chevron.right")
                                 }
                                 Text(consent.reason ?? "")
                                     .customFont(.body, fontSize: 16)
@@ -199,12 +186,11 @@ struct GetSecurityPINView: View {
     }
 
     func copyToClipboard() {
-        UIPasteboard.general.setValue(deviceVM.shareCode,
-                    forPasteboardType: UTType.plainText.identifier)
+        UIPasteboard.general.setValue(deviceVM.shareCode, forPasteboardType: UTType.plainText.identifier)
         withAnimation(.snappy) {
             isCopied = true
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             withAnimation(.snappy) {
                 isCopied = false
