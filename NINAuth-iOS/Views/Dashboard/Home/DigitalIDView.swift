@@ -114,6 +114,9 @@ struct DigitalIDView: View {
                 }
                 isPresentingScanner = false
             }
+            .onAppear {
+                scannedCode = nil
+            }
 
             if case .loading = viewModel.state {
                 ProgressView().scaleEffect(2)

@@ -14,7 +14,9 @@ import FirebaseMessaging
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @Environment(\.scenePhase) var scenePhase
     @StateObject private var appState = AppState()
+    @State private var workItem: DispatchWorkItem?
     
     var body: some Scene {
         WindowGroup {
@@ -27,7 +29,33 @@ struct NINAuth_iOSApp: SwiftUI.App {
             .environmentObject(appState)
             .hideWithScreenshot()
             .environment(\.dynamicTypeSize, .medium)
+            .onChange(of: scenePhase) { newValue in
+                switch newValue {
+                case .background:
+                    runForceLogout()
+                case .inactive:
+                    runForceLogout()
+                default:
+                    cancelTask()
+                }
+            }
         }
+    }
+    
+    private func runForceLogout() {
+        cancelTask()
+        workItem = DispatchWorkItem {
+            appState.main =  UUID()
+        }
+        
+        if let item = workItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: item)
+        }
+    }
+    
+    private func cancelTask() {
+        workItem?.cancel()
+        workItem = nil
     }
 }
 
