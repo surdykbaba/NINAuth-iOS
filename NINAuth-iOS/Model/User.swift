@@ -41,7 +41,7 @@ class User: Object, ObjectKeyIdentifiable {
         self.face_auth_completed = value?["face_auth_completed"].string
         self.created_at = value?["created_at"].string
         self.updated_at = value?["updated_at"].string
-        self.origin_local_government = value?["origin_state"].string
+        self.origin_local_government = value?["origin_local_government"].string
         self.origin_state = value?["origin_state"].string
     }
     

@@ -10,6 +10,7 @@ struct GetSecurityPINView: View {
     @State private var errTitle = ""
     @State private var msg = ""
     @State private var showDialog: Bool = false
+    @State private var showResetSheet = false  // <- NEW
 
     var body: some View {
         ZStack {
@@ -25,7 +26,6 @@ struct GetSecurityPINView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                // Secure Code Box
                 VStack(alignment: .center, spacing: 10) {
                     HStack(spacing: 8) {
                         Text(deviceVM.shareCode)
@@ -41,12 +41,12 @@ struct GetSecurityPINView: View {
                     }
 
                     Text("Your secure code expire in 29 days")
-                        .font(.system(size: 14))
-                        .foregroundColor(.green)
+                        .customFont(.title, fontSize: 14)
+                        .foregroundColor((Color.button))
                         .padding(.top, 4)
 
                     Button(action: {
-                        // TODO: Add LinkedIDViewModel logic later
+                        showResetSheet = true
                     }) {
                         Text("Reset")
                             .font(.system(size: 14, weight: .semibold))
@@ -55,8 +55,8 @@ struct GetSecurityPINView: View {
                             .padding(.vertical, 8)
                             .background(Color.button)
                             .cornerRadius(4)
-                            .frame(height:32)
-                            .frame(width:106)
+                            .frame(height: 32)
+                            .frame(width: 106)
                     }
                 }
                 .frame(height: 150)
@@ -71,15 +71,15 @@ struct GetSecurityPINView: View {
                         .fill(Color.white)
                 )
 
-                // Usage History or Consent Log
+                Spacer()
+
                 VStack {
-                    if deviceVM.consents.isEmpty {
+                    if (deviceVM.consents.isEmpty == true) {
                         VStack(spacing: 20) {
                             Text("USAGE HISTORY")
                                 .foregroundColor(Color(.textGrey))
                                 .customFont(.subheadline, fontSize: 16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-
                             Image(.logEmpty)
                                 .resizable()
                                 .frame(width: 83, height: 83)
@@ -101,10 +101,11 @@ struct GetSecurityPINView: View {
                 }
                 .padding()
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .stroke(.gray.opacity(0.2), lineWidth: 1)
                 )
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+                .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color(.white)))
                 .alert(errTitle, isPresented: $showDialog) {
                     Button("OK", role: .cancel) { }
                 } message: {
@@ -118,25 +119,38 @@ struct GetSecurityPINView: View {
                         .customFont(.subheadline, fontSize: 16)
                         .foregroundStyle(Color(.text))
                         .padding()
-                        .background(Color.white.cornerRadius(20))
+                        .background(Color(.white).cornerRadius(20))
                         .padding(.bottom)
                         .shadow(radius: 5)
                         .transition(.move(edge: .bottom))
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                Button {
+                    copyToClipboard()
+                } label: {
+                    Text(buttonText)
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .background(Color.button)
+                .cornerRadius(4)
+                .padding()
+            }
             .task {
                 await deviceVM.getShareCode()
             }
 
-            // Loading & Error State
             if case .loading = deviceVM.state {
                 ProgressView()
                     .scaleEffect(2)
             }
 
             if case .failed(let errorBag) = deviceVM.state {
-                Color.clear.onAppear {
+                Color.clear.onAppear() {
                     errTitle = errorBag.title
                     msg = errorBag.description
                     showDialog = true
@@ -145,6 +159,31 @@ struct GetSecurityPINView: View {
             }
         }
         .background(Color(.bg))
+        .sheet(isPresented: $showResetSheet) {
+            if #available(iOS 16.0, *) {
+                ResetShareCodeView(
+                    onConfirm: {
+                        showResetSheet = false
+                        // TODO: Reset logic here
+                    },
+                    onCancel: {
+                        showResetSheet = false
+                    }
+                )
+                .presentationDetents([.height(250)])
+                .presentationDragIndicator(.visible)
+            } else {
+                ResetShareCodeView(
+                    onConfirm: {
+                        showResetSheet = false
+                        // TODO: Reset logic here
+                    },
+                    onCancel: {
+                        showResetSheet = false
+                    }
+                )
+            }
+        }
     }
 
     var consentData: some View {
@@ -186,7 +225,8 @@ struct GetSecurityPINView: View {
     }
 
     func copyToClipboard() {
-        UIPasteboard.general.setValue(deviceVM.shareCode, forPasteboardType: UTType.plainText.identifier)
+        UIPasteboard.general.setValue(deviceVM.shareCode,
+                                      forPasteboardType: UTType.plainText.identifier)
         withAnimation(.snappy) {
             isCopied = true
         }

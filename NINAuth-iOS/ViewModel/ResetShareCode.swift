@@ -1,6 +1,12 @@
+//
+//  ResetShareCodeView.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 14/04/2025.
+//
 import SwiftUI
 
-struct LeaveAppAlertSheetView: View {
+struct ResetShareCodeView: View {
     var onConfirm: () -> Void
     var onCancel: () -> Void
 
@@ -23,8 +29,15 @@ struct LeaveAppAlertSheetView: View {
                 .frame(width: 40, height: 40)
                 .foregroundColor(.orange)
                 .padding(.top, -10)
+            
+            Text("Reset Code?")
+                .customFont(.title, fontSize: 22)
+                .multilineTextAlignment(.center)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal)
 
-            Text("You're about to leave the app and open this link in your device's web browser. Would you like to continue?")
+            Text("Resetting the code will revoke access for all enterprises currently using it. Do you want to continue?")
                 .customFont(.body, fontSize: 17)
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)
@@ -55,9 +68,8 @@ struct LeaveAppAlertSheetView: View {
         .padding()
     }
 }
-
 #Preview {
-    LeaveAppAlertSheetView(
+    ResetShareCodeView(
         onConfirm: { print("Confirmed") },
         onCancel: { print("Cancelled") }
     )
