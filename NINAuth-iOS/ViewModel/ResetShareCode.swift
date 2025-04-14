@@ -20,6 +20,7 @@ struct ResetShareCodeView: View {
                         .foregroundColor(.black)
                         .padding(10)
                         .contentShape(Rectangle())
+                        .padding(.top, 20)
                 }
             }
 
@@ -31,7 +32,7 @@ struct ResetShareCodeView: View {
                 .padding(.top, -10)
             
             Text("Reset Code?")
-                .customFont(.title, fontSize: 22)
+                .customFont(.title, fontSize: 20)
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)

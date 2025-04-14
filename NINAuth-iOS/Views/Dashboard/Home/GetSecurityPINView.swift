@@ -43,6 +43,7 @@ struct GetSecurityPINView: View {
                     Text("Your secure code expire in 29 days")
                         .customFont(.title, fontSize: 14)
                         .foregroundColor((Color.button))
+
                         .padding(.top, 4)
 
                     Button(action: {
