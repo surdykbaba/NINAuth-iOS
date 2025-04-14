@@ -52,7 +52,8 @@ struct GetSecurityPINView: View {
 //                    .background(RoundedRectangle(cornerRadius: 4, style: .continuous)
 //                        .fill(Color.button.opacity(0.1)))
                 }
-                .frame(maxWidth: .infinity, maxHeight: 300, alignment: .center)
+                .frame(height: 150)
+                .frame(maxWidth: .infinity, maxHeight: 150, alignment: .center)
                 .padding(.vertical)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -65,6 +66,8 @@ struct GetSecurityPINView: View {
 //                        currentTimer -= 1
 //                    }
 //                }
+                Spacer()
+                
                 VStack {
                     if (deviceVM.consents.isEmpty == true) {
                         VStack(spacing: 20) {
@@ -104,7 +107,7 @@ struct GetSecurityPINView: View {
                     Text(msg)
                 }
                 
-                Spacer()
+                //Spacer()
             }
             .padding()
             .overlay {
@@ -120,23 +123,23 @@ struct GetSecurityPINView: View {
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
             }
-            .safeAreaInset(edge: .bottom) {
-                Button {
-                    copyToClipboard()
-                } label: {
-                    Text(buttonText)
-                        .customFont(.title, fontSize: 18)
-                        .foregroundStyle(.white)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 18)
-                .background(Color.button)
-                .cornerRadius(4)
-                .padding()
-            }
+//            .safeAreaInset(edge: .bottom) {
+//                Button {
+//                    copyToClipboard()
+//                } label: {
+//                    Text(buttonText)
+//                        .customFont(.title, fontSize: 18)
+//                        .foregroundStyle(.white)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .padding(.vertical, 18)
+//                .background(Color.button)
+//                .cornerRadius(4)
+//                .padding()
+//            }
             .task {
                 await deviceVM.getShareCode()
-                await deviceVM.getLogs()
+//                await deviceVM.getLogs(code: deviceVM.shareCode)
             }
             
             if case .loading = deviceVM.state {

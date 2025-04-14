@@ -68,17 +68,20 @@ class DeviceViewModel: ObservableObject {
         case .success(let code):
             state = .success
             shareCode = code
+            Task {
+                await getLogs(code: shareCode)
+            }
         case .failure(let failure):
             state = .failed(failure)
         }
     }
     
-    func getLogs() async -> Void {
+    func getLogs(code: String) async -> Void {
         guard state != .loading else {
             return
         }
         state = .loading
-        let result =  await deviceService.getShareLogs()
+        let result =  await deviceService.getShareLogs(code: code)
         switch result {
         case .success(let data):
             state = .success

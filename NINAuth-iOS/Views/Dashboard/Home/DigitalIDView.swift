@@ -26,7 +26,7 @@ struct DigitalIDView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    VStack(alignment: .center, spacing: 10) {
+                    VStack(alignment: .center, spacing: 0) {
                         TabView(selection: $currentIndex) {
                             ForEach(0..<bannerData.count, id: \.self) { index in
                                 HStack(spacing: 12) {
@@ -36,12 +36,12 @@ struct DigitalIDView: View {
 
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(bannerData[index].title)
-                                            .font(.system(size: 17, weight: .semibold))
+                                            .customFont(.title, fontSize: 17)
                                             .foregroundColor(.primary)
                                             .fixedSize(horizontal: false, vertical: true)
 
                                         Text(bannerData[index].subtitle)
-                                            .font(.system(size: 15))
+                                            .customFont(.body, fontSize: 15)
                                             .foregroundColor(.secondary)
                                             .lineLimit(1)
                                             .fixedSize(horizontal: false, vertical: true)
@@ -62,35 +62,32 @@ struct DigitalIDView: View {
                                 .tag(index)
                             }
                         }
-                        .frame(height: 100)
-                        
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                        .frame(height: 81)
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                         .onReceive(bannerTimer) { _ in
                             withAnimation {
                                 currentIndex = (currentIndex + 1) % bannerData.count
                             }
                         }
-                        .environment(\.dynamicTypeSize, .medium)
-
-                        ZStack {
-                            DigitalbackCard()
-                                .opacity(isFlipped ? 1 : 0)
-                                .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
-
-                            DigitalIDCardView()
-                                .opacity(isFlipped ? 0 : 1)
-                                .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
-                        }
-                        .frame(height: 242)
-                        .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
-                        .onTapGesture {
-                            isFlipped.toggle()
-                        }
                     }
-                    .padding(.bottom, 15)
+                    
+                    ZStack {
+                        DigitalbackCard()
+                            .opacity(isFlipped ? 1 : 0)
+                            .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+
+                        DigitalIDCardView()
+                            .opacity(isFlipped ? 0 : 1)
+                            .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+                    }
+                    .frame(height: 242)
+                    .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                    .onTapGesture {
+                        isFlipped.toggle()
+                    }
 
                     Text("manage_your_identity")
-                        .font(.system(size: 17, weight: .medium))
+                        .customFont(.title, fontSize: 17)
                         .padding(.bottom, 15)
                         
 
@@ -147,7 +144,6 @@ struct DigitalIDView: View {
                 )
             }
         }
-        .environment(\.dynamicTypeSize, .medium)
 
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }
         NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) { EmptyView() }
@@ -170,6 +166,5 @@ struct DigitalIDView: View {
 }
 #Preview {
     DigitalIDView()
-        .environment(\.dynamicTypeSize, .medium)
 }
 

@@ -15,7 +15,7 @@ struct QRCodeScanner: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> QRCodeScannerController {
         var configuration = QRScannerConfiguration()
-        configuration.title = "NinAuth QR scanner"
+        configuration.title = ""
         configuration.readQRFromPhotos = false
         configuration.flashOnImage = UIImage(systemName: "flashlight.on.fill")
         configuration.cancelButtonTintColor = .greenText

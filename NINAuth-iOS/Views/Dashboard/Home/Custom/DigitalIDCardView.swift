@@ -119,7 +119,6 @@ struct DigitalIDCardView: View {
             .padding(.trailing,),
             alignment: .bottomTrailing
         )
-        .environment(\.dynamicTypeSize, .medium)
     }
 
     func doubleTextView(title: String, subtitle: String) -> some View {
@@ -133,11 +132,9 @@ struct DigitalIDCardView: View {
                 .foregroundColor(Color(.text))
         }
         .multilineTextAlignment(.leading)
-        .environment(\.dynamicTypeSize, .medium)
     }
 }
 
 #Preview {
     DigitalIDCardView()
-        .environment(\.dynamicTypeSize, .medium)
 }

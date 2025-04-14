@@ -231,6 +231,10 @@ struct SettingsView: View {
                 NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "device_mobile", name: "LinkedID")
                 }
+                NavigationLink(destination: ResetDeviceView()) {
+                    SettingsRow(image: "device_mobile", name: "Reset Device")
+                }
+
 
                 NavigationLink(destination: LinkedIDsView(), isActive: $goToLinkID) {}.isDetailLink(false)
                     .frame(width: 0, height: 0)
