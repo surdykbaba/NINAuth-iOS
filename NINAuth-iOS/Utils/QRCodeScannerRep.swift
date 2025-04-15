@@ -10,8 +10,8 @@ import SwiftQRCodeScanner
 
 struct QRCodeScanner: UIViewControllerRepresentable {
     @Binding var result: String?
-    
     typealias UIViewControllerType = QRCodeScannerController
+    private var scanner = QRCodeScannerController()
     
     func makeUIViewController(context: Context) -> QRCodeScannerController {
         var configuration = QRScannerConfiguration()
@@ -19,7 +19,7 @@ struct QRCodeScanner: UIViewControllerRepresentable {
         configuration.readQRFromPhotos = false
         configuration.flashOnImage = UIImage(systemName: "flashlight.on.fill")
         configuration.cancelButtonTintColor = .greenText
-        let scanner = QRCodeScannerController(qrScannerConfiguration: configuration)
+        scanner.qrScannerConfiguration = configuration
         scanner.delegate = context.coordinator
         return scanner
     }
