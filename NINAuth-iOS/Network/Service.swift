@@ -234,7 +234,7 @@ struct NetworkResponseModel {
         }else if isAuthorizationError() {
             return "Unauthorized request"
         }else {
-            return "The error is from our server, please try again after some time. Thank you"
+            return "We're currently experiencing a temporary issue. Please try again shortly. We appreciate your patience and understanding."
         }
     }
     

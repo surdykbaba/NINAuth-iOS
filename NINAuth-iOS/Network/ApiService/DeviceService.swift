@@ -46,8 +46,8 @@ struct DeviceService: DeviceProtocol {
         }
     }
     
-    func getShareLogs() async -> Result<[Consent], ErrorBag> {
-        let networkResponse = await Service.init().get(URLs.SHARE_CODE_LOGS)
+    func getShareLogs(code: String) async -> Result<[Consent], ErrorBag> {
+        let networkResponse = await Service.init().get(URLs.SHARE_CODE_LOGS + "\(code)/logs")
         switch networkResponse.isSuccess() {
         case true:
             do {

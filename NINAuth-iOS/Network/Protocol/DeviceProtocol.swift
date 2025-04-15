@@ -13,5 +13,5 @@ protocol DeviceProtocol {
     
     func getShareCode() async -> Result<String, ErrorBag>
     
-    func getShareLogs() async -> Result<[Consent], ErrorBag>
+    func getShareLogs(code: String) async -> Result<[Consent], ErrorBag>
 }

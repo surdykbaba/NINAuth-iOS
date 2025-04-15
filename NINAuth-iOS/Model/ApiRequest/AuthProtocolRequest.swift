@@ -73,6 +73,6 @@ struct ValidateOTP: Codable {
 struct StartSessionRequest: Codable {
     var enterpriseId: String = "NAT03765128F624"
     var requestType: String = "Account opening"
-    var consent: [String] = ["first_name", "middle_name", "last_name", "photo", "telephoneno"]
+    var consent: [String] = ["first_name", "middle_name", "last_name", "photo", "telephoneno","origin_local_government","origin_state"]
     var note: String = "For account Opening"
 }

@@ -104,7 +104,9 @@ struct OnboardingView: View {
                 appState.longitude = viewModel.userLocation?.coordinate.longitude ?? 0.00
             }
             .sheet(isPresented: $isPresentingScanner) {
-                QRCodeScanner(result: $scannedCode)
+                NavigationView {
+                    QRCodeScanner(result: $scannedCode)
+                }
                 //            CodeScannerView(codeTypes: [.qr]) { response in
                 //                if case let .success(result) = response {
                 //                    scannedCode = result.string

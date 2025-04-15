@@ -1,142 +1,167 @@
 import SwiftUI
 import RealmSwift
+import UIKit
 
 struct DigitalIDView: View {
     @EnvironmentObject var appState: AppState
     @State private var isFlipped = false
-    @State private var showShareIDPopover = false
     @State private var showSecurityPINView = false
+    @State private var showBannerAlert = false
+    @State private var bannerTappedIndex = 0
     @ObservedResults(User.self) var user
     @StateObject var viewModel = LinkedIDViewModel()
     @StateObject private var consentVM = ConsentViewModel()
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
-    @Environment(\.colorScheme) var colorScheme
+    @State private var currentIndex = 0
+
+    let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
+
+    let bannerData = [
+        (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield"),
+        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb")
+    ]
 
     var body: some View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    VStack(alignment: .center, spacing: 10) {
-                        ZStack {
-                            ForEach(0..<2, id: \.self) { index in
-                                HStack(spacing: 20) {
-                                    Image(systemName: "lightbulb.fill")
-                                        .foregroundColor(Color("buttonColor"))
-                                    
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        Text("Safeguard your identity")
-                                            .bold()
-                                            .customFont(.headline, fontSize: 16)
-                                        
-                                        Text("Click here to learn how to keep your identity safe.")
-                                            .customFont(.body, fontSize: 13)
+                    VStack(alignment: .center, spacing: 0) {
+                        TabView(selection: $currentIndex) {
+                            ForEach(0..<bannerData.count, id: \.self) { index in
+                                HStack(spacing: 12) {
+                                    Image(bannerData[index].icon)
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(bannerData[index].title)
+                                            .customFont(.title, fontSize: 17)
+                                            .foregroundColor(.primary)
+                                            .fixedSize(horizontal: false, vertical: true)
+
+                                        Text(bannerData[index].subtitle)
+                                            .customFont(.body, fontSize: 15)
                                             .foregroundColor(.secondary)
+                                            .lineLimit(1)
+                                            .fixedSize(horizontal: false, vertical: true)
                                     }
-                                    .multilineTextAlignment(.leading)
-                                    
+
                                     Spacer()
                                 }
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.black)
                                 .padding()
-                                .cornerRadius(10)
-                                .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .fill(index == 0 ? Color("another_bg") : Color.white))
-                                .shadow(color: Color("transparentGreenBackground"), radius: 10)
-                                .offset(y: CGFloat(index) * 20)
+                                .frame(width: 358, height: 81)
+                                .background(Color.white)
+                                .cornerRadius(14)
+                                .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                                .padding(.horizontal)
                                 .onTapGesture {
-                                    
+                                    bannerTappedIndex = index
+                                    showBannerAlert = true
                                 }
-                                .padding(.horizontal, index == 0 ? 16 : 0)
+                                .tag(index)
                             }
                         }
-                        .padding(.bottom, 28)
-                        
-                        ZStack {
-                            DigitalbackCard()
-                                .opacity(isFlipped ? 1 : 0)
-                                .rotation3DEffect(
-                                    .degrees(isFlipped ? 0 : -180),
-                                    axis: (x: 0, y: 1, z: 0),
-                                    perspective: 0.8
-                                )
-                            
-                            DigitalIDCardView()
-                                .opacity(isFlipped ? 0 : 1)
-                                .rotation3DEffect(
-                                    .degrees(isFlipped ? 180 : 0),
-                                    axis: (x: 0, y: 1, z: 0),
-                                    perspective: 0.8
-                                )
-                        }
-                        .frame(height: 242)
-                        .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
-                        .onTapGesture {
-                            isFlipped.toggle()
+                        .frame(height: 81)
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        .onReceive(bannerTimer) { _ in
+                            withAnimation {
+                                currentIndex = (currentIndex + 1) % bannerData.count
+                            }
                         }
                     }
-                    .padding(.bottom, 30)
+                    
+                    ZStack {
+                        DigitalbackCard()
+                            .opacity(isFlipped ? 1 : 0)
+                            .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+
+                        DigitalIDCardView()
+                            .opacity(isFlipped ? 0 : 1)
+                            .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+                    }
+                    .frame(height: 242)
+                    .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
+                    .onTapGesture {
+                        isFlipped.toggle()
+                    }
 
                     Text("manage_your_identity")
-                        .customFont(.subheadline, fontSize: 17)
+                        .customFont(.title, fontSize: 17)
                         .padding(.bottom, 15)
+                        .padding(.top, 40)
+                        
 
                     VStack(spacing: 12) {
-                        IdentityView(icon: "barcode", title: "Scan QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized, completion: {
+                        IdentityView(icon: "barcode", title: "Scan a QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized) {
                             isPresentingScanner.toggle()
-                           // showShareIDPopover = true
-                        })
-//                                .popover(isPresented: $showShareIDPopover) {
-//                                    ShareIDView(display: $showShareIDPopover)
-//                                }
+                        }
 
-                        IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized, completion: {
+                        IdentityView(icon: "padlock", title: "get_security_pin".localized, subtitle: "get_pin_to_access_nimc_digital_services".localized) {
                             showSecurityPINView = true
-                        })
+                        }
                     }
                 }
                 .padding()
-            }.sheet(isPresented: $isPresentingScanner) {
-                QRCodeScanner(result: $scannedCode)
+                
+            }
+            .background(Color(UIColor.secondarySystemBackground))
+            .sheet(isPresented: $isPresentingScanner) {
+                NavigationView {
+                    QRCodeScanner(result: $scannedCode)
+                }
             }
             .onChange(of: scannedCode) { _ in
                 if let code = scannedCode {
                     verifyCode(code)
+                    scannedCode = nil
                 }
                 isPresentingScanner = false
             }
             .onAppear {
                 scannedCode = nil
             }
-            .background(Color.secondaryGrayBackground)
-            
+
             if case .loading = viewModel.state {
-                ProgressView()
-                    .scaleEffect(2)
+                ProgressView().scaleEffect(2)
             }
         }
-        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) {}
-        
-        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) {}
+        .sheet(isPresented: $showBannerAlert) {
+            if #available(iOS 16.0, *) {
+                LeaveAppAlertSheetView(
+                    onConfirm: {
+                        showBannerAlert = false
+                        openBannerURL()
+                    },
+                    onCancel: {
+                        showBannerAlert = false
+                    }
+                )
+                .presentationDetents([.height(250)])
+                .presentationDragIndicator(.visible)
+            } else {
+                LeaveAppAlertSheetView(
+                    onConfirm: {
+                        showBannerAlert = false
+                        openBannerURL()
+                    },
+                    onCancel: {
+                        showBannerAlert = false
+                    }
+                )
+            }
+        }
+
+        NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }
+        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) { EmptyView() }
     }
 
-    func showQR(title: String, subtitle: String) -> some View {
-        VStack(spacing: 5) {
-            Text(title)
-                .customFont(.headline, fontSize: 17)
-                .foregroundColor(Color.greenText)
-            Text(subtitle)
-                .customFont(.caption2, fontSize: 14)
-                .foregroundColor(Color.black)
+    func openBannerURL() {
+        if let url = URL(string: "https://ninauth.com/privacy-policy") {
+            UIApplication.shared.open(url)
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 40)
-        .cornerRadius(10)
-        .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-            .fill(.white))
     }
-    
+
     func verifyCode(_ code: String) {
         var consentCode = ConsentCode()
         consentCode.deviceId = appState.getDeviceID()
@@ -146,8 +171,7 @@ struct DigitalIDView: View {
         }
     }
 }
-
 #Preview {
     DigitalIDView()
-        .environmentObject(AppState())
 }
+

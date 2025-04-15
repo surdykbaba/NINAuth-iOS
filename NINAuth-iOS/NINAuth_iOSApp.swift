@@ -14,7 +14,9 @@ import FirebaseMessaging
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @Environment(\.scenePhase) var scenePhase
     @StateObject private var appState = AppState()
+    @State private var workItem: DispatchWorkItem?
     
     var body: some Scene {
         WindowGroup {
@@ -26,7 +28,52 @@ struct NINAuth_iOSApp: SwiftUI.App {
             .tint(Color.button)
             .environmentObject(appState)
             .hideWithScreenshot()
+            .environment(\.dynamicTypeSize, .medium)
+            .onChange(of: scenePhase) { newValue in
+                switch newValue {
+                case .background:
+                    runForceLogout()
+                case .inactive:
+                    runForceLogout()
+                default:
+                    cancelTask()
+                }
+            }
         }
+    }
+    
+    private func runForceLogout() {
+        cancelTask()
+        workItem = DispatchWorkItem {
+            appState.main =  UUID()
+        }
+        
+        if let item = workItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: item)
+        }
+    }
+    
+    private func cancelTask() {
+        workItem?.cancel()
+        workItem = nil
+    }
+}
+
+extension UIApplication {
+    static func swizzlePreferredContentSizeCategory() {
+        let originalSelector = #selector(getter: UIApplication.preferredContentSizeCategory)
+        let swizzledSelector = #selector(UIApplication.swizzled_preferredContentSizeCategory)
+        
+        guard let originalMethod = class_getInstanceMethod(UIApplication.self, originalSelector),
+              let swizzledMethod = class_getInstanceMethod(UIApplication.self, swizzledSelector) else {
+            return
+        }
+        
+        method_exchangeImplementations(originalMethod, swizzledMethod)
+    }
+    
+    @objc func swizzled_preferredContentSizeCategory() -> UIContentSizeCategory {
+        return .medium // Replace with your desired fixed category
     }
 }
 
@@ -42,14 +89,21 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         hideBackButtonText()
         SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
+//        UILabel.appearance().adjustsFontForContentSizeCategory = false
+//        UITextField.appearance().adjustsFontForContentSizeCategory = false
+//        UITextView.appearance().adjustsFontForContentSizeCategory = false
+//        UIButton.appearance().titleLabel?.adjustsFontForContentSizeCategory = false
         
-        NotificationCenter.default.addObserver(
-            forName: UIApplication.userDidTakeScreenshotNotification,
-            object: nil,
-            queue: .main) { notification in
-                //executes after screenshot
-                Log.info("I took screen shot")
-        }
+        UIApplication.swizzlePreferredContentSizeCategory()
+        
+        
+//        NotificationCenter.default.addObserver(
+//            forName: UIApplication.userDidTakeScreenshotNotification,
+//            object: nil,
+//            queue: .main) { notification in
+//                //executes after screenshot
+//                Log.info("I took screen shot")
+//        }
         
         UNUserNotificationCenter.current().delegate = self
 
@@ -63,6 +117,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return true
     }
     
+    // Add this method to override content size category changes
+    func application(_ application: UIApplication, willChangeToContentSizeCategory newCategory: UIContentSizeCategory) {
+        // Optionally, you can log when changes occur
+        print("Content size category change detected: \(newCategory)")
+        
+        // Force the app to use a specific content size category
+        NotificationCenter.default.post(name: UIContentSizeCategory.didChangeNotification, object: nil, userInfo: [UIContentSizeCategory.newValueUserInfoKey: UIContentSizeCategory.medium])
+    }
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         Log.info("willPresent")
         let userInfo = notification.request.content.userInfo
@@ -72,7 +135,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         Log.info("didReceive response")
-        let userInfo = response.notification.request.content.userInfo
+       // let userInfo = response.notification.request.content.userInfo
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

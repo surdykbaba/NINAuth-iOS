@@ -2,7 +2,7 @@
 //  SettingsView.swift
 //  NINAuth-iOS
 //
-//  Created by Chioma Amanda Mmegwa  on 29/01/2025.
+//  Created by Arogundade Qoyum  on 9/04/2025.
 //
 
 import SwiftUI
@@ -28,63 +28,83 @@ struct SettingsView: View {
     private let mem = MemoryUtil.init()
     @State private var showSheet = false
     @State private var goToLinkID = false
-    
+    @State private var hideIntegrityIndex = false  // ✅ Added this line
+
     var body: some View {
         ZStack {
             ScrollView(showsIndicators: false) {
                 VStack {
                     VStack {
-                        Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-                            .resizable()
-                            .frame(width: 96, height: 96)
-                            .clipShape(Circle())
-                            .padding(.bottom, 16)
-                        
-                        Text("\(user.first?.first_name ?? "")" + " \(user.first?.last_name ?? "")")
-                            .customFont(.title, fontSize: 24)
-                            .padding(.bottom, 30)
-                        
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("ID Integrity index: 550")
-                                .customFont(.body, fontSize: 16)
-                            
-                            NinAuthSlider(value: $linkVM.score)
-                                .padding(.bottom)
-                            
-                            Button {
-                                showSheet.toggle()
-                            } label: {
-                                HStack {
-                                    Text("What does my ID integrity index mean?")
-                                        .customFont(.body, fontSize: 14)
-                                    
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(Color("buttonColor"))
-                                }
-                            }
-                            .padding(.top, 20)
+                        VStack(spacing: 6) {
+                            Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
+                                .resizable()
+                                .frame(width: 110, height: 110)
+                                .clipShape(Circle())
+
+                            Text("\(user.first?.first_name ?? "") \(user.first?.last_name ?? "")")
+                                .customFont(.title, fontSize: 24)
+
+                            Text("Last login : 23 hours ago")
+                                .customFont(.subheadline, fontSize: 16)
                         }
-                        .padding()
-                        .mask(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .stroke()
-                                .fill(.gray.opacity(0.2))
-                        )
-                        .padding(.bottom, 30)
-                        
+
+                        // ✅ Toggle Button to Hide/Show Integrity Index
+                        Button {
+                            hideIntegrityIndex.toggle()
+                        } label: {
+                            Text(hideIntegrityIndex ? "Show index" : "Hide index")
+                                .customFont(.subheadline, fontSize: 16)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 16)
+                                .background(Color.grayBackground)
+                                .cornerRadius(12)
+                                .padding(.bottom, 4)
+                        }
+
+                        // ✅ Conditional rendering of the Integrity Index section
+                        if !hideIntegrityIndex {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("ID Integrity index: 550")
+                                    .customFont(.body, fontSize: 16)
+
+                                NinAuthSlider(value: $linkVM.score)
+                                    .padding(.bottom)
+
+                                Button {
+                                    showSheet.toggle()
+                                } label: {
+                                    HStack {
+                                        Text("What does my ID integrity index mean?")
+                                            .customFont(.body, fontSize: 14)
+
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(Color("buttonColor"))
+                                    }
+                                }
+                                .padding(.top, 20)
+                            }
+                            .padding()
+                            .mask(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .stroke()
+                                    .fill(.gray.opacity(0.2))
+                            )
+                            .padding(.bottom, 30)
+                        }
+
                         legalAndComplaince
-                        
+
                         security
                             .padding(.top, 44)
-                        
+
                         others
                             .padding(.top, 44)
                             .padding(.bottom)
-                        
+
                         NavigationLink(destination: UpdatePinView(oldPIN: pin), isActive: $goToUpdatePin) {}.isDetailLink(false)
-                        
+
                         if case .failed(let errorBag) = viewModel.state {
                             Color.clear.onAppear {
                                 msg = errorBag.description
@@ -117,20 +137,20 @@ struct SettingsView: View {
             .task {
                 await linkVM.getScore(deviceID: appState.getDeviceID())
             }
-            
+
             BottomSheetView(isPresented: $showSheet) {
                 LinkedIDsModalView(showSheet: $showSheet, goToLinkID: $goToLinkID, score: $linkVM.score, scoreToDisplay: $linkVM.displayedScore)
                     .background(Color(.white))
                     .padding(.bottom, 50)
             }
-            
+
             if viewModel.isLogging == true {
                 ProgressView()
                     .scaleEffect(2)
             }
         }
     }
-    
+
     var biometrics: some View {
         HStack(spacing: 20) {
             Image("fingerprint")
@@ -139,7 +159,7 @@ struct SettingsView: View {
                 .padding(15)
                 .background(Color.grayBackground)
                 .clipShape(Circle())
-            
+
             Toggle(isOn: $biometricsIsOn,
                    label : {
                 Text("biometrics".localized)
@@ -156,37 +176,36 @@ struct SettingsView: View {
             Button("OK", role: .cancel) { }
         }
     }
-    
+
     var legalAndComplaince: some View {
         VStack(alignment: .leading, spacing: 20){
             Text("legal_and_compliance".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
-            
+
             Divider()
-            
+
             Group {
                 Link(destination: URL(string: "https://ninauth.com/privacy-policy")!) {
                     SettingsRow(image: "lock", name: "privacy_policy".localized)
                 }
-                
+
                 Link(destination: URL(string: "https://ninauth.com/terms-of-service")!) {
                     SettingsRow( image: "file_text", name: "terms_of_service".localized)
                 }
             }
         }
         .padding(.horizontal, 20)
-
     }
-    
+
     var security: some View {
         VStack(alignment: .leading, spacing: 20){
             Text("security".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
-            
+
             Divider()
-            
+
             Group {
                 NavigationLink(destination: DataSharingView()) {
                     SettingsRow(image: "wifi_off", name: "offline_data_sharing".localized)
@@ -202,46 +221,48 @@ struct SettingsView: View {
                 } onEnd: {
                     Log.info("Dismissed Sheet")
                 }
-                
+
                 biometrics
 
                 NavigationLink(destination: DevicesView()) {
                     SettingsRow(image: "device_mobile", name: "devices".localized)
                 }
-                
+
                 NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "device_mobile", name: "LinkedID")
                 }
+                NavigationLink(destination: ResetDeviceView()) {
+                    SettingsRow(image: "device_mobile", name: "Reset Device")
+                }
+
 
                 NavigationLink(destination: LinkedIDsView(), isActive: $goToLinkID) {}.isDetailLink(false)
                     .frame(width: 0, height: 0)
-                
+
                 if(viewModel.logOut) {
                     Color.clear.onAppear {
                         appState.userClickedLogout = true
                         appState.main = UUID()
                     }
                 }
-//                NavigationLink(destination: OnboardingView(), isActive: $viewModel.logOut) {}.isDetailLink(false)
-//                    .frame(width: 0, height: 0)
             }
         }
         .padding(.horizontal, 20)
     }
-    
+
     var others: some View {
         VStack(alignment: .leading, spacing: 20){
             Text("others")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
-            
+
             Divider()
-            
+
             Group {
                 NavigationLink(destination: NotificationsView()) {
                     SettingsRow(image: "notification", name: "notifications".localized)
                 }
-                
+
                 Button {
                     showSignOut = true
                 } label: {
@@ -261,7 +282,7 @@ struct SettingsView: View {
         }
         .padding(.horizontal, 20)
     }
-    
+
     var requestCodeView: some View {
         ZStack {
             Color.white
@@ -277,7 +298,7 @@ struct SettingsView: View {
                         }
                 }
                 .padding(.bottom)
-                
+
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Enter your old PIN to continue")
                         .customFont(.headline, fontSize: 24)
@@ -306,7 +327,6 @@ struct SettingsView: View {
                     .background(isValid ? Color.button : Color.button.opacity(0.2))
                     .cornerRadius(4)
                     .disabled(!isValid)
-
                 }
             }
             .padding()
@@ -314,7 +334,7 @@ struct SettingsView: View {
         }
         .ignoresSafeArea()
     }
-    
+
     func enableBiometrics() {
         let context = LAContext()
         var error: NSError?
@@ -340,7 +360,6 @@ struct SettingsView: View {
             mem.setValue(key: mem.authentication_key, value: false)
         }
     }
-    
 }
 
 #Preview {
