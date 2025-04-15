@@ -30,20 +30,20 @@ struct ResetShareCodeView: View {
                 .frame(width: 40, height: 40)
                 .foregroundColor(.orange)
                 .padding(.top, -10)
-            
+
             Text("Reset Code?")
                 .customFont(.title, fontSize: 20)
                 .multilineTextAlignment(.center)
-                .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
 
             Text("Resetting the code will revoke access for all enterprises currently using it. Do you want to continue?")
                 .customFont(.body, fontSize: 17)
                 .multilineTextAlignment(.center)
-                .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
+
+            Spacer(minLength: 0) // Optional: adds flexibility in height
 
             HStack(spacing: 12) {
                 Button(action: onCancel) {
@@ -65,10 +65,12 @@ struct ResetShareCodeView: View {
                 }
             }
             .padding(.horizontal)
+            .padding(.bottom, 10) // <- Raised 10 points from the bottom
         }
         .padding()
     }
 }
+
 #Preview {
     ResetShareCodeView(
         onConfirm: { print("Confirmed") },

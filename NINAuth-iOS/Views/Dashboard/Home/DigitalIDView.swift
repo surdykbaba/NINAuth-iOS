@@ -1,3 +1,10 @@
+//
+//  UserQRCodeView.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 15/04/2025.
+
+
 import SwiftUI
 import RealmSwift
 import UIKit

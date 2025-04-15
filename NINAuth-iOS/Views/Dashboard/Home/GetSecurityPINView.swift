@@ -171,7 +171,7 @@ struct GetSecurityPINView: View {
                         showResetSheet = false
                     }
                 )
-                .presentationDetents([.height(250)])
+                .presentationDetents([.height(290)])
                 .presentationDragIndicator(.visible)
             } else {
                 ResetShareCodeView(

@@ -4,23 +4,18 @@
 //
 //  Created by Arogundade Qoyum on 15/04/2025.
 
+
 import SwiftUI
-import RealmSwift
 import CoreImage.CIFilterBuiltins
+import RealmSwift
 
-struct DigitalbackCard: View {
+struct QRCodeUserDataView: View {
     @ObservedResults(User.self) var user
-
     let context = CIContext()
     let filter = CIFilter.qrCodeGenerator()
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Image("NinID_Back_new")
-                .resizable()
-                .frame(height: 242)
-                .clipped()
-
+        VStack {
             if let currentUser = user.first {
                 let userData: [String: String] = [
                     "surname": currentUser.last_name ?? "",
@@ -39,28 +34,30 @@ struct DigitalbackCard: View {
                     Image(uiImage: qrImage)
                         .interpolation(.none)
                         .resizable()
-                        .frame(width: 64, height: 64)
-                        .padding(.leading, 275)
-                        .padding(.top, 155)
+                        .scaledToFit()
+                        .frame(width: 200, height: 200)
+                        .padding()
+                } else {
+                    Text("Failed to generate QR code.")
+                        .foregroundColor(.red)
                 }
+            } else {
+                Text("No user data available")
+                    .foregroundColor(.gray)
             }
         }
-        .frame(maxWidth: 370, maxHeight: 242, alignment: .leading)
     }
 
     func generateQRCode(from string: String) -> UIImage? {
         filter.message = Data(string.utf8)
-        if let outputImage = filter.outputImage {
-            let transform = CGAffineTransform(scaleX: 6, y: 6)
-            let scaledImage = outputImage.transformed(by: transform)
-            if let cgimg = context.createCGImage(scaledImage, from: scaledImage.extent) {
-                return UIImage(cgImage: cgimg)
-            }
+        if let outputImage = filter.outputImage,
+           let cgimg = context.createCGImage(outputImage.transformed(by: CGAffineTransform(scaleX: 10, y: 10)), from: outputImage.extent) {
+            return UIImage(cgImage: cgimg)
         }
         return nil
     }
 }
 
 #Preview {
-    DigitalbackCard()
+    QRCodeUserDataView()
 }

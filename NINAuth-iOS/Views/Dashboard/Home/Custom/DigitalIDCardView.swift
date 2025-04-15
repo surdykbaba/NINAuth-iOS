@@ -1,3 +1,11 @@
+//
+//  UserQRCodeView.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 15/04/2025.
+
+
+
 import SwiftUI
 import RealmSwift
 
@@ -102,7 +110,7 @@ struct DigitalIDCardView: View {
         .background(
             Image("NinID_Front_new")
                 .resizable()
-                .frame(width: 360, height: 230)
+                .frame(width: 360, height: 235)
                 .clipped()
         )
         .overlay(
@@ -111,9 +119,9 @@ struct DigitalIDCardView: View {
                     .resizable()
                     .scaledToFill()
                     .cornerRadius(5)
-                    .frame(width: 89, height: 60)
+                    .frame(width: 75, height: 45)
             }
-            .frame(width: 79, height: 77)
+            .frame(width: 64, height: 63)
             .background(Color.white)
             .padding(.bottom, 34)
             .padding(.trailing,),
