@@ -11,7 +11,7 @@ import SwiftQRCodeScanner
 struct QRCodeScanner: UIViewControllerRepresentable {
     @Binding var result: String?
     typealias UIViewControllerType = QRCodeScannerController
-    private var scanner = QRCodeScannerController()
+    let scanner = QRCodeScannerController()
     
     func makeUIViewController(context: Context) -> QRCodeScannerController {
         var configuration = QRScannerConfiguration()
@@ -47,7 +47,7 @@ struct QRCodeScanner: UIViewControllerRepresentable {
         }
         
         func qrScanner(_ controller: UIViewController, didFailWithError error: SwiftQRCodeScanner.QRCodeError) {
-            
+            Log.info(error.localizedDescription)
         }
         
         func qrScannerDidCancel(_ controller: UIViewController) {

@@ -114,11 +114,14 @@ struct DigitalIDView: View {
             }
             .background(Color(UIColor.secondarySystemBackground))
             .sheet(isPresented: $isPresentingScanner) {
-                QRCodeScanner(result: $scannedCode)
+                NavigationView {
+                    QRCodeScanner(result: $scannedCode)
+                }
             }
             .onChange(of: scannedCode) { _ in
                 if let code = scannedCode {
                     verifyCode(code)
+                    scannedCode = nil
                 }
                 isPresentingScanner = false
             }

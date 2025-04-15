@@ -10,6 +10,7 @@ class PinViewModel: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
     @Published var pinIsSet: Bool = false
+    @Published var newPinSet: Bool = false
     @Published private(set) var pinUpdated: Bool = false
     @Published var randomNumber: Int = 0
     @Published var forgotPinSet: Bool = false
@@ -76,6 +77,7 @@ class PinViewModel: ObservableObject {
         }
     }
     
+    
     func setNewPin(setNewPin: SetNewPin) async -> Void {
         guard state != .loading else {
             return
@@ -84,7 +86,7 @@ class PinViewModel: ObservableObject {
         let result = await pinService.resetNewPin(setNewPin: setNewPin)
         switch result {
         case .success(_):
-            pinIsSet = true
+            newPinSet = true
             state = .success
         case .failure(let failure):
             state = .failed(failure)

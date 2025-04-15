@@ -60,7 +60,8 @@ struct SetPINView: View {
                 .disabled(!isValid)
 
                 NavigationLink(destination: UpdateContactInfoView(), isActive: $viewModel.pinIsSet) {}.isDetailLink(false)
-
+                
+                NavigationLink(destination: TabControllerView(), isActive: $viewModel.newPinSet) {}.isDetailLink(false)
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .center)
