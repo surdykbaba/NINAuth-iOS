@@ -228,10 +228,10 @@ struct SettingsView: View {
                 }
 
                 NavigationLink(destination: LinkedIDsView()) {
-                    SettingsRow(image: "device_mobile", name: "LinkedID")
+                    SettingsRow(image: "linked", name: "LinkedID")
                 }
                 NavigationLink(destination: ResetDeviceView()) {
-                    SettingsRow(image: "device_mobile", name: "Reset Device")
+                    SettingsRow(image: "Reset_device", name: "Reset Device")
                 }
 
 
@@ -367,22 +367,8 @@ struct SettingsView: View {
 }
 extension Date {
     var smartLastLogin: String {
-        let now = Date()
-        let difference = now.timeIntervalSince(self)
-
         let formatter = DateFormatter()
-
-        if difference < 86400 {
-            // Within 24 hours – show time (e.g. "3:45 PM")
-            formatter.dateStyle = .none
-            formatter.timeStyle = .short
-        } else {
-            // Older than 24 hours – show date (e.g. "Apr 14, 2025")
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .none
-        }
-
+        formatter.dateFormat = "d MMMM, yyyy" // e.g. "23 July, 2024"
         return formatter.string(from: self)
     }
 }
-
