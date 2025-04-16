@@ -81,11 +81,11 @@ struct DigitalIDView: View {
                     ZStack {
                         DigitalbackCard()
                             .opacity(isFlipped ? 1 : 0)
-                            .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+                            .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 1, y: 0, z: 0))
 
                         DigitalIDCardView()
                             .opacity(isFlipped ? 0 : 1)
-                            .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+                            .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 1, y: 0, z: 0))
                     }
                     .frame(height: 242)
                     .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)

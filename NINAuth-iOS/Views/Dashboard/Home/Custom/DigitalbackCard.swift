@@ -3,6 +3,7 @@
 //  NINAuth-iOS
 //
 //  Created by Arogundade Qoyum on 15/04/2025.
+
 import SwiftUI
 import RealmSwift
 import CoreImage.CIFilterBuiltins
@@ -18,22 +19,21 @@ struct DigitalbackCard: View {
         }
 
         let credentialSubject: [String: String] = [
-            "id": "did:nin:\(currentUser.nin)",
             "firstName": currentUser.first_name ?? "",
             "middleName": currentUser.middle_name ?? "",
-            "lastName": currentUser.last_name ?? "",
             "gender": currentUser.gender ?? "",
-            "stateOfOrigin": currentUser.origin_state ?? "",
-            "lga": currentUser.origin_local_government ?? "",
             "dateOfBirth": currentUser.getDOB()
         ]
 
+        let issuedAtDate = Date()
+        let issuedAtUnix = Int(issuedAtDate.timeIntervalSince1970)
+
         let payload: [String: Any] = [
-            "@context": ["https://www.w3.org/2018/credentials/v1"],
             "type": ["VerifiableCredential"],
             "credentialSubject": credentialSubject,
-            "issuer": "https://nin.gov.ng",
-            "issuanceDate": Date().iso8601String()
+            "issuer": "NINAuth",
+            //"issuanceDate": issuedAtDate.iso8601String(),
+            "issuanceDate": String(issuedAtUnix)
         ]
 
         guard let jsonData = try? JSONSerialization.data(withJSONObject: payload),
@@ -67,10 +67,9 @@ struct DigitalbackCard: View {
             Image(uiImage: qrImage)
                 .interpolation(.none)
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: 120, height: 120)
                 .cornerRadius(4)
-                .offset(x: -10)
-                .offset(y: -10)
+                .offset(x: -10, y: -10)
         }
         .frame(maxWidth: 370, maxHeight: 242)
     }
@@ -79,6 +78,8 @@ struct DigitalbackCard: View {
 extension Date {
     func iso8601String() -> String {
         let formatter = ISO8601DateFormatter()
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter.string(from: self)
     }
 }
