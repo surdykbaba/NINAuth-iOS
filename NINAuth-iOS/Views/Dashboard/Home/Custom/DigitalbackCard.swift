@@ -68,9 +68,7 @@ struct DigitalbackCard: View {
                 .interpolation(.none)
                 .resizable()
                 .frame(width: 100, height: 100)
-               
                 .cornerRadius(4)
-                
                 .offset(x: -10)
                 .offset(y: -10)
         }

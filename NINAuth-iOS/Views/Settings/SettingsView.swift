@@ -40,14 +40,13 @@ struct SettingsView: View {
                                 .resizable()
                                 .frame(width: 110, height: 110)
                                 .clipShape(Circle())
-
+                            
                             Text("\(user.first?.first_name ?? "") \(user.first?.last_name ?? "")")
                                 .customFont(.title, fontSize: 24)
-
-                            Text("Last login : 23 hours ago")
+                            
+                            Text("Last login: \(Date().smartLastLogin)")
                                 .customFont(.subheadline, fontSize: 16)
                         }
-
                         // ✅ Toggle Button to Hide/Show Integrity Index
                         Button {
                             hideIntegrityIndex.toggle()
@@ -366,3 +365,24 @@ struct SettingsView: View {
     SettingsView()
         .environmentObject(AppState())
 }
+extension Date {
+    var smartLastLogin: String {
+        let now = Date()
+        let difference = now.timeIntervalSince(self)
+
+        let formatter = DateFormatter()
+
+        if difference < 86400 {
+            // Within 24 hours – show time (e.g. "3:45 PM")
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+        } else {
+            // Older than 24 hours – show date (e.g. "Apr 14, 2025")
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+        }
+
+        return formatter.string(from: self)
+    }
+}
+

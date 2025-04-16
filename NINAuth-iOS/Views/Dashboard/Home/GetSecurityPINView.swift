@@ -114,33 +114,33 @@ struct GetSecurityPINView: View {
                 }
             }
             .padding()
-            .overlay {
-                if isCopied {
-                    Text("Copied to clipboard")
-                        .customFont(.subheadline, fontSize: 16)
-                        .foregroundStyle(Color(.text))
-                        .padding()
-                        .background(Color(.white).cornerRadius(20))
-                        .padding(.bottom)
-                        .shadow(radius: 5)
-                        .transition(.move(edge: .bottom))
-                        .frame(maxHeight: .infinity, alignment: .bottom)
-                }
-            }
-            .safeAreaInset(edge: .bottom) {
-                Button {
-                    copyToClipboard()
-                } label: {
-                    Text(buttonText)
-                        .customFont(.title, fontSize: 18)
-                        .foregroundStyle(.white)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 18)
-                .background(Color.button)
-                .cornerRadius(4)
-                .padding()
-            }
+//            .overlay {
+//                if isCopied {
+//                    Text("Copied to clipboard")
+//                        .customFont(.subheadline, fontSize: 16)
+//                        .foregroundStyle(Color(.text))
+//                        .padding()
+//                        .background(Color(.white).cornerRadius(20))
+//                        .padding(.bottom)
+//                        .shadow(radius: 5)
+//                        .transition(.move(edge: .bottom))
+//                        .frame(maxHeight: .infinity, alignment: .bottom)
+//                }
+//            }
+//            .safeAreaInset(edge: .bottom) {
+//                Button {
+//                    copyToClipboard()
+//                } label: {
+//                    Text(buttonText)
+//                        .customFont(.title, fontSize: 18)
+//                        .foregroundStyle(.white)
+//                }
+//                .frame(maxWidth: .infinity)
+//                .padding(.vertical, 18)
+//                .background(Color.button)
+//                .cornerRadius(4)
+//                .padding()
+//            }
             .task {
                 await deviceVM.getShareCode()
             }
