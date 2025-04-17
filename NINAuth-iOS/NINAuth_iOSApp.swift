@@ -85,7 +85,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         FirebaseApp.configure()
         
         let config = Realm.Configuration(
-                schemaVersion: 3, deleteRealmIfMigrationNeeded: false)
+                schemaVersion: 3, deleteRealmIfMigrationNeeded: true)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
         SmileID.initialize(useSandbox: false)
