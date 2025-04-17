@@ -76,3 +76,7 @@ struct StartSessionRequest: Codable {
     var consent: [String] = ["first_name", "middle_name", "last_name", "photo", "telephoneno","origin_local_government","origin_state"]
     var note: String = "For account Opening"
 }
+
+struct EmptyRequest: Codable {
+    
+}

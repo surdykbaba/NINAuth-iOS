@@ -12,6 +12,7 @@ struct DateFormat {
     static let Dateformat = "dd MMMM yyyy"
     static let yrMonthDayFormat = "yyyy-MM-dd"
     static let dateFormat = "dd MMM yyyy"
+    static let fineDateFormat = "d MMMM, yyyy"
 }
 
 extension Date {

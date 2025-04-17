@@ -44,7 +44,7 @@ struct SettingsView: View {
                             Text("\(user.first?.first_name ?? "") \(user.first?.last_name ?? "")")
                                 .customFont(.title, fontSize: 24)
                             
-                            Text("Last login: \(Date().smartLastLogin)")
+                            Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
                         }
                         // ✅ Toggle Button to Hide/Show Integrity Index
@@ -364,11 +364,4 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(AppState())
-}
-extension Date {
-    var smartLastLogin: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM, yyyy" // e.g. "23 July, 2024"
-        return formatter.string(from: self)
-    }
 }

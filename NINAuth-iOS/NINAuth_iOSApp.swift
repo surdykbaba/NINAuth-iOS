@@ -45,6 +45,7 @@ struct NINAuth_iOSApp: SwiftUI.App {
     private func runForceLogout() {
         cancelTask()
         workItem = DispatchWorkItem {
+            appState.userReferesh = true
             appState.main =  UUID()
         }
         
@@ -84,7 +85,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         FirebaseApp.configure()
         
         let config = Realm.Configuration(
-                schemaVersion: 2, deleteRealmIfMigrationNeeded: true)
+                schemaVersion: 3, deleteRealmIfMigrationNeeded: false)
         Realm.Configuration.defaultConfiguration = config
         hideBackButtonText()
         SmileID.initialize(useSandbox: false)

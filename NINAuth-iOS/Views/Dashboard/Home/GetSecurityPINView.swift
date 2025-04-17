@@ -10,7 +10,8 @@ struct GetSecurityPINView: View {
     @State private var errTitle = ""
     @State private var msg = ""
     @State private var showDialog: Bool = false
-    @State private var showResetSheet = false  // <- NEW
+    @State private var showResetSheet = false
+    @State private var showShareSheet = false
 
     var body: some View {
         ZStack {
@@ -32,18 +33,23 @@ struct GetSecurityPINView: View {
                             .lineSpacing(20)
                             .customFont(.headline, fontSize: 40)
 
+//                        Button(action: {
+//                            copyToClipboard()
+//                        }) {
+//                            Image(systemName: "doc.on.doc")
+//                                .foregroundColor((Color.button))
+//                        }
                         Button(action: {
-                            copyToClipboard()
+                            showShareSheet = true
                         }) {
-                            Image(systemName: "doc.on.doc")
+                            Image(systemName: "square.and.arrow.up")
                                 .foregroundColor((Color.button))
                         }
                     }
 
-                    Text("Your secure code expire in 29 days")
+                    Text("Your secure code expire in \(deviceVM.expiry) days")
                         .customFont(.title, fontSize: 14)
                         .foregroundColor((Color.button))
-
                         .padding(.top, 4)
 
                     Button(action: {
@@ -59,6 +65,7 @@ struct GetSecurityPINView: View {
                             .frame(height: 32)
                             .frame(width: 106)
                     }
+                    .padding(.top, 18)
                 }
                 .frame(height: 150)
                 .frame(maxWidth: .infinity)
@@ -165,7 +172,9 @@ struct GetSecurityPINView: View {
                 ResetShareCodeView(
                     onConfirm: {
                         showResetSheet = false
-                        // TODO: Reset logic here
+                        Task {
+                            await deviceVM.regenerateShareCode()
+                        }
                     },
                     onCancel: {
                         showResetSheet = false
@@ -177,12 +186,23 @@ struct GetSecurityPINView: View {
                 ResetShareCodeView(
                     onConfirm: {
                         showResetSheet = false
-                        // TODO: Reset logic here
+                        Task {
+                            await deviceVM.regenerateShareCode()
+                        }
                     },
                     onCancel: {
                         showResetSheet = false
                     }
                 )
+            }
+        }
+        .sheet(isPresented: $showShareSheet) {
+            if #available(iOS 16.0, *) {
+                ShareSheet(activityItems: [deviceVM.shareCode])
+                    .presentationDetents([.large, .medium, .height(600)])
+            } else {
+                // Fallback on earlier versions
+                ShareSheet(activityItems: [deviceVM.shareCode])
             }
         }
     }
@@ -225,19 +245,19 @@ struct GetSecurityPINView: View {
         }
     }
 
-    func copyToClipboard() {
-        UIPasteboard.general.setValue(deviceVM.shareCode,
-                                      forPasteboardType: UTType.plainText.identifier)
-        withAnimation(.snappy) {
-            isCopied = true
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            withAnimation(.snappy) {
-                isCopied = false
-            }
-        }
-    }
+//    func copyToClipboard() {
+//        UIPasteboard.general.setValue(deviceVM.shareCode,
+//                                      forPasteboardType: UTType.plainText.identifier)
+//        withAnimation(.snappy) {
+//            isCopied = true
+//        }
+//
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//            withAnimation(.snappy) {
+//                isCopied = false
+//            }
+//        }
+//    }
 }
 
 #Preview {

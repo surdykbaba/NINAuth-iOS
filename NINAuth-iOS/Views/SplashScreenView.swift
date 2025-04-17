@@ -34,7 +34,14 @@ struct SplashScreenView: View {
                     realm?.deleteAll()
                 }
                 showOnboarding = true
-            }else {
+            } else if (appState.userReferesh) {
+                if(user.first != nil) {
+                    showLoginScreen = true
+                }else {
+                    showOnboarding = true
+                }
+            }
+            else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     withAnimation {
                         if let _ = user.first {

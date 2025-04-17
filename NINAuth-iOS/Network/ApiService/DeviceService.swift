@@ -35,12 +35,11 @@ struct DeviceService: DeviceProtocol {
         }
     }
     
-    func getShareCode() async -> Result<String, ErrorBag> {
+    func getShareCode() async -> Result<JSON?, ErrorBag> {
         let networkResponse = await Service.init().get(URLs.SHARE_CODE)
         switch networkResponse.isSuccess() {
         case true:
-            let code = networkResponse.getJson()?["data"]["share_code"].string ?? ""
-            return .success(code)
+            return .success(networkResponse.getJson())
         default:
             return .failure(networkResponse.getErrorBag())
         }
@@ -57,6 +56,16 @@ struct DeviceService: DeviceProtocol {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
             }
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
+    func regenerateShareCode() async -> Result<JSON?, ErrorBag> {
+        let networkResponse = await Service.init().get(URLs.REGENERATE_CODE)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(networkResponse.getJson())
         default:
             return .failure(networkResponse.getErrorBag())
         }

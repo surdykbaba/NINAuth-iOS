@@ -29,6 +29,7 @@ enum URLs {
     static let UPDATE_USER_INFO = "auth/update-user-info"
     static let OTP = "otp"
     static let OTP_VALIDATE = "otp/validate"
+    static let RESET_DEVICE = "auth/account"
     
     
     //MARK: Consent
@@ -43,6 +44,7 @@ enum URLs {
     static let DEVICES = "devices"
     static let SHARE_CODE = "share-code"
     static let SHARE_CODE_LOGS = "share-code/"
+    static let REGENERATE_CODE = "share-code/regenerate"
     
     
     

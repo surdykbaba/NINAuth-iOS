@@ -178,4 +178,15 @@ struct AuthService: AuthProtocol {
         }
     }
     
+    func resetDevice() async -> Result<Bool, ErrorBag> {
+        let emptyRequest = EmptyRequest()
+        let networkResponse = await Service.init().delete(URLs.RESET_DEVICE, params: emptyRequest)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
 }

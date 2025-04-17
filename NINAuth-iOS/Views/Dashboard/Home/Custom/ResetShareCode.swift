@@ -23,6 +23,7 @@ struct ResetShareCodeView: View {
                         .padding(.top, 20)
                 }
             }
+            .padding(.top)
 
             Image(systemName: "exclamationmark.triangle.fill")
                 .resizable()
@@ -42,8 +43,6 @@ struct ResetShareCodeView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
-
-            Spacer(minLength: 0) // Optional: adds flexibility in height
 
             HStack(spacing: 12) {
                 Button(action: onCancel) {
@@ -65,7 +64,7 @@ struct ResetShareCodeView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.bottom, 10) // <- Raised 10 points from the bottom
+            .padding(.vertical, 16) // <- Raised 10 points from the bottom
         }
         .padding()
     }

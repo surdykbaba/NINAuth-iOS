@@ -25,6 +25,8 @@ class User: Object, ObjectKeyIdentifiable {
     @Persisted var updated_at: String?
     @Persisted var origin_local_government: String?
     @Persisted var origin_state: String?
+    @Persisted var registration_medium: String?
+    @Persisted var last_login: String?
     convenience init(value: JSON?){
         self.init()
         
@@ -43,6 +45,8 @@ class User: Object, ObjectKeyIdentifiable {
         self.updated_at = value?["updated_at"].string
         self.origin_local_government = value?["origin_local_government"].string
         self.origin_state = value?["origin_state"].string
+        self.registration_medium = value?["registration_medium"].string
+        self.last_login = value?["last_login"].string
     }
     
     func getDOB() -> String {
@@ -51,6 +55,16 @@ class User: Object, ObjectKeyIdentifiable {
         }else {
             let date = date_of_birth?.convertToDate(formater: DateFormat.yrMonthDayFormat)
             let stringDate = date?.getFormattedDate(format: DateFormat.dateFormat) ?? ""
+            return stringDate
+        }
+    }
+    
+    func getLastLogin() -> String {
+        if (last_login == nil) {
+            return ""
+        }else {
+            let date = last_login?.convertToDate(formater: DateFormat.UniversalDateFormat)
+            let stringDate = date?.getFormattedDate(format: DateFormat.fineDateFormat) ?? ""
             return stringDate
         }
     }

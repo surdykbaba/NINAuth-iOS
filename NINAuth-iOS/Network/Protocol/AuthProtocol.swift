@@ -26,4 +26,6 @@ protocol AuthProtocol {
     func sendOTP(sendOTPRequest: SendOTPRequest) async -> Result<Bool, ErrorBag>
     
     func validateOTP(validateOTP: ValidateOTP) async -> Result<Bool, ErrorBag>
+    
+    func resetDevice() async -> Result<Bool, ErrorBag>
 }

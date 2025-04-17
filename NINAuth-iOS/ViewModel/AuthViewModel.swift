@@ -21,6 +21,7 @@ class AuthViewModel: NSObject, ObservableObject  {
     @Published var otpTriggered = false
     @Published var otpValidated = false
     @Published var isLogging = false
+    @Published var deviceReset = false
     private let locationManager = CLLocationManager()
     private var deniedCount = 0
 
@@ -141,17 +142,6 @@ class AuthViewModel: NSObject, ObservableObject  {
         }
     }
     
-//    func deleteUserData() {
-//        do {
-//            let realm = try! Realm()
-//            try! realm.write {
-//                realm.deleteAll()
-//            }
-//        }catch {
-//            Log.info(error.localizedDescription)
-//        }
-//    }
-    
     @MainActor
     func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Void {
         guard state != .loading else {
@@ -211,6 +201,22 @@ class AuthViewModel: NSObject, ObservableObject  {
         case .success(_):
             state = .success
             otpValidated = true
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    @MainActor
+    func resetDevice() async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.resetDevice()
+        switch result {
+        case .success(_):
+            state = .success
+            deviceReset = true
         case .failure(let failure):
             state = .failed(failure)
         }

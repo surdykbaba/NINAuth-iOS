@@ -14,6 +14,7 @@ class DeviceViewModel: ObservableObject {
     @Published var devices: [Device] = []
     @Published var deviceRemoved: Bool = false
     @Published var shareCode: String = ""
+    @Published var expiry: Int = 30
     @Published var consents: [Consent] = []
     
     
@@ -65,9 +66,10 @@ class DeviceViewModel: ObservableObject {
         state = .loading
         let result =  await deviceService.getShareCode()
         switch result {
-        case .success(let code):
+        case .success(let json):
             state = .success
-            shareCode = code
+            shareCode = json?["data"]["share_code"].string ?? ""
+            expiry = json?["data"]["days_to_expire"].int ?? 30
             Task {
                 await getLogs(code: shareCode)
             }
@@ -86,6 +88,25 @@ class DeviceViewModel: ObservableObject {
         case .success(let data):
             state = .success
             consents = data
+        case .failure(let failure):
+            state = .failed(failure)
+        }
+    }
+    
+    func regenerateShareCode() async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result =  await deviceService.regenerateShareCode()
+        switch result {
+        case .success(let json):
+            state = .success
+            shareCode = json?["data"]["share_code"].string ?? ""
+            expiry = json?["data"]["days_to_expire"].int ?? 30
+//            Task {
+//                await getLogs(code: shareCode)
+//            }
         case .failure(let failure):
             state = .failed(failure)
         }
