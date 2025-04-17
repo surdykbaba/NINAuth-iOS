@@ -21,6 +21,7 @@ struct DigitalIDView: View {
     @State private var isPresentingScanner = false
     @State private var scannedCode: String?
     @State private var currentIndex = 0
+    @State private var finalCode = ""
 
     let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
 
@@ -160,7 +161,7 @@ struct DigitalIDView: View {
         }
 
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }
-        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: scannedCode ?? ""), isActive: $consentVM.isVerified) { EmptyView() }
+        NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: finalCode), isActive: $consentVM.isVerified) { EmptyView() }
     }
 
     func openBannerURL() {
@@ -173,6 +174,7 @@ struct DigitalIDView: View {
         var consentCode = ConsentCode()
         consentCode.deviceId = appState.getDeviceID()
         consentCode.requestCode = code
+        finalCode = code
         Task {
             await consentVM.verifyConsent(consentCode: consentCode)
         }

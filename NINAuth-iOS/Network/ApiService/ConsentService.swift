@@ -10,24 +10,31 @@ import SwiftyJSON
 struct ConsentService: ConsentProtocol {
     
     func giveConsent(consentCreated: ConsentCreate) async -> Result<Bool, ErrorBag> {
-        do {
-            var request = NetworkResponseModel.generateHeader(endpoint: URLs.CONSENT, authoriseHeader: true)
-            request.httpMethod = APIVerb.POST.rawValue
-            let jsonData = try? JSONEncoder().encode(consentCreated)
-            request.httpBody = jsonData
-            let (data, response) = try await URLSession.shared.data(for: request)
-            let httpResponse = response as? HTTPURLResponse
-            let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
-            if(networkResponse.isSuccess()) {
-                return .success(true)
-            }else {
-                let networkResponseFailed = NetworkResponseModel(statusCode: networkResponse.getStatusCode(), data: data)
-                return .failure(networkResponseFailed.getErrorBag())
-            }
-        }catch {
-            let networkResponse = NetworkResponseModel(statusCode: 0, data: nil, errorMessage: error.localizedDescription)
+        let networkResponse = await Service.init().post(URLs.CONSENT, params: consentCreated)
+        switch networkResponse.isSuccess() {
+        case true:
+            return .success(true)
+        default:
             return .failure(networkResponse.getErrorBag())
         }
+//        do {
+//            var request = NetworkResponseModel.generateHeader(endpoint: URLs.CONSENT, authoriseHeader: true)
+//            request.httpMethod = APIVerb.POST.rawValue
+//            let jsonData = try? JSONEncoder().encode(consentCreated)
+//            request.httpBody = jsonData
+//            let (data, response) = try await URLSession.shared.data(for: request)
+//            let httpResponse = response as? HTTPURLResponse
+//            let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
+//            if(networkResponse.isSuccess()) {
+//                return .success(true)
+//            }else {
+//                let networkResponseFailed = NetworkResponseModel(statusCode: networkResponse.getStatusCode(), data: data)
+//                return .failure(networkResponseFailed.getErrorBag())
+//            }
+//        }catch {
+//            let networkResponse = NetworkResponseModel(statusCode: 0, data: nil, errorMessage: error.localizedDescription)
+//            return .failure(networkResponse.getErrorBag())
+//        }
     }
     
     func getUserConsents() async -> Result<ConsentResponse, ErrorBag> {
