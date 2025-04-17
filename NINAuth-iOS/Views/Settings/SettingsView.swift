@@ -40,14 +40,13 @@ struct SettingsView: View {
                                 .resizable()
                                 .frame(width: 110, height: 110)
                                 .clipShape(Circle())
-
+                            
                             Text("\(user.first?.first_name ?? "") \(user.first?.last_name ?? "")")
                                 .customFont(.title, fontSize: 24)
-
-                            Text("Last login : 23 hours ago")
+                            
+                            Text("Last login: \(Date().smartLastLogin)")
                                 .customFont(.subheadline, fontSize: 16)
                         }
-
                         // ✅ Toggle Button to Hide/Show Integrity Index
                         Button {
                             hideIntegrityIndex.toggle()
@@ -229,10 +228,10 @@ struct SettingsView: View {
                 }
 
                 NavigationLink(destination: LinkedIDsView()) {
-                    SettingsRow(image: "device_mobile", name: "LinkedID")
+                    SettingsRow(image: "linked", name: "LinkedID")
                 }
                 NavigationLink(destination: ResetDeviceView()) {
-                    SettingsRow(image: "device_mobile", name: "Reset Device")
+                    SettingsRow(image: "Reset_device", name: "Reset Device")
                 }
 
 
@@ -365,4 +364,11 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(AppState())
+}
+extension Date {
+    var smartLastLogin: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM, yyyy" // e.g. "23 July, 2024"
+        return formatter.string(from: self)
+    }
 }

@@ -11,8 +11,8 @@ struct ResetDeviceView: View {
     var body: some View {
         VStack(spacing: 20) {
             Text("Reset Device")
-                .font(.largeTitle)
-                .bold()
+                .customFont(.title, fontSize: 24)
+                
 
             Text("This will remove all locally stored data and unlink your device. Are you sure?")
                 .multilineTextAlignment(.center)
