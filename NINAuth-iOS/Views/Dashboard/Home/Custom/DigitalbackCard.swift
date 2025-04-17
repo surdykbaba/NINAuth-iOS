@@ -1,12 +1,13 @@
-//
 //  UserQRCodeView.swift
 //  NINAuth-iOS
 //
 //  Created by Arogundade Qoyum on 15/04/2025.
+//
 
 import SwiftUI
 import RealmSwift
 import CoreImage.CIFilterBuiltins
+import CommonCrypto
 
 struct DigitalbackCard: View {
     @ObservedResults(User.self) var user
@@ -18,22 +19,22 @@ struct DigitalbackCard: View {
             return UIImage(systemName: "xmark.circle")!
         }
 
-        let credentialSubject: [String: String] = [
-            "firstName": currentUser.first_name ?? "",
-            "middleName": currentUser.middle_name ?? "",
-            "gender": currentUser.gender ?? "",
-            "dateOfBirth": currentUser.getDOB()
-        ]
+        // Combine sensitive fields into one string
+        let credentialData = [
+            currentUser.first_name ?? "",
+            currentUser.middle_name ?? "",
+            currentUser.gender ?? "",
+            currentUser.getDOB(),
+            currentUser.nin ?? "",
+            currentUser.origin_state ?? "",
+        ].joined(separator: "-")
 
-        let issuedAtDate = Date()
-        let issuedAtUnix = Int(issuedAtDate.timeIntervalSince1970)
+        let hashedCredentials = sha1(credentialData)
+        let timestamp = Int(Date().timeIntervalSince1970 * 1000)
 
         let payload: [String: Any] = [
-            "type": ["VerifiableCredential"],
-            "credentialSubject": credentialSubject,
-            "issuer": "NINAuth",
-            //"issuanceDate": issuedAtDate.iso8601String(),
-            "issuanceDate": String(issuedAtUnix)
+            "h": hashedCredentials,
+            "timestamp": timestamp
         ]
 
         guard let jsonData = try? JSONSerialization.data(withJSONObject: payload),
@@ -73,14 +74,15 @@ struct DigitalbackCard: View {
         }
         .frame(maxWidth: 370, maxHeight: 242)
     }
-}
 
-extension Date {
-    func iso8601String() -> String {
-        let formatter = ISO8601DateFormatter()
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter.string(from: self)
+    // SHA-1 hashing function
+    func sha1(_ input: String) -> String {
+        let data = Data(input.utf8)
+        var digest = [UInt8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
+        data.withUnsafeBytes {
+            _ = CC_SHA1($0.baseAddress, CC_LONG(data.count), &digest)
+        }
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 }
 
