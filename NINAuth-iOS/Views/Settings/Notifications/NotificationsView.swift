@@ -15,7 +15,7 @@ struct NotificationsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
         //.navigationTitle(Text("Notifications"))
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .background(Color(.bg))
 
     }
