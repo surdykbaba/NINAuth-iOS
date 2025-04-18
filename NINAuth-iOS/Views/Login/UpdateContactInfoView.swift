@@ -23,12 +23,33 @@ struct UpdateContactInfoView: View {
     @State private var isOTPValid: Bool = true
     @State private var otp: String = ""
     @State private var errTitle = ""
+    @State private var showSuccessMessage: Bool = false
     @State private var msg = ""
     @State private var showAlert = false
+    @FocusState private var focusedField: Field?
+
+    enum Field {
+        case phone, otp
+    }
+
     
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 16) {
+                if showSuccessMessage {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                        Text("Phone number added successfully")
+                            .customFont(.body, fontSize: 16)
+                            .foregroundColor(.green)
+                    }
+                    .padding()
+                    .background(Color.green.opacity(0.1))
+                    .cornerRadius(10)
+                    .transition(.opacity)
+                }
+
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Update Your Contact Information")
@@ -55,7 +76,7 @@ struct UpdateContactInfoView: View {
                                 } label: {
                                     Text("Edit number")
                                         .foregroundColor(Color(.button))
-                                        .font(.caption)
+                                        .customFont(.subheadline, fontSize: 16)
                                 }
                             }
                             .padding()
@@ -95,25 +116,40 @@ struct UpdateContactInfoView: View {
                         .padding(.top)
                         
                         Spacer()
+                    
                     }
+                    // Info Alert
+                    HStack(alignment: .center, spacing: 16) {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundColor(.orange)
+                        
+                        Text("Accurate contact details help us verify your identity and facilitate important communications and service delivery.")
+                            .customFont(.body, fontSize: 14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        //Spacer()
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemYellow).opacity(0.2))
+                    .cornerRadius(10)
                 }
                 
                 Spacer()
                 
-                // Info Alert
-                HStack(alignment: .center, spacing: 16) {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundColor(.orange)
-                    
-                    Text("Accurate contact details help us verify your identity and facilitate important communications and service delivery.")
-                        .customFont(.body, fontSize: 14)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    //Spacer()
-                }
-                .padding()
-                .background(Color(UIColor.systemYellow).opacity(0.2))
-                .cornerRadius(10)
+//                // Info Alert
+//                HStack(alignment: .center, spacing: 16) {
+//                    Image(systemName: "info.circle.fill")
+//                        .foregroundColor(.orange)
+//                    
+//                    Text("Accurate contact details help us verify your identity and facilitate important communications and service delivery.")
+//                        .customFont(.body, fontSize: 14)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                    
+//                    //Spacer()
+//                }
+//                .padding()
+//                .background(Color(UIColor.systemYellow).opacity(0.2))
+//                .cornerRadius(10)
                 
                 // Continue Button
                 Button(action: {
@@ -192,6 +228,7 @@ struct UpdateContactInfoView: View {
                 Color.clear.onAppear {
                     viewModel.otpTriggered = false
                     phone = phone2
+                    showSuccessMessage = true
                 }
                 .frame(width: 0, height: 0)
             }else {
@@ -247,12 +284,18 @@ struct UpdateContactInfoView: View {
                     TextField("12345678910", text: $phone2)
                         .keyboardType(.numberPad)
                         .customTextField()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke()
-                            .fill(isPhoneValid ? .gray : .red)
-                        )
-                        
+                        .focused($focusedField, equals: .phone)
+                        .onChange(of: phone2) { newValue in
+                            if newValue.count >= 11 {
+                                focusedField = nil
+                            }
+                               }
+                                .overlay(
+                             RoundedRectangle(cornerRadius: 8)
+                                .stroke()
+                                .fill(isPhoneValid ? .gray : .red)
+                              )
+
                     if !isPhoneValid {
                         Text("Mobile Number Invalid")
                             .customFont(.subheadline, fontSize: 14)
@@ -326,13 +369,19 @@ struct UpdateContactInfoView: View {
                         .customFont(.subheadline, fontSize: 16)
                         .padding(.top, 16)
                     TextField("123456", text: $otp)
-                        .keyboardType(.numberPad)
-                        .customTextField()
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke()
-                            .fill(isOTPValid ? .gray : .red)
-                        )
+                    .keyboardType(.numberPad)
+                    .customTextField()
+                    .focused($focusedField, equals: .otp)
+                    .onChange(of: otp) { newValue in
+                    if newValue.count >= 6 {
+                     focusedField = nil
+                       }
+                    }
+                      .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                     .stroke()
+                       .fill(isOTPValid ? .gray : .red)
+                                           )
                     
                     Text("Enter OTP sent to \(phone2)")
                 }
@@ -360,7 +409,9 @@ struct UpdateContactInfoView: View {
         .padding()
         .background(Color(.white))
     }
+    
 }
+
 
 // Custom Radio Button View
 struct RadioButton: View {

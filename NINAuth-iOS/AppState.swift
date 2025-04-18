@@ -150,7 +150,21 @@ class AppState: ObservableObject {
                 return UIImage(systemName: "xmark.circle")!
             }
 
-            let scaledImage = outputImage.transformed(by: CGAffineTransform(scaleX: 7, y: 7))
+            // Apply color filter to remove white background
+            guard let colorFilter = CIFilter(name: "CIFalseColor") else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+
+            colorFilter.setDefaults()
+            colorFilter.setValue(outputImage, forKey: kCIInputImageKey)
+            colorFilter.setValue(CIColor(color: .black), forKey: "inputColor0") // QR code color
+            colorFilter.setValue(CIColor.clear, forKey: "inputColor1")          // Background color (transparent)
+
+            guard let coloredImage = colorFilter.outputImage else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+
+            let scaledImage = coloredImage.transformed(by: CGAffineTransform(scaleX: 7, y: 7))
 
             if let cgimg = context.createCGImage(scaledImage, from: scaledImage.extent) {
                 return UIImage(cgImage: cgimg)
@@ -158,9 +172,10 @@ class AppState: ObservableObject {
 
             return UIImage(systemName: "xmark.circle")!
         }
-        
+
         return qrImage
     }
+
     
     // SHA-1 hashing function
     private func sha1(_ input: String) -> String {

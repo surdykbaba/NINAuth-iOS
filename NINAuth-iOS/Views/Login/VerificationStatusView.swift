@@ -2,7 +2,7 @@
 //  VerificationStatusView.swift
 //  NINAuth-iOS
 //
-//  Created by Chioma Amanda Mmegwa  on 27/01/2025.
+//  Created by Chioma Amanda Mmegwa on 27/01/2025.
 //
 
 import SwiftUI
@@ -11,6 +11,8 @@ struct VerificationStatusView: View {
     @State var verificationStatus: VerificationStatus = .inProgress
     @EnvironmentObject var appState: AppState
     @State private var goToPin = false
+    @State private var remainingTime = 300
+    let countdownTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack {
@@ -21,18 +23,27 @@ struct VerificationStatusView: View {
                 displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
             case .inProgress:
                 displayStatusInfo(imageName: "loading", backgroundColor: Color("checkmarkBackground"), title: "identity_verification_in_process".localized, titleMessage: "the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait.".localized)
+                
+                // Countdown Timer with Icon
+                HStack(spacing: 6) {
+                    Image(systemName: "clock")
+                        .foregroundColor(.green)
+                    Text(formatTime(remainingTime))
+                        .customFont(.subheadline, fontSize: 16)
+                        .foregroundColor(.green)
+                }
+                .padding(.top, 12)
             }
 
             Spacer()
-            
+
             if (appState.verifyStatus == "passed") {
                 Color.clear.onAppear {
                     verificationStatus = .done
                 }
             }
-            
-            NavigationLink(destination: SetPINView(), isActive: $goToPin) {}.isDetailLink(false)
 
+            NavigationLink(destination: SetPINView(), isActive: $goToPin) {}.isDetailLink(false)
         }
         .padding(.top, 50)
         .padding()
@@ -42,9 +53,9 @@ struct VerificationStatusView: View {
                 Button {
                     goToPin.toggle()
                 } label: {
-                        Text("continue".localized)
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(.white)
+                    Text("continue".localized)
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
@@ -53,9 +64,9 @@ struct VerificationStatusView: View {
                 .padding()
             case .failed:
                 Button {} label: {
-                        Text("retry".localized)
-                    .customFont(.title, fontSize: 18)
-                    .foregroundStyle(.white)
+                    Text("retry".localized)
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
@@ -74,6 +85,15 @@ struct VerificationStatusView: View {
         .onDisappear {
             appState.timer?.invalidate()
         }
+        .onReceive(countdownTimer) { _ in
+            if verificationStatus == .inProgress {
+                if remainingTime > 0 {
+                    remainingTime -= 1
+                } else {
+                    remainingTime = 300
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -88,6 +108,12 @@ struct VerificationStatusView: View {
                     .customFont(.body, fontSize: 18)
             }
         }
+    }
+
+    func formatTime(_ time: Int) -> String {
+        let minutes = time / 60
+        let seconds = time % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
