@@ -15,7 +15,7 @@ struct DigitalbackCard: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            Image("NINcard")
+            Image("Back")
                 .resizable()
                 .frame(height: 242)
                 .clipped()
