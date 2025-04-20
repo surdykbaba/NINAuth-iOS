@@ -9,6 +9,7 @@ import Foundation
 import RealmSwift
 import SwiftyJSON
 import UIKit
+import Network
 
 struct Service{
     
@@ -21,19 +22,19 @@ struct Service{
             if(increaseTimeout) {
                 request.timeoutInterval = 120
             }
-            #if DEBUG
+#if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
-            #endif
-        
+#endif
+            
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
                 if(networkResponse.statusCode != 204) {
                     let jsonValue = try JSON(data: data)
-                    #if DEBUG
+#if DEBUG
                     print(jsonValue)
-                    #endif
+#endif
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
                 }else {
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
@@ -51,15 +52,15 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "GET"
-        
+            
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
                 let jsonValue = try JSON(data: data)
-                #if DEBUG
+#if DEBUG
                 print(jsonValue)
-                #endif
+#endif
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
             }else {
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
@@ -76,18 +77,18 @@ struct Service{
             request.httpMethod = "PATCH"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            #if DEBUG
+#if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
-            #endif
-        
+#endif
+            
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
                 let jsonValue = try JSON(data: data)
-                #if DEBUG
+#if DEBUG
                 print(jsonValue)
-                #endif
+#endif
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
             }else {
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
@@ -104,19 +105,19 @@ struct Service{
             request.httpMethod = "PUT"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            #if DEBUG
+#if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
-            #endif
-        
+#endif
+            
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
                 if(networkResponse.statusCode != 204) {
                     let jsonValue = try JSON(data: data)
-                    #if DEBUG
+#if DEBUG
                     print(jsonValue)
-                    #endif
+#endif
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
                 }else {
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
@@ -136,19 +137,19 @@ struct Service{
             request.httpMethod = "DELETE"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            #if DEBUG
+#if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
-            #endif
-        
+#endif
+            
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
                 if(networkResponse.statusCode != 204) {
                     let jsonValue = try JSON(data: data)
-                    #if DEBUG
+#if DEBUG
                     print(jsonValue)
-                    #endif
+#endif
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
                 }else {
                     return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
@@ -163,87 +164,104 @@ struct Service{
     }
     
 }
-
 struct NetworkResponseModel {
     fileprivate var statusCode: Int
     private var data: Data?
     private var errorMessage: String?
     private var errorTitle: String?
     private var json: JSON?
-   
-    
+
     init(statusCode: Int) {
         self.statusCode = statusCode
     }
-    
-    init(statusCode: Int, data: Data? = nil, json: JSON? = nil, errorMessage: String? = nil, errorTitle: String? = "Error") {
+
+    init(statusCode: Int, data: Data? = nil, json: JSON? = nil, errorMessage: String? = nil, errorTitle: String? = "") {
         self.statusCode = statusCode
         self.data = data
         self.errorMessage = errorMessage
         self.errorTitle = errorTitle
         self.json = json
-        
-        if !self.isSuccess(),
-           self.errorMessage == nil{
+
+        if isOffline() {
+            self.errorMessage = "Error connecting. Please check your Internet Connection."
+        } else if !self.isSuccess(), self.errorMessage == nil {
             self.errorMessage = getNetworkErrorMessage()
         }
     }
-    
+
     func getStatusCode() -> Int {
         return statusCode
     }
-    
+
     static func initLogoutResponse(errorMessage: String? = nil) -> NetworkResponseModel {
         return NetworkResponseModel(statusCode: 403)
     }
-    
+
     func isSuccess() -> Bool {
         return statusCode == 200 || statusCode == 201 || statusCode == 204
     }
-    
+
     fileprivate func isFailed() -> Bool {
         return statusCode == 422
     }
-    
+
     fileprivate func isBadRequest() -> Bool {
         return statusCode == 404 || statusCode == 400
     }
-    
+
     fileprivate func isAuthorizationError() -> Bool {
         return statusCode == 401 || statusCode == 403
     }
-    
+
     func getData() -> Data? {
         return data
     }
-    
+
     func getJson() -> JSON? {
         return json
     }
-    
+
     func getErrorBag() -> ErrorBag {
-        let errorBag = ErrorBag(title: errorTitle ?? "", description: getNetworkErrorMessage() ?? "")
-        return errorBag
+        return ErrorBag(title: errorTitle ?? "", description: errorMessage ?? getNetworkErrorMessage() ?? "")
     }
-    
+
     private func getNetworkErrorMessage() -> String? {
         if isBadRequest() {
             return getBadRequestMessage(_data: data as Any)
-        }else if isFailed() {
+        } else if isFailed() {
             return getValidationErrorMessage(_data: data as Any)
-        }else if isAuthorizationError() {
+        } else if isAuthorizationError() {
             return "Unauthorized request"
-        }else {
-            return "Unable to fecth details, try again later"
+        } else {
+            return ".Unable to fetch details, please try again later."
         }
     }
+
+    private func isOffline() -> Bool {
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        var offline = false
+        let semaphore = DispatchSemaphore(value: 0)
+
+        monitor.pathUpdateHandler = { path in
+            offline = (path.status != .satisfied)
+            semaphore.signal()
+        }
+
+        monitor.start(queue: queue)
+        _ = semaphore.wait(timeout: .now() + 0.1)
+        monitor.cancel()
+
+        return offline
+    }
+
     
     private func getBadRequestMessage(_data : Any) -> String {
         var msg: String = ""
         do{
             if let safeData = _data as? Data{
                 let json = try JSON(data: safeData)
-                if let safeMessage = json["error"].string{
+                if let safeMessage = json[""].string{
                     msg = safeMessage
                 }
             }

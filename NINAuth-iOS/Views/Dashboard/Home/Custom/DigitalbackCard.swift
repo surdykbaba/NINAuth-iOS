@@ -10,19 +10,19 @@ struct DigitalbackCard: View {
     @EnvironmentObject var appState: AppState
     @ObservedResults(User.self) var user
     @State private var qrImage: UIImage = UIImage()
-    @State private var remainingSeconds: Int = 1800 // 30 minutes = 1800 seconds
+    @State private var remainingSeconds: Int = 5000
     @State private var timer: Timer?
 
     var body: some View {
         ZStack(alignment: .top) {
-            Image("Back_Card")
+            Image("NINcard")
                 .resizable()
                 .frame(height: 242)
                 .clipped()
             
             // Full name on top-left
             VStack(alignment: .leading, spacing: 6) {
-                Text("Full name")
+                Text("FULL NAME")
                     .foregroundColor(.green)
                     .customFont(.title, fontSize: 7)
                 
@@ -51,39 +51,42 @@ struct DigitalbackCard: View {
             
             // QR code on top-right
             VStack(alignment: .trailing, spacing: 4) {
+                // QR Code stays on the right
                 ZStack {
-                    // Background/frame image
-                    Image("Frame") // Make sure this is in Assets
+                    Image("Frame")
                         .resizable()
-                        .frame(width: 120, height: 110)
+                        .frame(width: 130, height: 130)
                         .cornerRadius(4)
-                    
-                    // QR code on top
+
                     Image(uiImage: qrImage)
                         .interpolation(.none)
                         .resizable()
-                        .frame(width: 102, height: 98)
+                        .frame(width: 112, height: 108)
                         .cornerRadius(4)
                 }
-                
-                (
-                    Text("QR code changes every ")
-                        .foregroundColor(.white) +
-                    Text(formattedTime)
-                        .foregroundColor(.green)
-                        
-                )
-                .customFont(.title, fontSize: 8)
-                .padding(4)
-                .background(Color(hex: "#4DCD94").opacity(0.2))
-                .cornerRadius(4)
-                .padding(.trailing, 4)
-                .padding(.top, 1)
-                .offset(x: 5)
+
+                // Text moves to the left
+                HStack {
+                    (
+                        Text("QR code changes every ")
+                            .foregroundColor(.white) +
+                        Text(formattedTime)
+                            .foregroundColor(.green)
+                    )
+                    .customFont(.title, fontSize: 9)
+                    .padding(4)
+                    .background(Color(hex: "#4DCD94").opacity(0.2))
+                    .cornerRadius(5)
+                    .padding(.top, -15)
+                    .padding(.leading, 17)
+
+                    Spacer() // Pushes the text to the left
+                }
             }
             .padding(.top, 10)
             .padding(.trailing, 10)
             .frame(maxWidth: .infinity, alignment: .trailing)
+
             
             // Machine Readable Zone at the bottom - TD1 format
             VStack(alignment: .leading, spacing: 0) {
@@ -94,25 +97,25 @@ struct DigitalbackCard: View {
                     Text(appState.generateTD1Line1())
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundColor(.black)
-                        .kerning(3.9) // 39% letter spacing
+                        .kerning(3.9)
                         .lineSpacing(0)
                     
                     Text(appState.generateTD1Line2())
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundColor(.black)
-                        .kerning(3.9) // 39% letter spacing
+                        .kerning(3.9)
                         .lineSpacing(0)
                     
                     Text(appState.generateTD1Line3())
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundColor(.black)
-                        .kerning(3.9) // 39% letter spacing
+                        .kerning(3.9)
                         .lineSpacing(0)
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 4)
-                .frame(width: 340) // Fixed width to match card width
-                //.background(Color.white)
+                .frame(width: 340)
+                
                 .cornerRadius(4)
                 .offset(y: -10)
             }
@@ -139,14 +142,14 @@ struct DigitalbackCard: View {
 
     private func startTimer() {
         timer?.invalidate()
-        remainingSeconds = 1800 // reset to 30 minutes
+        remainingSeconds = 300 //  5 minutes
 
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if remainingSeconds > 0 {
                 remainingSeconds -= 1
             } else {
                 qrImage = appState.generateHashedQRCode(user: user.first)
-                remainingSeconds = 1800 // reset after regeneration
+                remainingSeconds = 300 // reset after regeneration
             }
         }
     }
