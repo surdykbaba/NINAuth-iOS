@@ -14,6 +14,7 @@ struct SettingsView: View {
     @StateObject private var viewModel = AuthViewModel()
     @StateObject private var linkVM = LinkedIDViewModel()
     @State private var biometricsIsOn = true
+    @State private var appLockIsOn = false
     @ObservedResults(User.self) var user
     @ObservedResults(Token.self) var token
     @State private var showSignOut = false
@@ -131,6 +132,7 @@ struct SettingsView: View {
                 }
                 .onAppear {
                     biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
+                    appLockIsOn = UserDefaults.standard.bool(forKey: "appLockEnabled")
                 }
             }
             .task {
@@ -232,6 +234,7 @@ struct SettingsView: View {
                 }
                 NavigationLink(destination: ResetDeviceView()) {
                     SettingsRow(image: "Reset_device", name: "Reset Device")
+                        .foregroundColor(.red)
                 }
 
 
@@ -260,6 +263,42 @@ struct SettingsView: View {
             Group {
                 NavigationLink(destination: NotificationsView()) {
                     SettingsRow(image: "notification", name: "notifications".localized)
+                }
+                
+                // App Lock Toggle with fixed 5-minute timeout
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 20) {
+                        Image("lock")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .padding(15)
+                            .background(Color.grayBackground)
+                            .clipShape(Circle())
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Lock App")
+                                .customFont(.headline, fontSize: 19)
+                                .foregroundColor(.black)
+            
+                        }
+                        
+                        Spacer()
+                        
+                        Toggle("", isOn: $appLockIsOn)
+                            .labelsHidden()
+                            .onChange(of: appLockIsOn) { newValue in
+                                // Save the app lock state
+                                UserDefaults.standard.set(newValue, forKey: "appLockEnabled")
+                                
+                                // If enabled, set the timeout to 5 minutes (300 seconds)
+                                if newValue {
+                                    UserDefaults.standard.set(5, forKey: "appLockTimeout")
+                                    UserDefaults.standard.set(5 * 60 * 1000, forKey: "appLockTimeoutMillis")
+                                }
+                                
+                                UserDefaults.standard.synchronize()
+                            }
+                    }
                 }
 
                 Button {
