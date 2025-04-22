@@ -22,12 +22,15 @@ struct DigitalIDView: View {
     @State private var scannedCode: String?
     @State private var currentIndex = 0
     @State private var finalCode = ""
+    @State private var showDialog: Bool = false
+    @State private var msg = ""
 
     let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
 
     let bannerData = [
-        (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield"),
-        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb")
+        (title: "Tap Card", subtitle: "Tap card to view back of card and QR", icon: "bulb", url: ""),
+        (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield", url: "https://ninauth.com/privacy-policy"),
+        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb", url: "https://ninauth.com/privacy-policy")
     ]
 
     var body: some View {
@@ -129,17 +132,32 @@ struct DigitalIDView: View {
             .onAppear {
                 scannedCode = nil
             }
+            .alert(msg, isPresented: $showDialog) {
+                Button("OK", role: .cancel) {}
+            }
 
             if case .loading = viewModel.state {
                 ProgressView().scaleEffect(2)
             }
+            
+            if case .failed(let errorBag) = consentVM.state {
+                Color.clear.onAppear() {
+                    msg = errorBag.description
+                    showDialog = true
+                }
+                .frame(width: 0, height: 0)
+            }
+
         }
         .sheet(isPresented: $showBannerAlert) {
             if #available(iOS 16.0, *) {
                 LeaveAppAlertSheetView(
+                    customMessage: bannerData[bannerTappedIndex].url.isEmpty ? "Tap card to view MRZ data and QR code secured data." : "",
                     onConfirm: {
                         showBannerAlert = false
-                        openBannerURL()
+                        if(!bannerData[bannerTappedIndex].url.isEmpty) {
+                            openBannerURL()
+                        }
                     },
                     onCancel: {
                         showBannerAlert = false
@@ -149,9 +167,12 @@ struct DigitalIDView: View {
                 .presentationDragIndicator(.visible)
             } else {
                 LeaveAppAlertSheetView(
+                    customMessage: bannerData[bannerTappedIndex].url.isEmpty ? "Tap card to view MRZ data and QR code secured data." : "",
                     onConfirm: {
                         showBannerAlert = false
-                        openBannerURL()
+                        if(!bannerData[bannerTappedIndex].url.isEmpty) {
+                            openBannerURL()
+                        }
                     },
                     onCancel: {
                         showBannerAlert = false
@@ -159,7 +180,6 @@ struct DigitalIDView: View {
                 )
             }
         }
-
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }
         NavigationLink(destination: ConsentReviewView(consentRequest: consentVM.consentRequest, code: finalCode), isActive: $consentVM.isVerified) { EmptyView() }
     }
@@ -182,5 +202,6 @@ struct DigitalIDView: View {
 }
 #Preview {
     DigitalIDView()
+        .environmentObject(AppState())
 }
 

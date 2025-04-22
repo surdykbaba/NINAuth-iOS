@@ -10,6 +10,7 @@ import Foundation
 struct MemoryUtil {
     
     let authentication_key = "Enable_Authentication"
+    let lock_app = "LocKK_APPPP"
     
     func setValue(key: String, value: Any) {
         let defaults = UserDefaults.standard

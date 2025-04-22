@@ -319,27 +319,4 @@ class AppState: ObservableObject {
         // Return remainder of division by 10
         return String(sum % 10)
     }
-    
-    class AccountService {
-        static func deleteAccount(deviceId: String, authToken: String, completion: @escaping (Result<Void, Error>) -> Void) {
-            guard let url = URL(string: "https://your-api.com/auth/account") else {
-                return completion(.failure(URLError(.badURL)))
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "DELETE"
-            request.setValue(deviceId, forHTTPHeaderField: "device-id")
-            request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                } else if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                    completion(.success(()))
-                } else {
-                    completion(.failure(URLError(.badServerResponse)))
-                }
-            }.resume()
-        }
-    }
 }

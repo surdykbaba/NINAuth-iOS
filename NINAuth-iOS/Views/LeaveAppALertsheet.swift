@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct LeaveAppAlertSheetView: View {
+    var customMessage: String = ""
     var onConfirm: () -> Void
     var onCancel: () -> Void
 
@@ -24,23 +25,34 @@ struct LeaveAppAlertSheetView: View {
                 .foregroundColor(.orange)
                 .padding(.top, -10)
 
-            Text("You're about to leave the app and open this link in your device's web browser. Would you like to continue?")
-                .customFont(.body, fontSize: 17)
-                .multilineTextAlignment(.center)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal)
+            if(customMessage.isEmpty) {
+                Text("You're about to leave the app and open this link in your device's web browser. Would you like to continue?")
+                    .customFont(.body, fontSize: 17)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal)
+            }else {
+                Text(customMessage)
+                    .customFont(.body, fontSize: 17)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal)
+            }
 
             HStack(spacing: 12) {
-                Button(action: onCancel) {
-                    Text("Cancel")
-                        .foregroundColor(.green)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green.opacity(0.1))
-                        .cornerRadius(8)
-                }
+                if(customMessage.isEmpty) {
+                    Button(action: onCancel) {
+                        Text("Cancel")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green.opacity(0.1))
+                            .cornerRadius(8)
+                    }
 
+                }
                 Button(action: onConfirm) {
                     Text("Continue")
                         .foregroundColor(.white)

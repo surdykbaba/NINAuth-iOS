@@ -24,6 +24,7 @@ struct AuthService: AuthProtocol {
                     realm.add(token)
                     let mem = MemoryUtil()
                     mem.setValue(key: mem.authentication_key, value: false)
+                    mem.setValue(key: mem.lock_app, value: false)
                 }
                 return .success(true)
             }catch {
@@ -137,6 +138,7 @@ struct AuthService: AuthProtocol {
                     realm.add(token)
                     let mem = MemoryUtil()
                     mem.setValue(key: mem.authentication_key, value: false)
+                    mem.setValue(key: mem.lock_app, value: false)
                 }
                 return .success(true)
             }catch {

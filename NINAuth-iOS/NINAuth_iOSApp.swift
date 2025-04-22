@@ -43,14 +43,18 @@ struct NINAuth_iOSApp: SwiftUI.App {
     }
     
     private func runForceLogout() {
-        cancelTask()
-        workItem = DispatchWorkItem {
-            appState.userReferesh = true
-            appState.main =  UUID()
-        }
-        
-        if let item = workItem {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: item)
+        let mem = MemoryUtil()
+        let res = mem.getBoolValue(key: mem.lock_app)
+        if res {
+            cancelTask()
+            workItem = DispatchWorkItem {
+                appState.userReferesh = true
+                appState.main =  UUID()
+            }
+            
+            if let item = workItem {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: item)
+            }
         }
     }
     
@@ -90,6 +94,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         hideBackButtonText()
         SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
+        SmileID.apply(CustomTheme())
 //        UILabel.appearance().adjustsFontForContentSizeCategory = false
 //        UITextField.appearance().adjustsFontForContentSizeCategory = false
 //        UITextView.appearance().adjustsFontForContentSizeCategory = false
@@ -198,5 +203,11 @@ extension AppDelegate: MessagingDelegate {
         if let token = fcmToken {
             //TODO: do with token as you please
         }
+    }
+}
+
+class CustomTheme: SmileIdTheme {
+    var accent: Color {
+        Color(hex: "#008643")
     }
 }
