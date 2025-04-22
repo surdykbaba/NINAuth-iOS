@@ -140,6 +140,10 @@ struct DigitalIDView: View {
                 ProgressView().scaleEffect(2)
             }
             
+            if case .loading = consentVM.state {
+                ProgressView().scaleEffect(2)
+            }
+            
             if case .failed(let errorBag) = consentVM.state {
                 Color.clear.onAppear() {
                     msg = errorBag.description

@@ -18,12 +18,16 @@ struct LeaveAppAlertSheetView: View {
                 }
             }
 
-            Image(systemName: "exclamationmark.triangle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
-                .foregroundColor(.orange)
-                .padding(.top, -10)
+            if(customMessage.isEmpty) {
+                // Add the new image here since custom message is always going to be the tap card message
+            }else {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.orange)
+                    .padding(.top, -10)
+            }
 
             if(customMessage.isEmpty) {
                 Text("You're about to leave the app and open this link in your device's web browser. Would you like to continue?")
