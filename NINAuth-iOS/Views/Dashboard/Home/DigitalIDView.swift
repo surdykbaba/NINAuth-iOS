@@ -28,7 +28,7 @@ struct DigitalIDView: View {
     let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
 
     let bannerData = [
-        (title: "Tap Card", subtitle: "Tap card to view back of card and QR", icon: "bulb", url: ""),
+        (title: "Tap Card", subtitle: "Tap card to view back of card and QR", icon: "touch", url: ""),
         (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield", url: "https://ninauth.com/privacy-policy"),
         (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb", url: "https://ninauth.com/privacy-policy")
     ]
@@ -171,10 +171,12 @@ struct DigitalIDView: View {
                 .presentationDragIndicator(.visible)
             } else {
                 LeaveAppAlertSheetView(
-                    customMessage: bannerData[bannerTappedIndex].url.isEmpty ? "Tap card to view MRZ data and QR code secured data." : "",
+                    customMessage: bannerData[bannerTappedIndex].url.isEmpty
+                        ? "Tap card to view more user details."
+                        : "",
                     onConfirm: {
                         showBannerAlert = false
-                        if(!bannerData[bannerTappedIndex].url.isEmpty) {
+                        if !bannerData[bannerTappedIndex].url.isEmpty {
                             openBannerURL()
                         }
                     },
@@ -182,6 +184,7 @@ struct DigitalIDView: View {
                         showBannerAlert = false
                     }
                 )
+
             }
         }
         NavigationLink(destination: GetSecurityPINView(), isActive: $showSecurityPINView) { EmptyView() }

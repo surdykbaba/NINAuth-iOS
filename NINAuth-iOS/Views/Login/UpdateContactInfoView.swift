@@ -8,6 +8,8 @@
 import SwiftUI
 import RealmSwift
 
+
+
 struct UpdateContactInfoView: View {
     @StateObject private var viewModel = AuthViewModel()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -18,18 +20,21 @@ struct UpdateContactInfoView: View {
     @State private var phone = ""
     @State private var phone2 = ""
     @State private var showDialog = false
+    @State private var showEmailDialog = false
     @State private var isPhoneValid: Bool = true
+    @State private var isEmailValid: Bool = true
     @State private var isFormValid: Bool = true
     @State private var isOTPValid: Bool = true
     @State private var otp: String = ""
     @State private var errTitle = ""
     @State private var showSuccessMessage: Bool = false
+    @State private var successMessageType: String = ""
     @State private var msg = ""
     @State private var showAlert = false
     @FocusState private var focusedField: Field?
 
     enum Field {
-        case phone, otp
+        case phone, otp, email
     }
 
     
@@ -40,7 +45,7 @@ struct UpdateContactInfoView: View {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green)
-                        Text("Phone number added successfully")
+                        Text(successMessageType == "phone" ? "Phone number updated successfully" : "Email address updated successfully")
                             .customFont(.body, fontSize: 16)
                             .foregroundColor(.green)
                     }
@@ -48,6 +53,13 @@ struct UpdateContactInfoView: View {
                     .background(Color.green.opacity(0.1))
                     .cornerRadius(10)
                     .transition(.opacity)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            withAnimation {
+                                showSuccessMessage = false
+                            }
+                        }
+                    }
                 }
 
                 ScrollView(showsIndicators: false) {
@@ -87,14 +99,24 @@ struct UpdateContactInfoView: View {
                                 .customFont(.subheadline, fontSize: 16)
                                 .padding(.top, 16)
                             
-                            TextField("Enter your email", text: $email)
-                                .keyboardType(.emailAddress)
-                                .customTextField()
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .stroke()
-                                        .fill(isFormValid ? .gray : .red)
-                                )
+                            HStack {
+                                Text(email.isEmpty ? "Add your email" : email)
+                                    .customFont(.body, fontSize: 16)
+                                    .foregroundColor(email.isEmpty ? Color.gray.opacity(0.5) : .gray)
+                                
+                                Spacer()
+                                
+                                Button {
+                                    showEmailDialog.toggle()
+                                } label: {
+                                    Text(email.isEmpty ? "Add email" : "Edit email")
+                                        .foregroundColor(Color(.button))
+                                        .customFont(.subheadline, fontSize: 16)
+                                }
+                            }
+                            .padding()
+                            .background(Color(UIColor.systemGray6))
+                            .cornerRadius(10)
                         }
                         .padding(.vertical, 16)
                         
@@ -126,8 +148,6 @@ struct UpdateContactInfoView: View {
                         Text("Accurate contact details help us verify your identity and facilitate important communications and service delivery.")
                             .customFont(.body, fontSize: 14)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        //Spacer()
                     }
                     .padding()
                     .background(Color(UIColor.systemYellow).opacity(0.2))
@@ -135,21 +155,6 @@ struct UpdateContactInfoView: View {
                 }
                 
                 Spacer()
-                
-//                // Info Alert
-//                HStack(alignment: .center, spacing: 16) {
-//                    Image(systemName: "info.circle.fill")
-//                        .foregroundColor(.orange)
-//                    
-//                    Text("Accurate contact details help us verify your identity and facilitate important communications and service delivery.")
-//                        .customFont(.body, fontSize: 14)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                    
-//                    //Spacer()
-//                }
-//                .padding()
-//                .background(Color(UIColor.systemYellow).opacity(0.2))
-//                .cornerRadius(10)
                 
                 // Continue Button
                 Button(action: {
@@ -197,6 +202,7 @@ struct UpdateContactInfoView: View {
             }
             .onAppear {
                 phone = user.first?.phone_number ?? ""
+                
             }
             .alert(errTitle, isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
@@ -207,6 +213,7 @@ struct UpdateContactInfoView: View {
             NavigationLink(destination: TabControllerView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
                 .frame(width: 0, height: 0)
             
+            // Phone number bottom sheet
             BottomSheetView(isPresented: $showDialog) {
                 updateMobileNumber
             }
@@ -217,23 +224,32 @@ struct UpdateContactInfoView: View {
                 }
             }
             
+            // Email bottom sheet
+            BottomSheetView(isPresented: $showEmailDialog) {
+                updateEmailAddress
+            }
+            
             BottomSheetView(isPresented: $viewModel.otpTriggered) {
                 enterOTP
                     .onAppear{
                         showDialog = false
+                        showEmailDialog = false
                     }
             }
             
             if(viewModel.otpValidated == true) {
                 Color.clear.onAppear {
                     viewModel.otpTriggered = false
-                    phone = phone2
+                    if successMessageType == "phone" {
+                        phone = phone2
+                    }
                     showSuccessMessage = true
                 }
                 .frame(width: 0, height: 0)
             }else {
                 Color.clear.onAppear {
                     phone = user.first?.phone_number ?? ""
+                    
                 }
                 .frame(width: 0, height: 0)
             }
@@ -289,12 +305,12 @@ struct UpdateContactInfoView: View {
                             if newValue.count >= 11 {
                                 focusedField = nil
                             }
-                               }
-                                .overlay(
-                             RoundedRectangle(cornerRadius: 8)
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
                                 .stroke()
                                 .fill(isPhoneValid ? .gray : .red)
-                              )
+                        )
 
                     if !isPhoneValid {
                         Text("Mobile Number Invalid")
@@ -308,7 +324,9 @@ struct UpdateContactInfoView: View {
                 Button {
                     if(phone2.count > 10) {
                         Task {
-                            await viewModel.triggerOTP(sendOTPRequest: SendOTPRequest(receiverId: phone2, medium: "sms"))
+                            successMessageType = "phone"
+                            let request = SendOTPRequest(receiverId: phone2, medium: .sms)
+                            await viewModel.triggerOTP(sendOTPRequest: request)
                         }
                     }
                 } label: {
@@ -326,13 +344,84 @@ struct UpdateContactInfoView: View {
                 .padding(.vertical, 18)
                 .cornerRadius(4)
                 .background(Color.button)
-//                .disabled(!isValid)
                 .padding(.bottom, 30)
             }
             .onReceive(timer) { time in
                 if currentTimer > 0 {
                     currentTimer -= 1
                 }
+            }
+        }
+        .padding()
+        .background(Color(.white))
+    }
+    
+    var updateEmailAddress: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Spacer()
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 15, height: 15, alignment: .trailing)
+                    .padding(.top, 0)
+                    .onTapGesture {
+                        showEmailDialog.toggle()
+                    }
+            }
+            .padding(.vertical)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Update Email Address")
+                    .customFont(.headline, fontSize: 24)
+                Text("your_info_is_secure")
+                    .customFont(.body, fontSize: 16)
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom)
+
+                VStack(alignment: .leading) {
+                    Text("Email address")
+                        .customFont(.subheadline, fontSize: 16)
+                    TextField("your@gmail.com", text: $email)
+                        .keyboardType(.emailAddress)
+                        .customTextField()
+                        .autocapitalization(.none)
+                        .focused($focusedField, equals: .email)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke()
+                                .fill(isEmailValid ? .gray : .red)
+                        )
+
+                    if !isEmailValid {
+                        Text("Email must be valid")
+                            .customFont(.subheadline, fontSize: 14)
+                            .foregroundColor(.red)
+                    }
+                }
+                .padding(.bottom, 18)
+                .padding(.top, 20)
+
+                Button {
+                    if isValidEmail(email) {
+                        isEmailValid = true
+                        Task {
+                            successMessageType = "email"
+                            let request = SendOTPRequest(receiverId: email, medium: .email)
+                            await viewModel.triggerOTP(sendOTPRequest: request)
+                        }
+                    } else {
+                        isEmailValid = false
+                    }
+                } label: {
+                    Text("Continue")
+                        .customFont(.title, fontSize: 18)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .cornerRadius(4)
+                .background(Color.button)
+                .padding(.bottom, 30)
             }
         }
         .padding()
@@ -348,7 +437,6 @@ struct UpdateContactInfoView: View {
                     .frame(width: 15, height: 15, alignment: .trailing)
                     .padding(.top, 0)
                     .onTapGesture {
-                        showDialog.toggle()
                         viewModel.otpTriggered = false
                         timer.upstream.connect().cancel()
                         currentTimer = 60
@@ -357,7 +445,7 @@ struct UpdateContactInfoView: View {
             .padding(.vertical)
             
             VStack(alignment: .leading, spacing: 10) {
-                Text("Update Mobile Number")
+                Text(successMessageType == "phone" ? "Update Mobile Number" : "Update Email Address")
                     .customFont(.headline, fontSize: 24)
                 Text("your_info_is_secure")
                     .customFont(.body, fontSize: 16)
@@ -373,17 +461,19 @@ struct UpdateContactInfoView: View {
                     .customTextField()
                     .focused($focusedField, equals: .otp)
                     .onChange(of: otp) { newValue in
-                    if newValue.count >= 6 {
-                     focusedField = nil
-                       }
+                        if newValue.count >= 6 {
+                            focusedField = nil
+                        }
                     }
-                      .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                     .stroke()
-                       .fill(isOTPValid ? .gray : .red)
-                                           )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke()
+                            .fill(isOTPValid ? .gray : .red)
+                    )
                     
-                    Text("Enter OTP sent to \(phone2)")
+                    Text(successMessageType == "phone" ?
+                        "Enter OTP sent to \(phone2)" :
+                        "Enter OTP sent to \(email)")
                 }
                 .padding(.bottom, 18)
                 .padding(.top, 20)
@@ -410,6 +500,12 @@ struct UpdateContactInfoView: View {
         .background(Color(.white))
     }
     
+    // Email validation function
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
 }
 
 

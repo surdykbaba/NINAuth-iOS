@@ -19,13 +19,17 @@ struct LeaveAppAlertSheetView: View {
             }
 
             if(customMessage.isEmpty) {
-                // Add the new image here since custom message is always going to be the tap card message
-            }else {
                 Image(systemName: "exclamationmark.triangle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                        .padding(.top, -10)
+                        .foregroundColor(.orange)
+            }else {
+                Image("tapBlack")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40, height: 40)
-                    .foregroundColor(.orange)
                     .padding(.top, -10)
             }
 

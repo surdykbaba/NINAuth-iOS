@@ -61,10 +61,19 @@ struct LogOutRequest: Codable {
     var sessionId: String?
 }
 
+
+// Enum to define the medium types
+enum OTPSendMedium: String, Codable {
+    case sms
+    case email
+}
+
+// Request model for sending OTP
 struct SendOTPRequest: Codable {
     var receiverId: String?
-    var medium: String? = "sms"
+    var medium: OTPSendMedium = .sms // Default is sms
 }
+
 
 struct ValidateOTP: Codable {
     var otp: String?
