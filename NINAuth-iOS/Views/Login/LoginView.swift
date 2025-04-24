@@ -21,6 +21,7 @@ struct LoginView: View {
     @State private var showSendToForgotPin = false
     @State private var goForgotPin: Bool = false
     @State private var biometricsIsOn: Bool = false
+    @State private var biometricsIsEnabled: Bool = false
     @State private var showDialog: Bool = false
     @State private var errTitle = ""
     @State private var msg = ""
@@ -89,8 +90,12 @@ struct LoginView: View {
                     .padding(.top, 16)
 
                 Button {
-                    if(biometricsIsOn){
+                    if biometricsIsEnabled {
                         enableBiometrics()
+                    } else {
+                        errTitle = "Biometrics Not Enabled"
+                        msg = "Biometrics not enabled. Please login with NIN and activate biometrics in settings before you can use it."
+                        showDialog.toggle()
                     }
                 } label: {
                     HStack {
@@ -159,9 +164,10 @@ struct LoginView: View {
             Spacer()
         }
         .onAppear {
-            biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
+            biometricsIsOn = true // Always show the button as active
+            biometricsIsEnabled = mem.getBoolValue(key: mem.authentication_key)
             if(user.first == nil) {
-                biometricsIsOn = false
+                biometricsIsEnabled = false
             }
             viewModel.initiateLocationRequest()
         }

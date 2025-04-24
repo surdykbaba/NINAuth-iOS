@@ -156,7 +156,7 @@ struct DigitalIDView: View {
         .sheet(isPresented: $showBannerAlert) {
             if #available(iOS 16.0, *) {
                 LeaveAppAlertSheetView(
-                    customMessage: bannerData[bannerTappedIndex].url.isEmpty ? "Tap card to view MRZ data and QR code secured data." : "",
+                    customMessage: bannerData[bannerTappedIndex].url.isEmpty ? "Tap card to view more user details." : "",
                     onConfirm: {
                         showBannerAlert = false
                         if(!bannerData[bannerTappedIndex].url.isEmpty) {

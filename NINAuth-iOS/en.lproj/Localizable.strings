@@ -32,7 +32,7 @@
 "unable_to_verify_your_identity" = "Unable to verify your identity";
 "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered." = "Want to try again? Ensure you are in a well lit room and your face isn’t covered.";
 "identity_verification_in_process" = "Identity verification in process";
-"the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "The verification process is taking a little longer time to get done... Please wait.";
+"the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "The verification progress is taking a little longer time to get done... Please wait.";
 "retry" = "Retry";
 
 /**CheckIdentityView*/

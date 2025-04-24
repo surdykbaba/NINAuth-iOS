@@ -233,7 +233,7 @@ struct NetworkResponseModel {
         } else if isAuthorizationError() {
             return "Unauthorized request"
         } else {
-            return ".Unable to fetch details, please try again later."
+            return "Unable to fetch details, please try again later."
         }
     }
 
