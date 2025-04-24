@@ -157,10 +157,10 @@ struct SettingsView: View {
             Image("fingerprint")
                 .resizable()
                 .frame(width: 25, height: 25)
-                .padding(15)
-                .background(Color.grayBackground)
+                .padding(12)
+                .background(Color("grayBackground"))
                 .clipShape(Circle())
-
+            
             Toggle(isOn: $biometricsIsOn,
                    label : {
                 Text("biometrics".localized)
@@ -269,7 +269,7 @@ struct SettingsView: View {
                     Image("lock")
                         .resizable()
                         .frame(width: 25, height: 25)
-                        .padding(15)
+                        .padding(12)
                         .background(Color.grayBackground)
                         .clipShape(Circle())
 

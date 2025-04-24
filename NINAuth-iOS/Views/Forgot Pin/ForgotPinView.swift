@@ -50,6 +50,12 @@ struct ForgotPinView: View {
                 .padding(.bottom, 20)
 
                 Button {
+                    if(identificationNumber.count == 11){
+                        isFormValid = true
+                    }else {
+                        isFormValid = false
+                    }
+                    
                     if(isFormValid) {
                         Task {
                             await viewModel.forgotPin(resetPinRequest: ResetPinRequest(deviceId: appState.getDeviceID(), ninId: identificationNumber, deviceMetadata: DeviceMetadata(lat: appState.latitude, lng:appState.longitude)))
@@ -62,9 +68,10 @@ struct ForgotPinView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
-                .background(isFormValid ? Color.button : Color.button.opacity(0.2))
+                .background(Color.button)
+//                .background(isFormValid ? Color.button : Color.button.opacity(0.2))
                 .cornerRadius(4)
-                .disabled(!isFormValid)
+                //.disabled(!isFormValid)
 
                 Spacer()
 

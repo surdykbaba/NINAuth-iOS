@@ -60,8 +60,8 @@ struct SingleDeviceView: View {
         .padding(20)
         .background(.white)
         .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .alert("Unlink?", isPresented: $showSignOut) {
-            Button("OK", role: .destructive) {
+        .alert("Unlink Device?", isPresented: $showSignOut) {
+            Button("Yes", role: .destructive) {
                 Task {
                     await viewModel.deleteDevice(deviceRequest: DeviceRequest(deviceId: device.device_id))
                 }
