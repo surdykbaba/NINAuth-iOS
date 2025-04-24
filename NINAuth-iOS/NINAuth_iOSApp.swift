@@ -10,6 +10,7 @@ import RealmSwift
 import SmileID
 import Firebase
 import FirebaseMessaging
+import IQKeyboardManagerSwift
 
 @main
 struct NINAuth_iOSApp: SwiftUI.App {
@@ -95,21 +96,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         SmileID.apply(CustomTheme())
-//        UILabel.appearance().adjustsFontForContentSizeCategory = false
-//        UITextField.appearance().adjustsFontForContentSizeCategory = false
-//        UITextView.appearance().adjustsFontForContentSizeCategory = false
-//        UIButton.appearance().titleLabel?.adjustsFontForContentSizeCategory = false
+        IQKeyboardManager.shared.isEnabled = true
+        IQKeyboardManager.shared.resignOnTouchOutside = true
         
         UIApplication.swizzlePreferredContentSizeCategory()
-        
-        
-//        NotificationCenter.default.addObserver(
-//            forName: UIApplication.userDidTakeScreenshotNotification,
-//            object: nil,
-//            queue: .main) { notification in
-//                //executes after screenshot
-//                Log.info("I took screen shot")
-//        }
         
         UNUserNotificationCenter.current().delegate = self
 

@@ -14,6 +14,7 @@ struct UpdateContactInfoView: View {
     @StateObject private var viewModel = AuthViewModel()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var currentTimer = 60
+    @State private var finalEmail: String = ""
     @State private var email: String = ""
     @State private var preferredContact: String = "SMS"
     @ObservedResults(User.self) var user
@@ -52,6 +53,7 @@ struct UpdateContactInfoView: View {
                     .padding()
                     .background(Color.green.opacity(0.1))
                     .cornerRadius(10)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .transition(.opacity)
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -100,7 +102,7 @@ struct UpdateContactInfoView: View {
                                 .padding(.top, 16)
                             
                             HStack {
-                                Text(email.isEmpty ? "Add your email" : email)
+                                Text(finalEmail.isEmpty ? "Add your email" : finalEmail)
                                     .customFont(.body, fontSize: 16)
                                     .foregroundColor(email.isEmpty ? Color.gray.opacity(0.5) : .gray)
                                 
@@ -162,8 +164,8 @@ struct UpdateContactInfoView: View {
                     if(!phone.isEmpty) {
                         ids.append(UserkeyPair(key: "Phone Number", value: phone))
                     }
-                    if(!email.isEmpty) {
-                        ids.append(UserkeyPair(key: "Email", value: email))
+                    if(!finalEmail.isEmpty) {
+                        ids.append(UserkeyPair(key: "Email", value: finalEmail))
                     }
                     let userInfo = UpdateUserInfo(ids: ids, medium: preferredContact.lowercased())
                     Task {
@@ -242,6 +244,8 @@ struct UpdateContactInfoView: View {
                     viewModel.otpTriggered = false
                     if successMessageType == "phone" {
                         phone = phone2
+                    }else {
+                        finalEmail = email
                     }
                     showSuccessMessage = true
                 }
@@ -325,7 +329,7 @@ struct UpdateContactInfoView: View {
                     if(phone2.count > 10) {
                         Task {
                             successMessageType = "phone"
-                            let request = SendOTPRequest(receiverId: phone2, medium: .sms)
+                            let request = SendOTPRequest(receiverId: phone2, medium: "sms")
                             await viewModel.triggerOTP(sendOTPRequest: request)
                         }
                     }
@@ -381,7 +385,7 @@ struct UpdateContactInfoView: View {
                 VStack(alignment: .leading) {
                     Text("Email address")
                         .customFont(.subheadline, fontSize: 16)
-                    TextField("your@gmail.com", text: $email)
+                    TextField("", text: $email)
                         .keyboardType(.emailAddress)
                         .customTextField()
                         .autocapitalization(.none)
@@ -406,7 +410,7 @@ struct UpdateContactInfoView: View {
                         isEmailValid = true
                         Task {
                             successMessageType = "email"
-                            let request = SendOTPRequest(receiverId: email, medium: .email)
+                            let request = SendOTPRequest(receiverId: email, medium: "email")
                             await viewModel.triggerOTP(sendOTPRequest: request)
                         }
                     } else {

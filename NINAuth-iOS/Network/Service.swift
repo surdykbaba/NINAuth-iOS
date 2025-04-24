@@ -19,9 +19,7 @@ struct Service{
             request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            if(increaseTimeout) {
-                request.timeoutInterval = 120
-            }
+            request.timeoutInterval = 180
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
@@ -52,6 +50,7 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "GET"
+            request.timeoutInterval = 180
             
             let (data, response) = try await URLSession.shared.data(for: request)
             let httpResponse = response as? HTTPURLResponse
@@ -75,6 +74,7 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "PATCH"
+            request.timeoutInterval = 180
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
 #if DEBUG
@@ -85,11 +85,15 @@ struct Service{
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
-                let jsonValue = try JSON(data: data)
+                if(networkResponse.statusCode != 204) {
+                    let jsonValue = try JSON(data: data)
 #if DEBUG
-                print(jsonValue)
+                    print(jsonValue)
 #endif
-                return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data, json: jsonValue)
+                }else {
+                    return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
+                }
             }else {
                 return NetworkResponseModel(statusCode: networkResponse.statusCode, data: data)
             }
@@ -103,6 +107,7 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "PUT"
+            request.timeoutInterval = 180
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
 #if DEBUG
@@ -137,6 +142,7 @@ struct Service{
             request.httpMethod = "DELETE"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
+            request.timeoutInterval = 180
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif

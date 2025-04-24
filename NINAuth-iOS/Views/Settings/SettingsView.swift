@@ -285,21 +285,21 @@ struct SettingsView: View {
                     }
                 }
 
-                Button {
-                    showSignOut = true
-                } label: {
-                    SettingsRow(image: "logout", name: "Sign out")
-                }
-                .alert("Sign out?", isPresented: $showSignOut) {
-                    Button("OK", role: .destructive) {
-                        Task {
-                            await viewModel.logoutUser(logOutRequest: LogOutRequest(sessionId: token.first?.session))
-                        }
-                    }
-                    Button("Cancel", role: .cancel) { }
-                } message: {
-                    Text("You are about to sign out of this device")
-                }
+//                Button {
+//                    showSignOut = true
+//                } label: {
+//                    SettingsRow(image: "logout", name: "Sign out")
+//                }
+//                .alert("Sign out?", isPresented: $showSignOut) {
+//                    Button("OK", role: .destructive) {
+//                        Task {
+//                            await viewModel.logoutUser(logOutRequest: LogOutRequest(sessionId: token.first?.session))
+//                        }
+//                    }
+//                    Button("Cancel", role: .cancel) { }
+//                } message: {
+//                    Text("You are about to sign out of this device")
+//                }
             }
         }
         .padding(.horizontal, 20)

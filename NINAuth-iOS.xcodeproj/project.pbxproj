@@ -17,6 +17,7 @@
 		CF76B7AC2DA3E19F00D5C591 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = CF76B7AB2DA3E19F00D5C591 /* FirebaseMessaging */; };
 		CF98AC712D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */; };
 		CF98AC722D6B9C3500A3011F /* BlusaltLivenessOnly.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF98AC6E2D6B9BF200A3011F /* BlusaltLivenessOnly.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CFD281782DBA52D80073F58F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CFD281772DBA52D80073F58F /* IQKeyboardManagerSwift */; };
 		CFD87C1F2D70989200B537B1 /* SwiftQRCodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFD87C1E2D70989200B537B1 /* SwiftQRCodeScanner */; };
 		CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */ = {isa = PBXBuildFile; productRef = CFE4EEAA2D6A352D005C26BA /* EasySkeleton */; };
 		CFFFA82E2D60D6BF00835FC1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CFFFA82D2D60D6BF00835FC1 /* CodeScanner */; };
@@ -75,6 +76,7 @@
 				CFE4EEAB2D6A352D005C26BA /* EasySkeleton in Frameworks */,
 				CF76B7A82DA3E19F00D5C591 /* FirebaseCrashlytics in Frameworks */,
 				CFFFA8FF2D60F1DE00835FC1 /* SmileID in Frameworks */,
+				CFD281782DBA52D80073F58F /* IQKeyboardManagerSwift in Frameworks */,
 				CF6FE76E2D48F03000DF9470 /* Realm in Frameworks */,
 				CF76B7AC2DA3E19F00D5C591 /* FirebaseMessaging in Frameworks */,
 				CFD87C1F2D70989200B537B1 /* SwiftQRCodeScanner in Frameworks */,
@@ -146,6 +148,7 @@
 				CF76B7A72DA3E19F00D5C591 /* FirebaseCrashlytics */,
 				CF76B7A92DA3E19F00D5C591 /* FirebaseInAppMessaging-Beta */,
 				CF76B7AB2DA3E19F00D5C591 /* FirebaseMessaging */,
+				CFD281772DBA52D80073F58F /* IQKeyboardManagerSwift */,
 			);
 			productName = "NINAuth-iOS";
 			productReference = 7AC0750C2D46D83200ECC913 /* NINAuth-iOS.app */;
@@ -183,6 +186,7 @@
 				CFE4EEA92D6A352D005C26BA /* XCRemoteSwiftPackageReference "EasySkeleton" */,
 				CFD87C1D2D70989200B537B1 /* XCRemoteSwiftPackageReference "SwiftQRCodeScanner" */,
 				CF76B7A22DA3E19E00D5C591 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CFD281762DBA52D80073F58F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7AC0750D2D46D83200ECC913 /* Products */;
@@ -496,6 +500,14 @@
 				minimumVersion = 11.9.0;
 			};
 		};
+		CFD281762DBA52D80073F58F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.1;
+			};
+		};
 		CFD87C1D2D70989200B537B1 /* XCRemoteSwiftPackageReference "SwiftQRCodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vinodiOS/SwiftQRCodeScanner";
@@ -570,6 +582,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CF76B7A22DA3E19E00D5C591 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		CFD281772DBA52D80073F58F /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFD281762DBA52D80073F58F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 		CFD87C1E2D70989200B537B1 /* SwiftQRCodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
