@@ -189,7 +189,7 @@ struct NetworkResponseModel {
         self.json = json
 
         if isOffline() {
-            self.errorMessage = "Error connecting. Please check your Internet Connection."
+            self.errorMessage = "Oops, can't connect! Check your internet and try again?"
         } else if !self.isSuccess(), self.errorMessage == nil {
             self.errorMessage = getNetworkErrorMessage()
         }
@@ -239,7 +239,7 @@ struct NetworkResponseModel {
         } else if isAuthorizationError() {
             return "Unauthorized request"
         } else {
-            return "Unable to fetch details, please try again later."
+            return "Something went wrong, please try again later and thanks for your patience."
         }
     }
 
