@@ -53,6 +53,7 @@ struct ResetDeviceView: View {
             
             if(viewModel.deviceReset) {
                 Color.clear.onAppear {
+                    appState.removeDeviceID()
                     appState.userClickedLogout = true
                     appState.main = UUID()
                 }

@@ -81,7 +81,7 @@ struct ConsentView: View {
                     }
                 
                 Button {
-                    showFilter.toggle()
+                    //showFilter.toggle()
                 } label: {
                     Image(.consentCalendar)
                         .resizable()

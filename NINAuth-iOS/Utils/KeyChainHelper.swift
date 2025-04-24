@@ -8,6 +8,7 @@ import Foundation
 
 struct KeyChainHelper {
     
+    // DO NOT CHANGE UNDER NO CIRCUMSTANCE
     static var deviceID = "NinAuth_Device_ID_key"
     
     static func storeData(key: String, data: Data) -> Bool {
@@ -39,6 +40,14 @@ struct KeyChainHelper {
             }
         }
         return nil
+    }
+    
+    static func removeData(key: String) {
+        let query = [
+            kSecClass as String       : kSecClassGenericPassword,
+            kSecAttrAccount as String : key ] as [String : Any]
+        
+        SecItemDelete(query as CFDictionary)
     }
 
 }

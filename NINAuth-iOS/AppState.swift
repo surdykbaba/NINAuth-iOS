@@ -51,6 +51,10 @@ class AppState: ObservableObject {
         return deviceID
     }
     
+    func removeDeviceID() {
+        KeyChainHelper.removeData(key: KeyChainHelper.deviceID)
+    }
+    
     private func createUniqueID() -> String {
         let uuid: CFUUID = CFUUIDCreate(nil)
         let cfStr: CFString = CFUUIDCreateString(nil, uuid)
