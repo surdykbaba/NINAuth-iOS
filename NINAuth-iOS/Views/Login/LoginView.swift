@@ -93,8 +93,8 @@ struct LoginView: View {
                     if biometricsIsEnabled {
                         enableBiometrics()
                     } else {
-                        errTitle = "Biometrics Not Enabled"
-                        msg = "Biometrics not enabled. Please login with NIN and activate biometrics in settings before you can use it."
+                        errTitle = "Authentication Disabled"
+                        msg = " Please enable biometrics from app settings."
                         showDialog.toggle()
                     }
                 } label: {
@@ -144,7 +144,7 @@ struct LoginView: View {
                 }
                 Button("Cancel", role: .cancel) { }
             }message: {
-                Text("Your NIN is different, begin authentication to sign in")
+                Text("Incorrect NIN")
             }
 
             if case .loading = viewModel.state {
