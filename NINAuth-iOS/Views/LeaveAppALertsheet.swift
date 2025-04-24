@@ -1,11 +1,3 @@
-
-//
-//  Revokeaccess.swift
-//  NINAuth-iOS
-//
-//  Created by Arogundade Qoyum on 24/04/2025.
-//
-
 import SwiftUI
 
 struct LeaveAppAlertSheetView: View {
