@@ -17,6 +17,7 @@ struct LoginView: View {
     @State private var isValid: Bool = true
     @State private var identificationNumber = ""
     @State private var password: String = ""
+    @State private var isSecure: Bool = true
     @State private var isFormValid: Bool = false
     @State private var showSendToForgotPin = false
     @State private var goForgotPin: Bool = false
@@ -39,23 +40,41 @@ struct LoginView: View {
                     .customFont(.subheadline, fontSize: 20)
                     .padding(.bottom, 40)
 
-                SecureField("nin_number".localized, text: $identificationNumber)
-                    .keyboardType(.numberPad)
-                    .customTextField()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke()
-                        .fill(isFormValid ? .gray : .red)
-                    )
-                    .onAppear(perform: {
-                        isFormValid = true
-                        identificationNumber = user.first?.nin ?? ""
-                    })
-                    .onChange(of: identificationNumber) { _ in
-                        if(identificationNumber.count > 11) {
-                            identificationNumber = String(identificationNumber.prefix(11))
+                HStack {
+                    Group {
+                        if isSecure {
+                            SecureField("nin_number".localized, text: $identificationNumber)
+                        } else {
+                            TextField("nin_number".localized, text: $identificationNumber)
                         }
                     }
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .keyboardType(.numberPad)
+                    
+                    Button(action: {
+                        isSecure.toggle()
+                    }) {
+                        Image(systemName: isSecure ? "eye.slash" : "eye")
+                            .foregroundColor(.gray)
+                    }
+                }
+                .customTextField()
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke()
+                        .fill(isFormValid ? .gray : .red)
+                )
+                .onAppear(perform: {
+                    isFormValid = true
+                    identificationNumber = user.first?.nin ?? ""
+                })
+                .onChange(of: identificationNumber) { _ in
+                    if(identificationNumber.count > 11) {
+                        identificationNumber = String(identificationNumber.prefix(11))
+                    }
+                }
+                    
 
                 SecureField("pin_camel".localized, text: $password)
                     .keyboardType(.numberPad)
