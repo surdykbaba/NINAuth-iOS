@@ -1,10 +1,3 @@
-//
-//  ConsentDetailsView.swift
-//  NINAuth-iOS
-//
-//  Created by Chioma Amanda Mmegwa  on 09/02/2025.
-//
-
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -13,21 +6,13 @@ struct ConsentDetailsView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var appState: AppState
     @StateObject private var viewModel = ConsentViewModel()
-    @State private var showSheet = false
+    @State private var showRevokeSheet = false
     @State private var isCopied = false
     @State private var showAlert: Bool = false
     @State private var error = ErrorBag()
-    @State private var showingAlert = false
     
     var body: some View {
         mainBody
-//        if #available(iOS 16.0, *) {
-//            mainBody
-//                .toolbarBackground(.bg, for: .navigationBar)
-//                .toolbarRole(.editor)
-//        }else {
-//            mainBody
-//        }
     }
     
     var mainBody: some View {
@@ -49,7 +34,7 @@ struct ConsentDetailsView: View {
                     HStack {
                         Button {
                             if(consent.status == "approved") {
-                                showingAlert = true
+                                showRevokeSheet = true
                             }
                         } label: {
                             Text("revoke_access")
@@ -62,21 +47,6 @@ struct ConsentDetailsView: View {
                         .cornerRadius(4)
                         .background(consent.status == "approved" ? Color.button : Color.button.opacity(0.1))
                         .disabled(consent.status == "approved" ? false : true)
-                        .alert("Revoke?", isPresented: $showingAlert) {
-                            Button("Ok", role: .destructive){
-                                Task {
-                                    await viewModel.updateContent(consentUpdate: ConsentUpdate(status: "revoked", consentId: consent.id))
-                                }
-                            }
-                            Button("Cancel", role: .cancel) { }
-                        } message: {
-                            Text("You are about to revoke consent")
-                        }
-//                        .halfSheet(showSheet: $showSheet) {
-//
-//                        } onEnd: {
-//                            Log.info("Dismissed Sheet")
-//                        }
 
                         HStack {
                             Text(consent.request_id ?? "")
@@ -142,6 +112,17 @@ struct ConsentDetailsView: View {
             .alert(error.description, isPresented: $showAlert) {
                 Button("OK", role: .cancel) { }
             }
+            
+            // Bottom sheet overlay
+            if showRevokeSheet {
+                CustomBottomSheet(isPresented: $showRevokeSheet) {
+                    RevokeAccessView(isPresented: $showRevokeSheet, onRevoke: {
+                        Task {
+                            await viewModel.updateContent(consentUpdate: ConsentUpdate(status: "revoked", consentId: consent.id))
+                        }
+                    })
+                }
+            }
         }
     }
     
@@ -203,6 +184,106 @@ struct ConsentDetailsView: View {
         .background(Color.white)
         .mask(
             RoundedRectangle(cornerRadius: 15, style: .continuous))
+    }
+}
+
+// Custom bottom sheet container
+struct CustomBottomSheet<Content: View>: View {
+    @Binding var isPresented: Bool
+    let content: Content
+    
+    init(isPresented: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self._isPresented = isPresented
+        self.content = content()
+    }
+    
+    var body: some View {
+        ZStack {
+            // Dimmed background
+            Color.black.opacity(0.3)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    isPresented = false
+                }
+            
+            // Bottom sheet content
+            VStack {
+                Spacer()
+                content
+                    .background(RoundedRectangle(cornerRadius: 20).fill(Color(UIColor.systemBackground)))
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeInOut, value: isPresented)
+            }
+        }
+    }
+}
+
+// Modified RevokeAccessView based on your RevokeAccessBottomSheetView
+struct RevokeAccessView: View {
+    @Binding var isPresented: Bool
+    var onRevoke: () -> Void
+    @State private var selectedReason: String = ""
+    let reasons = ["Privacy concern", "No longer using service", "Other"]
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Capsule()
+                .frame(width: 40, height: 6)
+                .foregroundColor(.gray.opacity(0.4))
+                .padding(.top, 10)
+            
+            Image(systemName: "exclamationmark.triangle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
+                .foregroundColor(.red)
+            
+            Text("Revoke access to your data?")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
+            
+            Text("This organization will no longer have access to your data")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+            
+            Menu {
+                ForEach(reasons, id: \.self) { reason in
+                    Button(reason) {
+                        selectedReason = reason
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(selectedReason.isEmpty ? "Select a reason" : selectedReason)
+                        .foregroundColor(selectedReason.isEmpty ? .gray : .primary)
+                    Spacer()
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.4)))
+            }
+            
+            Button(action: {
+                onRevoke()
+                isPresented = false
+            }) {
+                Text("Revoke access")
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(8)
+            }
+            .disabled(selectedReason.isEmpty)
+            .opacity(selectedReason.isEmpty ? 0.6 : 1)
+            
+            Spacer(minLength: 10)
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
     }
 }
 
