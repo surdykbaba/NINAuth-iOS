@@ -267,7 +267,7 @@ struct NetworkResponseModel {
         do{
             if let safeData = _data as? Data{
                 let json = try JSON(data: safeData)
-                if let safeMessage = json[""].string{
+                if let safeMessage = json["error"].string{
                     msg = safeMessage
                 }
             }
