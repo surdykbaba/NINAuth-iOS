@@ -72,7 +72,22 @@ struct PinService : PinProtocol {
         let networkResponse = await Service.init().post(URLs.SET_NEW_PIN, params: setNewPin)
         switch networkResponse.isSuccess() {
         case true:
-            return .success(true)
+            do {
+                let realm = try await Realm()
+                try await realm.asyncWrite {
+                    let sessionID = realm.objects(Token.self).first?.freeze().session ?? ""
+                    let user = User(value: networkResponse.getJson()?["user"])
+                    realm.deleteAll()
+                    let token = Token()
+                    token.session = sessionID
+                    realm.add(token, update: .all)
+                    realm.add(user)
+                }
+                return .success(true)
+            }catch {
+                Log.error(error.localizedDescription)
+                return .failure(ErrorBag())
+            }
         default:
             return .failure(networkResponse.getErrorBag())
         }
