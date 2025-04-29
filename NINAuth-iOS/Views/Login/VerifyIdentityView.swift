@@ -140,18 +140,20 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     {
         presentEnroll.toggle()
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
-        registerUserSelfieRequest.deviceId = appState.getDeviceID()
-        registerUserSelfieRequest.images = []
-        
-        for img in livenessImages {
-            var selfieImage = SelfieImage()
-            selfieImage.image_type = "image_type_2"
-            if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
-                let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
-                selfieImage.image = stringImg?.base64EncodedString() ?? ""
-                registerUserSelfieRequest.images?.append(selfieImage)
-            }
-        }
+        registerUserSelfieRequest.user_id = apiResponse?.userId ?? ""
+        registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
+//        registerUserSelfieRequest.deviceId = appState.getDeviceID()
+//        registerUserSelfieRequest.images = []
+//        
+//        for img in livenessImages {
+//            var selfieImage = SelfieImage()
+//            selfieImage.image_type = "image_type_2"
+//            if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
+//                let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
+//                selfieImage.image = stringImg?.base64EncodedString() ?? ""
+//                registerUserSelfieRequest.images?.append(selfieImage)
+//            }
+//        }
         
         Task {
             await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
@@ -176,46 +178,46 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         }
     }
     
-    private func startBluSalt() {
-        if let windowScene = UIApplication.shared.connectedScenes.first
-            as? UIWindowScene,
-            let viewController = windowScene.windows.first?.rootViewController
-          {
-            LivenessOnlyManager.shared
-              .startFaceDetectionOnlySDK(
-                viewController, clientId: "clientId", appName: "appName", apiKey: "apiKey",
-                isDev: false, livenessDetectionOnlyType: .MOTIONAL,
-                onComplete: { jsonRawValue, livenessSuccess in
-                    Log.info(
-                    "startLivenessDetectionOnlySDK Demo app is called and is successful")
-
-                    Log.info(
-                    "\(String(describing: livenessSuccess.isProcedureValidationPassed))")
-
-                    if let base64 = livenessSuccess.faceDetectionData?.livenessImage {
-                        livenessResult = Data(base64Encoded: base64)
-                        var registerUserSelfieRequest = RegisterUserSelfieRequest()
-                        registerUserSelfieRequest.deviceId = appState.getDeviceID()
-                        registerUserSelfieRequest.images = []
-
-                        var selfieImage = SelfieImage()
-                        selfieImage.image_type = "image_type_2"
-                        selfieImage.image = base64
-                        registerUserSelfieRequest.images?.append(selfieImage)
-
-                        Task {
-                          await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
-                        }
-                    }
-                },
-                onFailure: {
-                  statusCode, errorText in
-                    Log.error(
-                    "startFacialComparisonSDK Demo app is called and is failed: \(statusCode) \(errorText)"
-                  )
-                })
-          }
-    }
+//    private func startBluSalt() {
+//        if let windowScene = UIApplication.shared.connectedScenes.first
+//            as? UIWindowScene,
+//            let viewController = windowScene.windows.first?.rootViewController
+//          {
+//            LivenessOnlyManager.shared
+//              .startFaceDetectionOnlySDK(
+//                viewController, clientId: "clientId", appName: "appName", apiKey: "apiKey",
+//                isDev: false, livenessDetectionOnlyType: .MOTIONAL,
+//                onComplete: { jsonRawValue, livenessSuccess in
+//                    Log.info(
+//                    "startLivenessDetectionOnlySDK Demo app is called and is successful")
+//
+//                    Log.info(
+//                    "\(String(describing: livenessSuccess.isProcedureValidationPassed))")
+//
+//                    if let base64 = livenessSuccess.faceDetectionData?.livenessImage {
+//                        livenessResult = Data(base64Encoded: base64)
+//                        var registerUserSelfieRequest = RegisterUserSelfieRequest()
+//                        registerUserSelfieRequest.deviceId = appState.getDeviceID()
+//                        registerUserSelfieRequest.images = []
+//
+//                        var selfieImage = SelfieImage()
+//                        selfieImage.image_type = "image_type_2"
+//                        selfieImage.image = base64
+//                        registerUserSelfieRequest.images?.append(selfieImage)
+//
+//                        Task {
+//                          await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
+//                        }
+//                    }
+//                },
+//                onFailure: {
+//                  statusCode, errorText in
+//                    Log.error(
+//                    "startFacialComparisonSDK Demo app is called and is failed: \(statusCode) \(errorText)"
+//                  )
+//                })
+//          }
+//    }
 }
 
 #Preview {

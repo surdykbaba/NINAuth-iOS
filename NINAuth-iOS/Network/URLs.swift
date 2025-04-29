@@ -18,7 +18,7 @@ enum URLs {
     
     //MARK: Auth
     static let REGISTER_USER = "auth/register"
-    static let REGISTER_USER_SELFIE = "auth/face-auth"
+    static let REGISTER_USER_SELFIE = "auth/face-match"
     static let LOGIN = "auth/login"
     static let LOGIN_NIN = "auth/login-with-nin"
     static let LOGOUT = "auth/logout"
