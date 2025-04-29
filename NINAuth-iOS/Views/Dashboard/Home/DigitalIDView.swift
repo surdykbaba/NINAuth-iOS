@@ -100,7 +100,7 @@ struct DigitalIDView: View {
                     Text("manage_your_identity")
                         .customFont(.title, fontSize: 17)
                         .padding(.bottom, 15)
-                        .padding(.top, 20)
+                        .padding(.top, 40)
                         
 
                     VStack(spacing: 12) {
