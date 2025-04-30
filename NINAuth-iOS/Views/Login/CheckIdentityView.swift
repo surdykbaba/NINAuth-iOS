@@ -67,7 +67,7 @@ struct CheckIdentityView: View {
 
                 Spacer()
 
-                NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+                NavigationLink(destination: VerifyIdentityView(nin: identificationNumber), isActive: $viewModel.continueReg) {}.isDetailLink(false)
             }
             .padding(.top, 20)
             .padding()
