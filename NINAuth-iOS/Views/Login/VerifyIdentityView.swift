@@ -122,7 +122,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
 //                            extraPartnerParams: [:],
 //                            delegate: self
 //                        )
-                        OrchestratedEnhancedSelfieCaptureScreen(userId: "user- \(nin ?? "")", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                        OrchestratedEnhancedSelfieCaptureScreen(userId: "user-\(nin ?? "")", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
                     }
                 })
             }
@@ -141,7 +141,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     {
         presentEnroll.toggle()
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
-        registerUserSelfieRequest.user_id = apiResponse?.userId ?? ""
+        registerUserSelfieRequest.user_id = "user-\(nin ?? "")"
         registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
 //        registerUserSelfieRequest.deviceId = appState.getDeviceID()
 //        registerUserSelfieRequest.images = []
