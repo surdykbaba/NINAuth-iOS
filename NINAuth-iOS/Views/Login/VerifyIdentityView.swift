@@ -121,7 +121,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
 //                            extraPartnerParams: [:],
 //                            delegate: self
 //                        )
-                        OrchestratedEnhancedSelfieCaptureScreen(userId: appState.getUserRandomUniqueNumber(), isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                        OrchestratedEnhancedSelfieCaptureScreen(userId: "user- \(appState.getUserRandomUniqueNumber())", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
                     }
                 })
             }
@@ -158,6 +158,10 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         Task {
             await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
         }
+    }
+    
+    func didSucceed(selfieImage: Data, livenessImages: [Data], jobStatusResponse: SmartSelfieJobStatusResponse) {
+            print("Successfully submitted SmartSelfie job")
     }
     
     func didError(error: any Error) {
