@@ -10,6 +10,7 @@ import SmileID
 import BlusaltLivenessOnly
 
 struct VerifyIdentityView: View, SmartSelfieResultDelegate {
+    @State var nin: String? = ""
     @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = AuthViewModel()
     @State private var presentEnroll = false
@@ -121,7 +122,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
 //                            extraPartnerParams: [:],
 //                            delegate: self
 //                        )
-                        OrchestratedEnhancedSelfieCaptureScreen(userId: "user- \(appState.getUserRandomUniqueNumber())", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                        OrchestratedEnhancedSelfieCaptureScreen(userId: "user- \(nin ?? "")", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
                     }
                 })
             }
