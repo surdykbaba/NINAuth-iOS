@@ -116,6 +116,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                     NavigationView {
                         SmileID.smartSelfieAuthenticationScreenEnhanced(
                             userId:"user-\(nin ?? "")",
+                            /*userId: "User1746097869FhP"*/
                             allowNewEnroll: false,
                             showAttribution: false,
                             showInstructions: true,
