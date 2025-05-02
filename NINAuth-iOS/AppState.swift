@@ -1,19 +1,15 @@
+//
+//  AppState.swift
+//  NINAuth-iOS
+//
+//  Created by Maxwell Nwanna on 15/02/2025.
+//
 import Foundation
 import UIKit
 import SwiftUI
 import RealmSwift
 import CommonCrypto
 import CoreImage.CIFilterBuiltins
-
-// Define AppViews enum for navigation control
-enum AppViews {
-    case login
-    case main
-    case verification
-    case otpVerification
-    case passwordReset
-    // Add other view states as needed
-}
 
 class AppState: ObservableObject {
     
@@ -27,9 +23,6 @@ class AppState: ObservableObject {
     @Published var main = UUID()
     @Published var userClickedLogout = false
     @Published var userReferesh = false
-    @Published var isAppLocked = false // Track if app is locked
-    @Published var currentView: AppViews = .main // Control navigation
-    
     private let authService: AuthService
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()
@@ -38,26 +31,6 @@ class AppState: ObservableObject {
     init() {
         authService = AuthService()
         timer?.invalidate()
-    }
-    
-    // App locking functionality
-    func lockApp() {
-        self.isAppLocked = true
-        // We don't set userClickedLogout to true since this is not a logout action
-        Log.info("App has been locked due to inactivity")
-    }
-    
-    // App unlocking functionality
-    func unlockApp() {
-        self.isAppLocked = false
-        Log.info("App has been unlocked")
-    }
-    
-    // Navigation to login view after app lock
-    func navigateToLoginAfterLock() {
-        self.currentView = .login
-        self.main = UUID() // Trigger UI refresh
-        Log.info("Navigating to login view after app lock")
     }
     
     func getDeviceID() -> String {
