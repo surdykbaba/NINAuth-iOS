@@ -1,13 +1,18 @@
-//
-//  SettingsView.swift
-//  NINAuth-iOS
-//
-//  Created by Arogundade Qoyum  on 9/04/2025.
-//
-
 import SwiftUI
 import RealmSwift
 import LocalAuthentication
+
+// Add this at the top level of your file
+extension ScenePhase {
+    var stringValue: String {
+        switch self {
+        case .active: return "active"
+        case .inactive: return "inactive"
+        case .background: return "background"
+        default: return "unknown"
+        }
+    }
+}
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
@@ -29,8 +34,11 @@ struct SettingsView: View {
     private let mem = MemoryUtil.init()
     @State private var showSheet = false
     @State private var goToLinkID = false
-    @State private var hideIntegrityIndex = false  // ✅ Added this line
-
+    @State private var hideIntegrityIndex = false
+    @State private var showAppLockDialog = false // For the app lock dialog
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var appLockTimer: Timer?
+    
     var body: some View {
         ZStack {
             ScrollView(showsIndicators: false) {
@@ -48,7 +56,7 @@ struct SettingsView: View {
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
                         }
-                        // ✅ Toggle Button to Hide/Show Integrity Index
+                        // Toggle Button to Hide/Show Integrity Index
                         Button {
                             hideIntegrityIndex.toggle()
                         } label: {
@@ -61,7 +69,7 @@ struct SettingsView: View {
                                 .padding(.bottom, 4)
                         }
 
-                        // ✅ Conditional rendering of the Integrity Index section
+                        // Conditional rendering of the Integrity Index section
                         if !hideIntegrityIndex {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text("ID Integrity index: 550")
@@ -133,6 +141,12 @@ struct SettingsView: View {
                 .onAppear {
                     biometricsIsOn = mem.getBoolValue(key: mem.authentication_key)
                     appLockIsOn = mem.getBoolValue(key: mem.lock_app)
+                    
+                    // Check if app was previously locked and handle navigation
+                    if appState.isAppLocked {
+                        Log.info("App was locked on previous exit, navigating to login")
+                        appState.navigateToLoginAfterLock()
+                    }
                 }
             }
             .task {
@@ -150,6 +164,45 @@ struct SettingsView: View {
                     .scaleEffect(2)
             }
         }
+        .alert(isPresented: $showAppLockDialog) {
+            Alert(
+                title: Text("App Lock Enabled"),
+                message: Text("Your app will automatically lock after 30 seconds of inactivity."),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .onChange(of: scenePhase) { newPhase in
+            handleScenePhaseChange(newPhase)
+        }
+    }
+    
+    // Method to handle scene phase changes for app lock functionality
+    private func handleScenePhaseChange(_ newPhase: ScenePhase) {
+        Log.info("Scene phase changed to: \(newPhase.stringValue)")
+        
+        // Cancel any existing timer
+        appLockTimer?.invalidate()
+        
+        if appLockIsOn {
+            if newPhase == .background || newPhase == .inactive {
+                // Start a timer when app goes to background
+                appLockTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { _ in
+                    Log.info("App lock timer triggered")
+                    lockApp()
+                }
+            } else if newPhase == .active && appState.isAppLocked {
+                // If app becomes active and was previously locked
+                Log.info("App returning to active state while locked")
+                appState.navigateToLoginAfterLock()
+            }
+        }
+    }
+    
+    // Function to lock the app
+    private func lockApp() {
+        Log.info("Locking app from SettingsView")
+        // Set the app lock state
+        appState.lockApp()
     }
 
     var biometrics: some View {
@@ -279,8 +332,13 @@ struct SettingsView: View {
                             Text("App Lock on Exit")
                                 .customFont(.headline, fontSize: 19)
                         })
-                        .onChange(of: appLockIsOn) { _ in
-                            mem.setValue(key: mem.lock_app, value: appLockIsOn)
+                        .onChange(of: appLockIsOn) { newValue in
+                            mem.setValue(key: mem.lock_app, value: newValue)
+                            
+                            // Show dialog when app lock is enabled
+                            if newValue {
+                                showAppLockDialog = true
+                            }
                         }
                     }
                 }

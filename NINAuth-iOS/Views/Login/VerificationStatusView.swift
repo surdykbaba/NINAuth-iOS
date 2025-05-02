@@ -20,7 +20,7 @@ struct VerificationStatusView: View {
             case .done:
                 displayStatusInfo(imageName: "checkmark_icon", backgroundColor: Color("checkmarkBackground"), title: "verification_done!".localized, titleMessage: "your_identity_has_been_successfully_verified".localized)
             case .failed:
-                displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
+                displayStatusInfo(imageName: "error", backgroundColor: Color("errorBackground"), title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn't_covered.".localized)
             case .inProgress:
                 displayStatusInfo(imageName: "loading", backgroundColor: Color("checkmarkBackground"), title: "identity_verification_in_process".localized, titleMessage: "the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait.".localized)
                 
@@ -47,6 +47,12 @@ struct VerificationStatusView: View {
         }
         .padding(.top, 50)
         .padding()
+        .navigationBarBackButtonHidden(true) //hides the back button
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                EmptyView() //replaces the back button with an empty view
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             switch verificationStatus {
             case .done:
@@ -118,8 +124,10 @@ struct VerificationStatusView: View {
 }
 
 #Preview {
-    VerificationStatusView()
-        .environmentObject(AppState())
+    NavigationView {
+        VerificationStatusView()
+            .environmentObject(AppState())
+    }
 }
 
 enum VerificationStatus {
