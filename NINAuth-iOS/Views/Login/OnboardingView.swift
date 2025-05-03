@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CodeScanner
+import IQKeyboardManagerSwift
 
 struct OnboardingView: View {
     @EnvironmentObject var appState: AppState
@@ -121,6 +122,13 @@ struct OnboardingView: View {
             
             BottomSheetView(isPresented: $showSheet) {
                 requestCodeView
+            }
+            .onChange(of: showSheet) { _ in
+                if !showSheet {
+                    IQKeyboardManager.shared.isEnabled = true
+                }else {
+                    IQKeyboardManager.shared.isEnabled = false
+                }
             }
             
             if case .loading = viewModel.state {

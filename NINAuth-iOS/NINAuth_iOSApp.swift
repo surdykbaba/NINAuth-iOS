@@ -96,6 +96,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         SmileID.initialize(useSandbox: false)
         SmileID.setCallbackUrl(url: URL(string: "https://smileidentity.com"))
         SmileID.apply(CustomTheme())
+//        IQKeyboardManager.shared.enable = true
+//        IQKeyboardManager.shared.resignOnTouchOutside = true
         IQKeyboardManager.shared.isEnabled = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
         
