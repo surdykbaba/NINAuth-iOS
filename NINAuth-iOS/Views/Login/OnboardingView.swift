@@ -116,7 +116,7 @@ struct OnboardingView: View {
                 //            }
             }
             
-            NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.continueReg) {}.isDetailLink(false)
+            NavigationLink(destination: VerifyIdentityView(nin: identificationNumber, userID: viewModel.userID), isActive: $viewModel.continueReg) {}.isDetailLink(false)
                 .frame(width: 0, height: 0)
             
             BottomSheetView(isPresented: $showSheet) {

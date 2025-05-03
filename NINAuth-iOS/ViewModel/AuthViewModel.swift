@@ -13,6 +13,7 @@ class AuthViewModel: NSObject, ObservableObject  {
     
     @Published private(set) var state: LoadingState = .idle
     @Published var continueReg = false
+    @Published var userID = ""
     @Published var verifyStatus = ""
     @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
@@ -39,7 +40,8 @@ class AuthViewModel: NSObject, ObservableObject  {
         state = .loading
         let result = await authService.registerUser(registerUserRequest: registerUserRequest)
         switch result {
-        case .success(_):
+        case .success(let id):
+            userID = id
             continueReg = true
             state = .success
         case .failure(let failure):
@@ -150,7 +152,8 @@ class AuthViewModel: NSObject, ObservableObject  {
         state = .loading
         let result = await authService.registerWithNIN(registerWithNIN: registerWithNIN)
         switch result {
-        case .success(_):
+        case .success(let id):
+            userID = id
             continueReg = true
             state = .success
         case .failure(let failure):

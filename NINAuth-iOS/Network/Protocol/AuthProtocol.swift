@@ -7,7 +7,7 @@
 import SwiftyJSON
 
 protocol AuthProtocol {
-    func registerUser(registerUserRequest: RegisterUserRequest) async -> Result<Bool, ErrorBag>
+    func registerUser(registerUserRequest: RegisterUserRequest) async -> Result<String, ErrorBag>
     
     func registerUserSelfie(registerUserSelfieRequest: RegisterUserSelfieRequest) async -> Result<JSON, ErrorBag>
     
@@ -19,7 +19,7 @@ protocol AuthProtocol {
     
     func loginWithNIN(loginWithNIN: LoginWithNIN) async -> Result<Bool, ErrorBag>
     
-    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<Bool, ErrorBag>
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<String, ErrorBag>
     
     func updateUserInfo(updateUserInfo: UpdateUserInfo) async -> Result<Bool, ErrorBag>
     

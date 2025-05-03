@@ -11,6 +11,7 @@ import BlusaltLivenessOnly
 
 struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     @State var nin: String? = ""
+    @State var userID: String = ""
     @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = AuthViewModel()
     @State private var presentEnroll = false
@@ -115,8 +116,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                 .sheet(isPresented: $presentEnroll, content: {
                     NavigationView {
                         SmileID.smartSelfieAuthenticationScreenEnhanced(
-                            userId:"user-\(nin ?? "")",
-                            /*userId: "User1746097869FhP"*/
+                            userId: userID,
                             allowNewEnroll: false,
                             showAttribution: false,
                             showInstructions: true,
@@ -142,7 +142,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     {
         presentEnroll.toggle()
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
-        registerUserSelfieRequest.user_id = "user-\(nin ?? "")"
+        registerUserSelfieRequest.user_id = userID
         registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
 //        registerUserSelfieRequest.deviceId = appState.getDeviceID()
 //        registerUserSelfieRequest.images = []

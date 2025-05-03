@@ -10,6 +10,7 @@ import Foundation
 class PinViewModel: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
+    @Published var userID: String = ""
     @Published var pinIsSet: Bool = false
     @Published var newPinSet: Bool = false
     @Published private(set) var pinUpdated: Bool = false
@@ -70,7 +71,8 @@ class PinViewModel: ObservableObject {
         state = .loading
         let result = await pinService.resetPin(resetPinRequest: resetPinRequest)
         switch result {
-        case .success(_):
+        case .success(let id):
+            userID = id
             forgotPinSet = true
             state = .success
         case .failure(let failure):

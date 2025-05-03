@@ -11,7 +11,7 @@ protocol PinProtocol {
     
     func updatePin(updatePinRequest: UpdatePinRequest) async -> Result<Bool, ErrorBag>
     
-    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<Bool, ErrorBag>
+    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<String, ErrorBag>
     
     func resetNewPin(setNewPin: SetNewPin) async -> Result<Bool, ErrorBag>
 }

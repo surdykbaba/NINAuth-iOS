@@ -75,7 +75,7 @@ struct ForgotPinView: View {
 
                 Spacer()
 
-                NavigationLink(destination: VerifyIdentityView(), isActive: $viewModel.forgotPinSet) {}.isDetailLink(false)
+                NavigationLink(destination: VerifyIdentityView(nin: identificationNumber, userID: viewModel.userID), isActive: $viewModel.forgotPinSet) {}.isDetailLink(false)
             }
             .padding(.top, 20)
             .padding()
