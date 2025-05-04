@@ -104,7 +104,7 @@ struct DigitalIDView: View {
                         
 
                     VStack(spacing: 12) {
-                        IdentityView(icon: "barcode", title: "Scan a QR code", subtitle: "scan_the_qr_code_to_share_identity_data".localized) {
+                        IdentityView(icon: "barcode", title: "Scan a QR Code", subtitle: "scan_the_qr_code_to_share_identity_data".localized) {
                             isPresentingScanner.toggle()
                         }
 

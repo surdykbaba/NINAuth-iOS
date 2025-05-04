@@ -13,10 +13,11 @@ struct DataSharingView: View {
         DataSharingOptions(dataItem: "Full Name", color: Color.yellow),
         DataSharingOptions(dataItem: "Mobile Number", color: Color.green),
         DataSharingOptions(dataItem: "Date of Birth", color: Color.orange),
-        DataSharingOptions(dataItem: "Olace of origin", color: Color.purple),
+        DataSharingOptions(dataItem: "Place of Origin", color: Color.purple),
         DataSharingOptions(dataItem: "Gender", color: Color.yellow),
-        DataSharingOptions(dataItem: "Photograph", color: Color.green),
+        DataSharingOptions(dataItem: "Photo", color: Color.green),
         DataSharingOptions(dataItem: "Registered Address", color: Color.orange)
+        
     ]
     
     var body: some View {
