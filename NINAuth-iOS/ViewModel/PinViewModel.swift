@@ -11,6 +11,7 @@ class PinViewModel: ObservableObject {
     
     @Published private(set) var state: LoadingState = .idle
     @Published var userID: String = ""
+    @Published var jobID: String = ""
     @Published var pinIsSet: Bool = false
     @Published var newPinSet: Bool = false
     @Published private(set) var pinUpdated: Bool = false
@@ -71,8 +72,9 @@ class PinViewModel: ObservableObject {
         state = .loading
         let result = await pinService.resetPin(resetPinRequest: resetPinRequest)
         switch result {
-        case .success(let id):
-            userID = id
+        case .success(let json):
+            userID = json["user_id"].string ?? ""
+            jobID = json["enrollment_jon_id"].string ?? ""
             forgotPinSet = true
             state = .success
         case .failure(let failure):

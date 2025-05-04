@@ -14,6 +14,7 @@ class AuthViewModel: NSObject, ObservableObject  {
     @Published private(set) var state: LoadingState = .idle
     @Published var continueReg = false
     @Published var userID = ""
+    @Published var jobID = ""
     @Published var verifyStatus = ""
     @Published var isLoggedIn = false
     @Published private(set) var requestCode: String?
@@ -40,8 +41,9 @@ class AuthViewModel: NSObject, ObservableObject  {
         state = .loading
         let result = await authService.registerUser(registerUserRequest: registerUserRequest)
         switch result {
-        case .success(let id):
-            userID = id
+        case .success(let json):
+            userID = json["user_id"].string ?? ""
+            jobID = json["enrollment_jon_id"].string ?? ""
             continueReg = true
             state = .success
         case .failure(let failure):
@@ -152,8 +154,9 @@ class AuthViewModel: NSObject, ObservableObject  {
         state = .loading
         let result = await authService.registerWithNIN(registerWithNIN: registerWithNIN)
         switch result {
-        case .success(let id):
-            userID = id
+        case .success(let json):
+            userID = json["user_id"].string ?? ""
+            jobID = json["enrollment_jon_id"].string ?? ""
             continueReg = true
             state = .success
         case .failure(let failure):

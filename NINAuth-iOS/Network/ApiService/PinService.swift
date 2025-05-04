@@ -6,6 +6,7 @@
 //
 
 import RealmSwift
+import SwiftyJSON
 
 struct PinService : PinProtocol {
     
@@ -44,7 +45,7 @@ struct PinService : PinProtocol {
         }
     }
     
-    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<String, ErrorBag> {
+    func resetPin(resetPinRequest: ResetPinRequest) async -> Result<JSON, ErrorBag> {
         let networkResponse = await Service.init().put(URLs.RESET_PIN, params: resetPinRequest)
         switch networkResponse.isSuccess() {
         case true:
@@ -58,7 +59,8 @@ struct PinService : PinProtocol {
                     mem.setValue(key: mem.authentication_key, value: false)
                     mem.setValue(key: mem.lock_app, value: false)
                 }
-                return .success(networkResponse.getJson()?["user_id"].string ?? "")
+                //return .success(networkResponse.getJson()?["user_id"].string ?? "")
+                return .success(networkResponse.getJson() ?? JSON())
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())

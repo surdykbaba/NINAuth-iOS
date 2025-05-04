@@ -19,12 +19,13 @@ struct Service{
             request.httpMethod = "POST"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            request.timeoutInterval = 180
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
-            
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 180
+            config.timeoutIntervalForResource = 3600
+            let (data, response) = try await URLSession(configuration: config).data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
@@ -50,9 +51,11 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "GET"
-            request.timeoutInterval = 180
             
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 180
+            config.timeoutIntervalForResource = 3600
+            let (data, response) = try await URLSession(configuration: config).data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
@@ -74,14 +77,17 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "PATCH"
-            request.timeoutInterval = 180
+            //request.timeoutInterval = 180
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
             
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 180
+            config.timeoutIntervalForResource = 3600
+            let (data, response) = try await URLSession(configuration: config).data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
@@ -109,12 +115,15 @@ struct Service{
             request.httpMethod = "PUT"
             request.timeoutInterval = 180
             let jsonData = try? JSONEncoder().encode(params)
-            request.httpBody = jsonData
+            //request.httpBody = jsonData
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
             
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 180
+            config.timeoutIntervalForResource = 3600
+            let (data, response) = try await URLSession(configuration: config).data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {
@@ -142,12 +151,15 @@ struct Service{
             request.httpMethod = "DELETE"
             let jsonData = try? JSONEncoder().encode(params)
             request.httpBody = jsonData
-            request.timeoutInterval = 180
+            //request.timeoutInterval = 180
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
             
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let config = URLSessionConfiguration.default
+            config.timeoutIntervalForRequest = 180
+            config.timeoutIntervalForResource = 3600
+            let (data, response) = try await URLSession(configuration: config).data(for: request)
             let httpResponse = response as? HTTPURLResponse
             let networkResponse = NetworkResponseModel(statusCode: (httpResponse?.statusCode ?? 0))
             if(networkResponse.isSuccess()) {

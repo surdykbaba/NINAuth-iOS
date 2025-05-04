@@ -11,7 +11,7 @@ import SwiftyJSON
 struct AuthService: AuthProtocol {
     
     @MainActor
-    func registerUser(registerUserRequest: RegisterUserRequest) async -> Result<String, ErrorBag> {
+    func registerUser(registerUserRequest: RegisterUserRequest) async -> Result<JSON, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.REGISTER_USER, params: registerUserRequest, authoriseHeader: false)
         switch networkResponse.isSuccess() {
         case true:
@@ -26,7 +26,8 @@ struct AuthService: AuthProtocol {
                     mem.setValue(key: mem.authentication_key, value: false)
                     mem.setValue(key: mem.lock_app, value: false)
                 }
-                return .success(networkResponse.getJson()?["user_id"].stringValue ?? "")
+                //return .success(networkResponse.getJson()?["user_id"].stringValue ?? "")
+                return .success(networkResponse.getJson() ?? JSON())
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
@@ -126,7 +127,7 @@ struct AuthService: AuthProtocol {
         }
     }
     
-    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<String, ErrorBag> {
+    func registerWithNIN(registerWithNIN: RegisterWithNIN) async -> Result<JSON, ErrorBag> {
         let networkResponse = await Service.init().post(URLs.REGISTER_WITH_NIN, params: registerWithNIN, authoriseHeader: false)
         switch networkResponse.isSuccess() {
         case true:
@@ -140,7 +141,8 @@ struct AuthService: AuthProtocol {
                     mem.setValue(key: mem.authentication_key, value: false)
                     mem.setValue(key: mem.lock_app, value: false)
                 }
-                return .success(networkResponse.getJson()?["user_id"].stringValue ?? "")
+                //return .success(networkResponse.getJson()?["user_id"].stringValue ?? "")
+                return .success(networkResponse.getJson() ?? JSON())
             }catch {
                 Log.error(error.localizedDescription)
                 return .failure(ErrorBag())
