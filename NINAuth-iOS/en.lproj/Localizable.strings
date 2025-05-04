@@ -32,7 +32,7 @@
 "unable_to_verify_your_identity" = "Unable to verify your identity";
 "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered." = "Want to try again? Ensure you are in a well lit room and your face isn’t covered.";
 "identity_verification_in_process" = "Identity verification in process";
-"the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "Hang tight! Verification is almost done!";
+"the_verification_process_is_taking_a_little_longer_time_to_get_done..._please_wait." = "Identity Verification in progress";
 "retry" = "Retry";
 
 /**CheckIdentityView*/
@@ -60,7 +60,7 @@
 "manage_your_identity" = "Manage your identity";
 "share_my_id" = "Share my ID";
 "scan_the_qr_code_to_share_identity_data" = "Scan a QR code to share identity data";
-"get_security_pin" = "Get a Share code";
+"get_security_pin" = "Get a Share Code";
 "get_pin_to_access_nimc_digital_services" = "Get code to access NIMC digital services";
 "linked_ids" = "Linked IDs";
 "view_other_functional_ids_linked_to_your_nin" = "View other functional IDs linked to your NIN";
@@ -109,15 +109,15 @@
 "offline_data_sharing" = "Offline data sharing";
 "manage_and_update_the_personal_information_you_share_with_organizations_offline_to_stay_fully_in_control_of_your_data." = "Manage and update the personal information you share with organizations offline to stay fully in control of your data.";
 "only_selected_data_will_be_shared" = "Only selected data will be shared";
-"save_update" = "Save update";
+"save_update" = "Save Update";
 
 /**SettingsView*/
 "biometrics" = "Biometrics";
-"legal_and_compliance" = "Legal and compliance";
-"privacy_policy" = "Privacy policy";
-"terms_of_service" = "Terms of service";
+"legal_and_compliance" = "Legal and Compliance";
+"privacy_policy" = "Privacy Policy";
+"terms_of_service" = "Terms of Service";
 "security" = "Security";
-"offline_data_sharing" = "Offline data sharing";
+"offline_data_sharing" = "Offline Data Sharing";
 "update_pin" = "Update PIN";
 "devices" = "Devices";
 "others" = "Others";

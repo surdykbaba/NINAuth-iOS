@@ -1,10 +1,3 @@
-//
-//  SettingsView.swift
-//  NINAuth-iOS
-//
-//  Created by Arogundade Qoyum  on 9/04/2025.
-//
-
 import SwiftUI
 import RealmSwift
 import LocalAuthentication
@@ -29,8 +22,8 @@ struct SettingsView: View {
     private let mem = MemoryUtil.init()
     @State private var showSheet = false
     @State private var goToLinkID = false
-    @State private var hideIntegrityIndex = false  // ✅ Added this line
-    @State private var showAppLockInfo = false     // ✅ Added this line for app lock dialog
+    @State private var hideIntegrityIndex = true  // ✅ Changed to true to hide by default
+    @State private var showAppLockInfo = false
 
     var body: some View {
         ZStack {
@@ -49,11 +42,11 @@ struct SettingsView: View {
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
                         }
-                        // ✅ Toggle Button to Hide/Show Integrity Index
+                        // Toggle Button to Show/Hide Integrity Index
                         Button {
                             hideIntegrityIndex.toggle()
                         } label: {
-                            Text(hideIntegrityIndex ? "Show index" : "Hide index")
+                            Text(hideIntegrityIndex ? "Show Index" : "Hide Index")
                                 .customFont(.subheadline, fontSize: 16)
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 16)
@@ -62,10 +55,10 @@ struct SettingsView: View {
                                 .padding(.bottom, 4)
                         }
 
-                        // ✅ Conditional rendering of the Integrity Index section
+                        // Conditional rendering of the Integrity Index section
                         if !hideIntegrityIndex {
                             VStack(alignment: .leading, spacing: 16) {
-                                Text("ID Integrity index: 550")
+                                Text("ID Integrity Index: 550")
                                     .customFont(.body, fontSize: 16)
 
                                 NinAuthSlider(value: $linkVM.score)
@@ -180,7 +173,7 @@ struct SettingsView: View {
     }
 
     var legalAndComplaince: some View {
-        VStack(alignment: .leading, spacing: 20){
+        VStack(alignment: .leading, spacing: 18){
             Text("legal_and_compliance".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
@@ -201,7 +194,7 @@ struct SettingsView: View {
     }
 
     var security: some View {
-        VStack(alignment: .leading, spacing: 20){
+        VStack(alignment: .leading, spacing: 18){
             Text("security".localized)
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
@@ -231,7 +224,7 @@ struct SettingsView: View {
                 }
 
                 NavigationLink(destination: LinkedIDsView()) {
-                    SettingsRow(image: "linked", name: "LinkedID")
+                    SettingsRow(image: "linked", name: "Linked IDs")
                 }
                 NavigationLink(destination: ResetDeviceView()) {
                     SettingsRow(image: "Reset_device", name: "Reset Device")
@@ -254,7 +247,7 @@ struct SettingsView: View {
     }
 
     var others: some View {
-        VStack(alignment: .leading, spacing: 20){
+        VStack(alignment: .leading, spacing: 18){
             Text("others")
                 .customFont(.headline, fontSize: 17)
                 .foregroundColor(.black)
