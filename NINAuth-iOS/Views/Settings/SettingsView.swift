@@ -42,18 +42,18 @@ struct SettingsView: View {
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
                         }
-                        // Toggle Button to Show/Hide Integrity Index
-                        Button {
-                            hideIntegrityIndex.toggle()
-                        } label: {
-                            Text(hideIntegrityIndex ? "Show Index" : "Hide Index")
-                                .customFont(.subheadline, fontSize: 16)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 16)
-                                .background(Color.grayBackground)
-                                .cornerRadius(12)
-                                .padding(.bottom, 4)
-                        }
+//                        // Toggle Button to Show/Hide Integrity Index
+//                        Button {
+//                            hideIntegrityIndex.toggle()
+//                        } label: {
+//                            Text(hideIntegrityIndex ? "Show Index" : "Hide Index")
+//                                .customFont(.subheadline, fontSize: 16)
+//                                .padding(.vertical, 8)
+//                                .padding(.horizontal, 16)
+//                                .background(Color.grayBackground)
+//                                .cornerRadius(12)
+//                                .padding(.bottom, 4)
+//                        }
 
                         // Conditional rendering of the Integrity Index section
                         if !hideIntegrityIndex {
