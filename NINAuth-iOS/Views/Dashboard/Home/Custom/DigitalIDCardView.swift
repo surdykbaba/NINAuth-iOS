@@ -139,14 +139,32 @@
 //    DigitalIDCardView()
 //}
 
-
 import SwiftUI
 import RealmSwift
 
 struct DigitalIDCardView: View {
     @ObservedResults(User.self) var user
-
+    
     var body: some View {
+        // Check if user image is available
+        if let firstUser = user.first, firstUser.image?.imageFromBase64 != nil {
+            // User image is available, show the digital ID card
+            digitalIDCardContent()
+        } else {
+            // User image is not available, show only the message
+            VStack {
+                Spacer()
+                Text("Digital IC not available")
+                    .font(.title2)
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+    
+    @ViewBuilder
+    private func digitalIDCardContent() -> some View {
         // Using GeometryReader to ensure proper sizing and prevent layout issues
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
@@ -204,19 +222,8 @@ struct DigitalIDCardView: View {
                                 
                                 doubleTextView(
                                     title: "Document Number",
-                                    subtitle: {
-                                        let nin = user.first?.id_number ?? ""
-                                        return nin
-//                                        if nin.count >= 6 {
-//                                            let first3 = nin.prefix(3)
-//                                            let last3 = nin.suffix(3)
-//                                            return "\(first3)\(last3)"
-//                                        } else {
-//                                            return nin
-//                                        }
-                                    }()
+                                    subtitle: user.first?.id_number ?? ""
                                 )
-
                             }
                             .frame(width: 130)
                         }
