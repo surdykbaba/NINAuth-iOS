@@ -205,14 +205,15 @@ struct DigitalIDCardView: View {
                                 doubleTextView(
                                     title: "Document Number",
                                     subtitle: {
-                                        let nin = user.first?.nin ?? ""
-                                        if nin.count >= 6 {
-                                            let first3 = nin.prefix(3)
-                                            let last3 = nin.suffix(3)
-                                            return "\(first3)\(last3)"
-                                        } else {
-                                            return nin
-                                        }
+                                        let nin = user.first?.id_number ?? ""
+                                        return nin
+//                                        if nin.count >= 6 {
+//                                            let first3 = nin.prefix(3)
+//                                            let last3 = nin.suffix(3)
+//                                            return "\(first3)\(last3)"
+//                                        } else {
+//                                            return nin
+//                                        }
                                     }()
                                 )
 

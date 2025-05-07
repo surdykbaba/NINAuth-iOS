@@ -26,7 +26,7 @@ struct DeviceService: DeviceProtocol {
     }
     
     func deleteDevice(deviceRequest: DeviceRequest) async -> Result<Bool, ErrorBag> {
-        let networkResponse = await Service.init().delete(URLs.DEVICES, params: deviceRequest)
+        let networkResponse = await Service.init().delete(URLs.DEVICES + "/\(deviceRequest.deviceId ?? "")", params: deviceRequest)
         switch networkResponse.isSuccess() {
         case true:
             return .success(true)

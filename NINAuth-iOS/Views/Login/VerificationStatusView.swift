@@ -42,6 +42,12 @@ struct VerificationStatusView: View {
                     verificationStatus = .done
                 }
             }
+            
+            if (appState.verifyStatus == "failed") {
+                Color.clear.onAppear {
+                    verificationStatus = .failed
+                }
+            }
 
             NavigationLink(destination: SetPINView(), isActive: $goToPin) {}.isDetailLink(false)
         }
