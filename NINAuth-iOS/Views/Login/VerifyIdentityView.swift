@@ -16,6 +16,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     @StateObject private var viewModel = AuthViewModel()
     @State private var presentEnroll = false
     @State private var switchView: Bool = false
+    @State private var showFailed = false
     private var defaultDirectory: URL {
         get throws {
             let documentDirectory = try FileManager.default.url(
@@ -82,6 +83,8 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         if (viewModel.verifyStatus == "processing" || viewModel.verifyStatus == "failed") {
                             NavigationLink(destination: VerificationStatusView(verificationStatus: .inProgress), isActive: .constant(true)) {}.isDetailLink(false)
                         }
+                        
+                        NavigationLink(destination: VerificationStatusView(verificationStatus: .failed), isActive: $showFailed) {}.isDetailLink(false)
                     }
                 }
             }
@@ -141,9 +144,17 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     func didSucceed(selfieImage: URL, livenessImages: [URL], apiResponse: SmartSelfieResponse?)
     {
         presentEnroll.toggle()
-        var registerUserSelfieRequest = RegisterUserSelfieRequest()
-        registerUserSelfieRequest.user_id = userID
-        registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
+        if apiResponse?.status == .approved {
+            var registerUserSelfieRequest = RegisterUserSelfieRequest()
+            registerUserSelfieRequest.user_id = userID
+            registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
+            
+            Task {
+                await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
+            }
+        }else {
+            showFailed.toggle()
+        }
 //        registerUserSelfieRequest.deviceId = appState.getDeviceID()
 //        registerUserSelfieRequest.images = []
 //        
@@ -156,15 +167,11 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
 //                registerUserSelfieRequest.images?.append(selfieImage)
 //            }
 //        }
-        
-        Task {
-            await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
-        }
     }
     
-    func didSucceed(selfieImage: Data, livenessImages: [Data], jobStatusResponse: SmartSelfieJobStatusResponse) {
-            print("Successfully submitted SmartSelfie job")
-    }
+//    func didSucceed(selfieImage: Data, livenessImages: [Data], jobStatusResponse: SmartSelfieJobStatusResponse) {
+//            print("Successfully submitted SmartSelfie job")
+//    }
     
     func didError(error: any Error) {
         presentEnroll.toggle()
