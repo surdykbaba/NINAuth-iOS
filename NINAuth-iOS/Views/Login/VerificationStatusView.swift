@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct VerificationStatusView: View {
+    @Environment(\.dismiss) private var dismiss
     @State var verificationStatus: VerificationStatus = .inProgress
     @EnvironmentObject var appState: AppState
     @State private var goToPin = false
@@ -75,7 +76,9 @@ struct VerificationStatusView: View {
                 .cornerRadius(4)
                 .padding()
             case .failed:
-                Button {} label: {
+                Button {
+                    dismiss()
+                } label: {
                     Text("retry".localized)
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(.white)

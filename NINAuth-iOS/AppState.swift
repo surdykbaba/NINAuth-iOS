@@ -80,7 +80,7 @@ class AppState: ObservableObject {
                     // NOTE: Verify Status is either "passed" or "process"
                     verifyStatus = res["status"].stringValue
                     state = .success
-                    if(verifyStatus == "passed") {
+                    if(verifyStatus == "passed" || verifyStatus == "failed") {
                         timer?.invalidate()
                     }else {
                         timedEmailCall(id: deviceID)
@@ -95,7 +95,7 @@ class AppState: ObservableObject {
     
     private func timedEmailCall(id: String) {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true) { [weak self] timer in
             self?.getFaceAuthStatus(deviceID: id)
         }
         timer?.tolerance = 0.3
