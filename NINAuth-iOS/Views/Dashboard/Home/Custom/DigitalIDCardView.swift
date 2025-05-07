@@ -147,10 +147,7 @@ struct DigitalIDCardView: View {
     
     var body: some View {
         // Check if user image is available
-        if let firstUser = user.first, firstUser.image?.imageFromBase64 != nil {
-            // User image is available, show the digital ID card
-            digitalIDCardContent()
-        } else {
+        if user.first?.image?.isEmpty == true || user.first?.image == nil {
             // User image is not available, show only the message
             VStack {
                 Spacer()
@@ -160,6 +157,9 @@ struct DigitalIDCardView: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }else {
+            // User image is available, show the digital ID card
+            digitalIDCardContent()
         }
     }
     
