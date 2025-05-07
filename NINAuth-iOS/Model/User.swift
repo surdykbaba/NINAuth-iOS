@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class User: Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) var id: String?
+    @Persisted var id_number: String?
     @Persisted var nin: String?
     @Persisted var first_name: String?
     @Persisted var middle_name: String?
@@ -31,6 +32,7 @@ class User: Object, ObjectKeyIdentifiable {
         self.init()
         
         self.id = value?["id"].string
+        self.id_number = value?["id_number"].string
         self.nin = value?["nin"].string
         self.first_name = value?["first_name"].string
         self.middle_name = value?["middle_name"].string
