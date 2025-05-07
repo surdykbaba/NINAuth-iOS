@@ -86,6 +86,7 @@ struct DigitalIDView: View {
                         DigitalbackCard()
                             .opacity(isFlipped ? 1 : 0)
                             .rotation3DEffect(.degrees(isFlipped ? 0 : -180), axis: (x: 1, y: 0, z: 0))
+                            .offset(y:20)
 
                         DigitalIDCardView()
                             .opacity(isFlipped ? 0 : 1)
