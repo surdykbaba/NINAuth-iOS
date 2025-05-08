@@ -95,7 +95,7 @@ class AppState: ObservableObject {
     
     private func timedEmailCall(id: String) {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true) { [weak self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 9, repeats: true) { [weak self] timer in
             self?.getFaceAuthStatus(deviceID: id)
         }
         timer?.tolerance = 0.3

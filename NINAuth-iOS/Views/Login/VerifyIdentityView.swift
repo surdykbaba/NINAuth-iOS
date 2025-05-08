@@ -16,6 +16,8 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     @StateObject private var viewModel = AuthViewModel()
     @State private var presentEnroll = false
     @State private var switchView: Bool = false
+    @State private var showFailed: Bool = false
+    @State private var showSuccess: Bool = false
 
     private var defaultDirectory: URL {
         get throws {
@@ -40,7 +42,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         if case .failed(_) = viewModel.state {
                             displayStatusInfo(imageName: "error", backgroundColor: Color.errorBackground, title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
                         } else {
-                            if(viewModel.verifyStatus == "failed") {
+                            if(showFailed == true) {
                                 displayStatusInfo(imageName: "error", backgroundColor: Color.errorBackground, title: "unable_to_verify_your_identity".localized, titleMessage: "want_to_try_again?_ensure_you_are_in_a_well_lit_room_and_your_face_isn’t_covered.".localized)
                             }else {
                                 VStack(alignment: .leading, spacing: 15) {
@@ -75,14 +77,10 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         }
 
                         Spacer()
-
-                        if (viewModel.verifyStatus == "passed") {
-                            NavigationLink(destination: VerificationStatusView(verificationStatus: .done), isActive: .constant(true)) {}.isDetailLink(false)
-                        }
-
-                        if (viewModel.verifyStatus == "processing" || viewModel.verifyStatus == "failed") {
-                            NavigationLink(destination: VerificationStatusView(verificationStatus: .inProgress), isActive: .constant(true)) {}.isDetailLink(false)
-                        }
+                        
+                        NavigationLink(destination: VerificationStatusView(verificationStatus: .done), isActive: $showSuccess) {}.isDetailLink(false)
+                        
+                        NavigationLink(destination: VerificationStatusView(verificationStatus: .failed), isActive: $showFailed) {}.isDetailLink(false)
                     }
                 }
             }
@@ -98,7 +96,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                         .customFont(.title, fontSize: 18)
                         .foregroundStyle(.white)
                     }else {
-                        if(viewModel.verifyStatus == "failed") {
+                        if(showFailed == true) {
                             Text("retry".localized)
                             .customFont(.title, fontSize: 18)
                             .foregroundStyle(.white)
@@ -145,9 +143,13 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
         registerUserSelfieRequest.user_id = userID
         registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
-        
         Task {
-            await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
+           await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
+       }
+        if(apiResponse?.status == .approved) {
+            showSuccess = true
+        }else {
+            showFailed = false
         }
 //        registerUserSelfieRequest.deviceId = appState.getDeviceID()
 //        registerUserSelfieRequest.images = []
