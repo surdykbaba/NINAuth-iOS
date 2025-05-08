@@ -41,6 +41,8 @@ struct SettingsView: View {
                             
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
+                            
+                                Spacer()
                         }
 //                        // Toggle Button to Show/Hide Integrity Index
 //                        Button {

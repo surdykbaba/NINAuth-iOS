@@ -91,6 +91,7 @@ struct DigitalIDView: View {
                         DigitalIDCardView()
                             .opacity(isFlipped ? 0 : 1)
                             .rotation3DEffect(.degrees(isFlipped ? 180 : 0), axis: (x: 1, y: 0, z: 0))
+                            .offset(y:10)
                     }
                     .frame(height: 242)
                     .animation(.spring(response: 1.4, dampingFraction: 0.7, blendDuration: 0.5), value: isFlipped)
@@ -101,7 +102,7 @@ struct DigitalIDView: View {
                     Text("manage_your_identity")
                         .customFont(.title, fontSize: 17)
                         .padding(.bottom, 15)
-                        .padding(.top, 40)
+                        .padding(.top, 30)
                         
 
                     VStack(spacing: 12) {
