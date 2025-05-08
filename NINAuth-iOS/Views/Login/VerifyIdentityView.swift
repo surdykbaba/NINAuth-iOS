@@ -143,6 +143,18 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
         registerUserSelfieRequest.user_id = userID
         registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
+        
+        registerUserSelfieRequest.images = []
+        
+        for img in livenessImages {
+            var selfieImage = SelfieImage()
+            selfieImage.image_type = "image_type_2"
+            if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
+                let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
+                selfieImage.image = stringImg?.base64EncodedString() ?? ""
+                registerUserSelfieRequest.images?.append(selfieImage)
+            }
+        }
         Task {
            await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
        }
@@ -151,18 +163,6 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         }else {
             showFailed = false
         }
-//        registerUserSelfieRequest.deviceId = appState.getDeviceID()
-//        registerUserSelfieRequest.images = []
-//        
-//        for img in livenessImages {
-//            var selfieImage = SelfieImage()
-//            selfieImage.image_type = "image_type_2"
-//            if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
-//                let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
-//                selfieImage.image = stringImg?.base64EncodedString() ?? ""
-//                registerUserSelfieRequest.images?.append(selfieImage)
-//            }
-//        }
     }
     
 //    func didSucceed(selfieImage: Data, livenessImages: [Data], jobStatusResponse: SmartSelfieJobStatusResponse) {

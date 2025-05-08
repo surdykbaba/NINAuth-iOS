@@ -37,6 +37,7 @@ struct DeviceMetadata: Codable {
 struct RegisterUserSelfieRequest: Codable {
     var user_id: String?
     var job_id: String?
+    var images: [SelfieImage]?
 }
 
 struct SelfieImage: Codable {
