@@ -113,9 +113,9 @@ struct Service{
         do {
             var request = NetworkResponseModel.generateHeader(endpoint: urlString, authoriseHeader: authoriseHeader)
             request.httpMethod = "PUT"
-            request.timeoutInterval = 180
+            //request.timeoutInterval = 180
             let jsonData = try? JSONEncoder().encode(params)
-            //request.httpBody = jsonData
+            request.httpBody = jsonData
 #if DEBUG
             try? Log.info("The sending json body \(params.jsonPrettyPrinted())")
 #endif
