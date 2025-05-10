@@ -139,6 +139,9 @@
 //    DigitalIDCardView()
 //}
 
+
+
+
 import SwiftUI
 import RealmSwift
 
@@ -146,21 +149,8 @@ struct DigitalIDCardView: View {
     @ObservedResults(User.self) var user
     
     var body: some View {
-        // Check if user image is available
-        if user.first?.image?.isEmpty == true || user.first?.image == nil {
-            // User image is not available, show only the message
-            VStack {
-                Spacer()
-                Text("Digital IC not available")
-                    .font(.title2)
-                    .foregroundColor(.black)
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }else {
-            // User image is available, show the digital ID card
-            digitalIDCardContent()
-        }
+        // Always show the digital ID card content, no condition checking
+        digitalIDCardContent()
     }
     
     @ViewBuilder
