@@ -155,6 +155,7 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                 registerUserSelfieRequest.images?.append(selfieImage)
             }
         }
+        
         Task {
            await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
        }
