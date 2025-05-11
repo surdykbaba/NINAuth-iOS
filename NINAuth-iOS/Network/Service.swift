@@ -182,6 +182,7 @@ struct Service{
     }
     
 }
+
 struct NetworkResponseModel {
     fileprivate var statusCode: Int
     private var data: Data?
@@ -317,20 +318,14 @@ struct NetworkResponseModel {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("*/*", forHTTPHeaderField: "Accept")
         request.setValue(getDeviceID(), forHTTPHeaderField: "device-id")
+        
+//        // Get app version from Info.plist
+//        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+//        request.setValue(appVersion, forHTTPHeaderField: "app-version") 
+//        
         if(authoriseHeader) {
             request.setValue("Bearer \(getToken())", forHTTPHeaderField: "Authorization")
         }
-//        if let fields = request.allHTTPHeaderFields {
-//            // get your authorization token here
-//            // it probably is in the headers
-//            for (_, field) in fields.enumerated() {
-//                // ACTIONS REQUIRED FROM YOU:
-//                // do something here to match field's key so that you get the authorization token
-//                #if DEBUG
-//                print(field)
-//                #endif
-//            }
-//        }
         return request
     }
     
@@ -421,4 +416,3 @@ enum APIVerb: String, CaseIterable {
     case DELETE = "DELETE"
     case PATCH = "PATCH"
 }
-

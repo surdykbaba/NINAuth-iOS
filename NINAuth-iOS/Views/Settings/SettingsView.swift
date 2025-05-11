@@ -41,20 +41,21 @@ struct SettingsView: View {
                             
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
+                            
+                                Spacer()
                         }
-                        
                         // Toggle Button to Show/Hide Integrity Index
-//                        Button {
-//                            hideIntegrityIndex.toggle()
-//                        } label: {
-//                            Text(hideIntegrityIndex ? "Show Index" : "Hide Index")
-//                                .customFont(.subheadline, fontSize: 16)
-//                                .padding(.vertical, 8)
-//                                .padding(.horizontal, 16)
-//                                .background(Color.grayBackground)
-//                                .cornerRadius(12)
-//                                .padding(.bottom, 4)
-//                        }
+                        Button {
+                            hideIntegrityIndex.toggle()
+                        } label: {
+                            Text(hideIntegrityIndex ? "Show Index" : "Hide Index")
+                                .customFont(.subheadline, fontSize: 16)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 16)
+                                .background(Color.grayBackground)
+                                .cornerRadius(12)
+                                .padding(.bottom, 4)
+                        }
 
                         // Conditional rendering of the Integrity Index section
                         if !hideIntegrityIndex {
@@ -304,6 +305,16 @@ struct SettingsView: View {
 //                    Text("You are about to sign out of this device")
 //                }
             }
+            
+            // Version display at bottom
+            Divider()
+                .padding(.top, 20)
+            
+            Text("Version \(getAppVersion())")
+                .customFont(.subheadline, fontSize: 14)
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.top, 10)
         }
         .padding(.horizontal, 20)
     }
@@ -384,6 +395,13 @@ struct SettingsView: View {
             showAlert.toggle()
             mem.setValue(key: mem.authentication_key, value: false)
         }
+    }
+    
+    // Get app version
+    func getAppVersion() -> String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        return "\(version) (\(build))"
     }
 }
 

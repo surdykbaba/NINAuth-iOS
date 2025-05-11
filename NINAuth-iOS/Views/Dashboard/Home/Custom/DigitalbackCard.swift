@@ -295,7 +295,7 @@ struct DigitalbackCard: View {
         }
         .frame(maxWidth: 370, maxHeight: 242)
         .onAppear {
-            qrImage = appState.generateHashedQRCode(user: user.first)
+            qrImage = appState.generateHashedAztecCode(user: user.first)
             startTimer()
         }
         .onDisappear {
@@ -317,7 +317,7 @@ struct DigitalbackCard: View {
             if remainingSeconds > 0 {
                 remainingSeconds -= 1
             } else {
-                qrImage = appState.generateHashedQRCode(user: user.first)
+                qrImage = appState.generateHashedAztecCode(user: user.first)
                 remainingSeconds = 300 // reset after regeneration
             }
         }
