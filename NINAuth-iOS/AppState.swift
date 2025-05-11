@@ -157,6 +157,7 @@ class AppState: ObservableObject {
             guard let outputImage = aztecFilter.outputImage else {
                 return UIImage(systemName: "xmark.circle")!
             }
+            
 
             // Apply color filter to create transparent background
             guard let colorFilter = CIFilter(name: "CIFalseColor") else {
