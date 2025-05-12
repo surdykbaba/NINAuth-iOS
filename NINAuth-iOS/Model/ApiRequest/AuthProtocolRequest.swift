@@ -38,6 +38,7 @@ struct RegisterUserSelfieRequest: Codable {
     var user_id: String?
     var job_id: String?
     var images: [SelfieImage]?
+    var status: String?
 }
 
 struct SelfieImage: Codable {

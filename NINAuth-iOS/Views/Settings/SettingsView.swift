@@ -1,3 +1,13 @@
+//
+//  UserQRCodeView.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 15/04/2025.
+
+
+
+
+
 import SwiftUI
 import RealmSwift
 import LocalAuthentication
@@ -228,6 +238,7 @@ struct SettingsView: View {
                 NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "linked", name: "Linked IDs")
                 }
+                
                 NavigationLink(destination: ResetDeviceView()) {
                     SettingsRow(image: "Reset_device", name: "Reset Device")
                         .foregroundColor(.red)

@@ -143,6 +143,8 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
         registerUserSelfieRequest.user_id = userID
         registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
+        registerUserSelfieRequest.status = apiResponse?.status.rawValue ?? "unknown" 
+        
         
         registerUserSelfieRequest.images = []
         
