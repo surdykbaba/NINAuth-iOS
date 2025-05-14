@@ -15,6 +15,8 @@ struct HomeView: View {
     @ObservedResults(User.self) var user
     @ObservedResults(Token.self) var token
 
+    @State private var showWallet = false
+    
     var body: some View {
         ZStack {
             Color.secondaryGrayBackground
@@ -34,23 +36,38 @@ struct HomeView: View {
             }
             
             NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: token.first?.requestCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)
+            
+            NavigationLink(destination: MyWalletView(), isActive: $showWallet) {}.isDetailLink(false)
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .topBarLeading, ) {
                 Text("Home")
                     .customFont(.headline, fontSize: 24)
                     .padding(.leading)
+                
             }
         }
         .toolbar {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                Image(uiImage: user.first?.image?.imageFromBase64 ?? UIImage())
-//                    .resizable()
-//                    .frame(width: 47, height: 47)
-//                    .clipShape(Circle())
-//                    .padding(.trailing)
-//                    .padding(.top)
-//            }
+            // Trailing My Wallet Button
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    showWallet = true
+                }) {
+                    HStack(spacing: 4) {
+                        Text("My Wallet")
+                            .customFont(.headline, fontSize: 17)
+                            .foregroundColor(.button)
+                        
+                        Image("Wallet2")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 16)
+                            .foregroundColor(.button)
+                    }
+                    .padding(.leading)
+                    .offset(x: -14)
+                }
+            }
         }
         .task {
             if(!appState.initialRequestCode.isEmpty) {
