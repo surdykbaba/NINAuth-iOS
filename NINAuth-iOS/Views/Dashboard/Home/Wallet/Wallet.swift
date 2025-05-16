@@ -15,20 +15,21 @@ struct MyWalletView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("My Wallet")
                     .customFont(.title, fontSize: 24)
-                
-                Text("Add your government issued IDs to NINAuthWallet")
-                    .font(.subheadline)
-                    .foregroundColor(.black)
+                    .padding(.bottom, 7)
+                    
+                Text("Add_your_government_issued_IDs")
+                    .customFont(.body, fontSize: 17)
+                    .foregroundColor(.textBlackSec)
             }
             .padding(.horizontal)
 
             Spacer()
 
-            // Card with image and message
+           
             VStack(spacing: 16) {
-                Text("Your wallet is empty. Start by adding your first ID")
+                Text("Your_wallet_is_empty")
                     .foregroundColor(.black)
-                    .customFont(.headline, fontSize: 24)
+                    .customFont(.subheadline, fontSize: 24)
 
                 Image("purse")
                     .resizable()
@@ -55,16 +56,15 @@ struct MyWalletView: View {
             Button(action: {
                 showSelectID = true
             }) {
-                Text("Add your first ID")
+                Text("Add_your_first_id")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.button)
                     .cornerRadius(4)
+                    .customFont(.title, fontSize: 17)
             }
             .padding(.horizontal)
-
-            // NavigationLink placed outside of the NavigationView to prevent double back navigation
             NavigationLink(destination: WalletView(), isActive: $showSelectID) {
                 EmptyView()
             }

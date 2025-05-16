@@ -62,7 +62,7 @@ struct IDScannerView: View {
             VStack {
                 HStack {
                     Button(action: {}) {
-                        Image(systemName: "cancel")
+                        Image(systemName: "xmark")
                             .font(.title2)
                             .foregroundColor(.white)
                             .padding(12)

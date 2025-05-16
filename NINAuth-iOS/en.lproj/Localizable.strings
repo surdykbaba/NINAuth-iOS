@@ -125,3 +125,10 @@
 
 /**SplashScreenView*/
 "powered_by_nimc" = "Powered by NIMC";
+
+
+/**WalletView**/
+"Add_your_government_issued_IDs"="Add your government issued IDs to NINAuth\nWallet";
+"Your_wallet_is_empty"="Your wallet is empty. Start by adding your first ID";
+"Add_your_first_id"="Add your first ID";
+"Tap_the_card_to_view_your_next_ID."="Tap the card to view your next ID. Use your digital IDs for quick verification and access to services anytime.";

@@ -16,10 +16,10 @@ struct IDTypeSelectionScreen: View {
 
     let categoryOptions: [String: [String]] = [
         "Digital Government Services": ["International Passport", "Driver's license", "Voter's ID", "Residence Permit"],
-        "Financial Services": ["BVN Card", "Credit Card", "Bank Debit Card, Card"],
+        "Financial Services": ["BVN Card", "Credit Card", "Bank Debit Card", "Card"],
         "Tax, Insurance and Benefits": ["Tax ID", "TIN", "FIRS", "Virtual"],
         "Memberships": ["Polo", "Resident", "Landlord", "Tenant"],
-        "Driving and Transport": ["Driver's license", "Vehicle Registration", "Transport Card"]
+        "Driving and Transport": ["Driver's license", "Vehicle Registration", "Transport" ,"Card"]
     ]
 
     var options: [String] {
@@ -59,7 +59,7 @@ struct IDTypeSelectionScreen: View {
                 Text("Continue")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(selectedOption.isEmpty ? Color.button : Color.accentColor)
+                    .background(selectedOption.isEmpty ? Color.button : Color.button)
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }

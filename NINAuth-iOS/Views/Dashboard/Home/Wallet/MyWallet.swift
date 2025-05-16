@@ -11,17 +11,16 @@ import SwiftUI
 
 struct Card: Identifiable, Equatable {
     let id = UUID()
-    let title: String
     let imageName: String
 }
 
 // MARK: - WalletView
 struct WalletView: View {
     @State private var cards: [Card] = [
-        Card(title: "International Passport", imageName: "International passport"),
-        Card(title: "Driver's License", imageName: "Drivers"),
-        Card(title: "Driver's License", imageName: "voters"),
-        Card(title: "International Passport", imageName: "resident"),
+        Card(imageName: "International passport"),
+        Card(imageName: "Drivers"),
+        Card( imageName: "voters"),
+        Card( imageName: "resident"),
         
     ]
     
@@ -37,7 +36,7 @@ struct WalletView: View {
                 .bold()
                 .padding(.horizontal)
 
-            Text("Add your government issued IDs to NINAuth Wallet")
+            Text("Add_your_government_issued_IDs")
                 .font(.subheadline)
                 .foregroundColor(.gray)
                 .padding(.horizontal)
