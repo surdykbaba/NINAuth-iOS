@@ -37,6 +37,7 @@ struct MyWalletView: View {
                     .resizable()
                     .scaledToFit()
                     .offset(y: -30)
+                    
                    
             }
             .padding()

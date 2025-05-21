@@ -1,3 +1,13 @@
+//
+//  UserQRCodeView.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 15/04/2025.
+
+
+
+
+
 import SwiftUI
 import RealmSwift
 import LocalAuthentication
@@ -22,7 +32,7 @@ struct SettingsView: View {
     private let mem = MemoryUtil.init()
     @State private var showSheet = false
     @State private var goToLinkID = false
-    @State private var hideIntegrityIndex = true  // ✅ Changed to true to hide by default
+    @State private var hideIntegrityIndex = true
     @State private var showAppLockInfo = false
 
     var body: some View {
@@ -228,6 +238,7 @@ struct SettingsView: View {
                 NavigationLink(destination: LinkedIDsView()) {
                     SettingsRow(image: "linked", name: "Linked IDs")
                 }
+                
                 NavigationLink(destination: ResetDeviceView()) {
                     SettingsRow(image: "Reset_device", name: "Reset Device")
                         .foregroundColor(.red)
@@ -305,6 +316,15 @@ struct SettingsView: View {
 //                    Text("You are about to sign out of this device")
 //                }
             }
+            
+            // Version display at bottom
+            
+            
+            Text("Version \(getAppVersion())")
+                .customFont(.subheadline, fontSize: 14)
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.top, 10)
         }
         .padding(.horizontal, 20)
     }
@@ -385,6 +405,13 @@ struct SettingsView: View {
             showAlert.toggle()
             mem.setValue(key: mem.authentication_key, value: false)
         }
+    }
+    
+    // Get app version
+    func getAppVersion() -> String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        return "\(version) (\(build))"
     }
 }
 

@@ -58,7 +58,7 @@ struct HomeView: View {
                             .customFont(.headline, fontSize: 17)
                             .foregroundColor(.button)
                         
-                        Image("Wallet2")
+                        Image("wallet icon")
                             .resizable()
                             .scaledToFit()
                             .frame(height: 16)
