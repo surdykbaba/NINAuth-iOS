@@ -1,7 +1,3 @@
-//  ServiceSelectionView.swift
-//  NINAuth-iOS
-//
-
 import SwiftUI
 
 // MARK: - Models
@@ -9,7 +5,6 @@ struct ServiceCategory: Identifiable {
     let id = UUID()
     let title: String
     let icon: String
-    let color: Color
     let services: [DigitalService]
 }
 
@@ -19,411 +14,260 @@ struct DigitalService: Identifiable {
     let subtitle: String
     let imageName: String
     let iconName: String
-    let color: Color
 }
 
-// MARK: - Main Views
-struct AddServiceView: View {
-    @State private var selectedCategory: ServiceCategory?
-    @State private var showFilterSheet = false
-    @State private var navigateToGovernmentServices = false
-    
-    let categories: [ServiceCategory] = [
-        ServiceCategory(
-            title: "Digital Government Services",
-            icon: "building.columns.fill",
-            color: Color.green,
-            services: [
-                DigitalService(
-                    title: "Nigerian Passport",
-                    subtitle: "Government Services",
-                    imageName: "passport_image",
-                    iconName: "card1",
-                    color: Color.green
-                ),
-                DigitalService(
-                    title: "Driver's License",
-                    subtitle: "Government Services",
-                    imageName: "license_image",
-                    iconName: "card2",
-                    color: Color.red
-                ),
-                DigitalService(
-                    title: "Voter's Card",
-                    subtitle: "Government Services",
-                    imageName: "voter_image",
-                    iconName: "card3",
-                    color: Color.green
-                ),
-                DigitalService(
-                    title: "State Residence Permit",
-                    subtitle: "Government Services",
-                    imageName: "residence_image",
-                    iconName: "card4",
-                    color: Color.orange
-                )
-            ]
-        ),
-        ServiceCategory(
-            title: "Driving and Transport",
-            icon: "car.fill",
-            color: Color.blue,
-            services: []
-        ),
-        ServiceCategory(
-            title: "Tax, Insurance and Benefits",
-            icon: "doc.text.fill",
-            color: Color.orange,
-            services: []
-        ),
-        ServiceCategory(
-            title: "Financial Services",
-            icon: "building.columns.fill",
-            color: Color.cyan,
-            services: []
-        ),
-        ServiceCategory(
-            title: "Memberships",
-            icon: "person.2.fill",
-            color: Color.gray,
-            services: []
-        )
+struct BannerItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
+    let imageName: String
+    let iconName: String
+}
+
+// MARK: - Main View
+struct AddToWalletView: View {
+    @State private var searchText = ""
+    @State private var showMoreServices = false
+    @State private var currentBannerIndex = 0
+    @State private var selectedServiceID: String?
+    @State private var navigateToDetails = false
+
+    let bannerTimer = Timer.publish(every: 4, on: .main, in: .common).autoconnect()
+
+    let bannerItems: [BannerItem] = [
+        BannerItem(title: "", subtitle: "", imageName: "maincard4", iconName: ""),
+        BannerItem(title: "", subtitle: "", imageName: "maincard1", iconName: ""),
+        BannerItem(title: "", subtitle: "", imageName: "maincard2", iconName: "")
     ]
-    
-    // Get the government services category
-    private var governmentServicesCategory: ServiceCategory {
-        return categories.first { $0.title.contains("Government") } ?? categories[0]
+
+    let governmentServices: [DigitalService] = [
+        DigitalService(title: "Nigerian Passport", subtitle: "Government Services", imageName: "", iconName: "card4"),
+        DigitalService(title: "Voter's Card", subtitle: "Government Services", imageName: "voter_image", iconName: "state resident"),
+        DigitalService(title: "State Residence Permit", subtitle: "Government Services", imageName: "residence_image", iconName: "card2")
+    ]
+
+    let drivingServices: [DigitalService] = [
+        DigitalService(title: "Travel Card", subtitle: "Transport Services", imageName: "travel_image", iconName: "card5"),
+        DigitalService(title: "Driver's License", subtitle: "Transport Services", imageName: "license_image", iconName: "Federal Road Safety"),
+        DigitalService(title: "Nigeria Railway Coporation", subtitle: "Transport Services", imageName: "train_image", iconName: "railway")
+    ]
+
+    let additionalServices: [DigitalService] = [
+        DigitalService(title: "Lagos Food Bank Initaitive", subtitle: "Financial Services", imageName: "tax_image", iconName: "food bank"),
+        DigitalService(title: "PenCom ID", subtitle: "Healthcare Services", imageName: "health_image", iconName: "card9"),
+        DigitalService(title: "I-fitness ID", subtitle: "Professional Services", imageName: "prof_image", iconName: "Gym"),
+        DigitalService(title: "JTB Tax Identification Number", subtitle: "Healthcare Services", imageName: "health_image", iconName: "card10"),
+        DigitalService(title: "Internal Revenue service", subtitle: "Healthcare Services", imageName: "health_image", iconName: "internal Revenue")
+    ]
+
+    var filteredGovernmentServices: [DigitalService] {
+        searchText.isEmpty ? governmentServices : governmentServices.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
     }
-    
+
+    var filteredDrivingServices: [DigitalService] {
+        searchText.isEmpty ? drivingServices : drivingServices.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    var filteredAdditionalServices: [DigitalService] {
+        searchText.isEmpty ? additionalServices : additionalServices.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                // Header
+            VStack(alignment: .leading, spacing: 10) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Add a Service")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    
-                    Text("Keep all your IDs for easy access and verification")
-                        .font(.body)
-                        .foregroundColor(.secondary)
+                    Text("Add to your Wallet")
+                        .customFont(.headline, fontSize: 24)
+
+                    Text("Keep all your daily IDs and passes in one place.")
+                        .customFont(.body, fontSize: 16)
                 }
                 .padding(.horizontal)
                 .padding(.top, 16)
-                
-                // Categories List
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(categories) { category in
-                            CategoryRowView(category: category)
-                                .onTapGesture {
-                                    // Always navigate to government services
-                                    selectedCategory = governmentServicesCategory
-                                    navigateToGovernmentServices = true
-                                }
-                        }
-                    }
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                    
-                    
+
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.gray)
+
+                    TextField("Search by name", text: $searchText)
                 }
-                
-                Spacer()
-                
+                .padding()
+                .background(Color(UIColor.systemGray6))
+                .cornerRadius(10)
+                .padding(.horizontal)
+                ScrollView {
+
+                TabView(selection: $currentBannerIndex) {
+                    ForEach(bannerItems.indices, id: \.self) { index in
+
+                        BannerCardView(bannerItem: bannerItems[index])
+                            .padding(.horizontal, 12)
+                            .tag(index)
+                    }
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .frame(height: 230)
+                .onReceive(bannerTimer) { _ in
+                    withAnimation {
+                        currentBannerIndex = (currentBannerIndex + 1) % bannerItems.count
+                    }
+                }
+
                
-              
+                    VStack(alignment: .leading, spacing: 20) {
+                        ServiceSectionView(title: "Government Services", services: filteredGovernmentServices) { service in
+                            selectedServiceID = service.title
+                            navigateToDetails = true
+                        }
+
+                        ServiceSectionView(title: "Driving and Transport", services: filteredDrivingServices) { service in
+                            selectedServiceID = service.title
+                            navigateToDetails = true
+                        }
+
+                        if showMoreServices || !searchText.isEmpty {
+                            ServiceSectionView(title: "Additional Services", services: filteredAdditionalServices) { service in
+                                selectedServiceID = service.title
+                                navigateToDetails = true
+                            }
+                        }
+
+                        if filteredGovernmentServices.isEmpty && filteredDrivingServices.isEmpty && filteredAdditionalServices.isEmpty && !searchText.isEmpty {
+                            Text("No matching services found.")
+                                .foregroundColor(.gray)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
+
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showMoreServices.toggle()
+                            }
+                        }) {
+                            Text(showMoreServices ? "Show less services" : "Load more services")
+                                .fontWeight(.medium)
+                                .foregroundColor(.button)
+                                .underline()
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .padding(.horizontal)
+                        
+
+                        Spacer(minLength: 80)
+                    }
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        // Go back action
-                    }) {
+                    Button(action: {}) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.green)
                             .imageScale(.large)
                     }
                 }
             }
-            .background(Color(UIColor.systemBackground))
-            .sheet(isPresented: $showFilterSheet) {
-                FilterSheetView(categories: categories)
-            }
             .background(
-                NavigationLink(
-                    destination: CategoryDetailView(category: governmentServicesCategory),
-                    isActive: $navigateToGovernmentServices,
-                    label: { EmptyView() }
-                )
+                NavigationLink(destination: PassportDetailsView(selectedID: selectedServiceID), isActive: $navigateToDetails) {
+                    EmptyView()
+                }
             )
         }
     }
 }
 
-struct CategoryRowView: View {
-    let category: ServiceCategory
-    
-    var body: some View {
-        HStack(spacing: 16) {
-            // Icon
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(category.color)
-                    .frame(width: 48, height: 48)
-                
-                Image(systemName: category.icon)
-                    .foregroundColor(.white)
-                    .font(.system(size: 24))
-            }
-            
-            // Title
-            Text(category.title)
-                .font(.headline)
-            
-            Spacer()
-            
-            // Chevron
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color.white)
-        .contentShape(Rectangle())
-    }
-}
+struct BannerCardView: View {
+    let bannerItem: BannerItem
 
-struct CategoryDetailView: View {
-    let category: ServiceCategory
-    @Environment(\.presentationMode) var presentationMode
-    @State private var searchText = ""
-    @State private var showFilterSheet = false
-    @State private var selectedServiceID: String?
-    @State private var navigateToPassportDetails = false
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Header
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Government Services")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                Text("Store your digital IDs for easy access to government services.")
-                    .font(.body)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.horizontal)
-            .padding(.top, 16)
-            
-            // Featured Service
-            FeaturedServiceCard()
-                .padding(.horizontal)
-            
-            // Search Bar
-            HStack {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    
-                    TextField("Search ID", text: $searchText)
-                }
-                .padding()
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(10)
-                
-                Button(action: {
-                    showFilterSheet = true
-                }) {
-                    Image(systemName: "slider.horizontal.3")
-                        .foregroundColor(.black)
-                        .padding()
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(10)
-                }
-            }
-            .padding(.horizontal)
-            
-            // Services List
-            ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(category.services) { service in
-                        DigitalServiceRowView(digitalService: service)
-                            .onTapGesture {
-                                selectedServiceID = service.title
-                                navigateToPassportDetails = true
-                            }
-                    }
-                }
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
-            }
-            
-            Spacer()
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.green)
-                        .imageScale(.large)
-                }
-            }
-        }
-        .sheet(isPresented: $showFilterSheet) {
-            // Use all categories from the AddServiceView
-            FilterSheetView(categories: AddServiceView().categories)
-        }
-        .background(
-            NavigationLink(
-                destination: PassportDetailsView(selectedID: selectedServiceID),
-                isActive: $navigateToPassportDetails,
-                label: { EmptyView() }
-            )
-        )
-    }
-}
-
-struct FeaturedServiceCard: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // Using a Rectangle with gradient as a fallback if the image doesn't exist
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.orange, Color.yellow]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+            Image(bannerItem.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
                 .frame(height: 200)
-                .cornerRadius(12)
-                .overlay(
-                    Image("maincard4") // Replace with your image asset name
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200)
-                        .clipped()
-                        .cornerRadius(12)
-                )
-            
-            // Add to Wallet Button
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    Button(action: {
-                        // Add to wallet action
-                    }) {
-                        Text("Add to Wallet")
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.green)
-                            .cornerRadius(8)
-                    }
-                }
-                .padding()
-                
-                Spacer()
+                .cornerRadius(10)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(bannerItem.title)
+                    .font(.headline)
+                    .foregroundColor(.white)
+//                    .padding(.top,10)
+                Text(bannerItem.subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.9))
+//                    .padding(.top,10)
             }
+            .padding()
+//            .padding(.top,20)
         }
         .frame(height: 200)
     }
 }
 
-struct DigitalServiceRowView: View {
+struct ServiceSectionView: View {
+    let title: String
+    let services: [DigitalService]
+    let onServiceTap: (DigitalService) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .customFont(.subheadline, fontSize: 17)
+                .padding(.horizontal)
+                .padding(.top, 15)
+
+            VStack(spacing: 6) { // Added 5 point spacing between service rows
+                ForEach(services) { service in
+                    ServiceRowView(digitalService: service)
+                        .onTapGesture {
+                            onServiceTap(service)
+                        }
+                    if service.id != services.last?.id {
+                        Rectangle()
+                            .foregroundColor(Color(hex: "#EDEFEC"))
+                            .frame(height: 0.5)
+                            .padding(.horizontal, 20) // Center the divider with equal padding on both sides
+                    }
+                }
+            }
+            .background(Color(hex: "#F6F8F6"))
+            .cornerRadius(10)
+            .padding(.horizontal)
+            .padding(.top,10)
+        }
+    }
+}
+
+struct ServiceRowView: View {
     let digitalService: DigitalService
-    
+
     var body: some View {
         HStack(spacing: 16) {
-            // Icon placeholder with fallback
-            ZStack {
-               
-                
-                Image(digitalService.iconName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 48, height: 32)
-                    .cornerRadius(4)
-            }
-            
-            // Title
+            Image(digitalService.iconName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 44, height: 26)
+
             Text(digitalService.title)
-                .font(.headline)
+                .customFont(.subheadline, fontSize: 16)
             
+
             Spacer()
-            
-            // Chevron
+
             Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                .foregroundColor(.primary)
         }
-        .padding()
-        .background(Color.white)
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .background(Color.bg)
         .contentShape(Rectangle())
     }
 }
 
-struct FilterSheetView: View {
-    let categories: [ServiceCategory]
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Header with close button
-            HStack {
-                Text("Add a service")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image(systemName: "xmark")
-                        .foregroundColor(.black)
-                        .font(.title3)
-                }
-            }
-            .padding(.top)
-            .padding(.horizontal)
-            
-            // Categories List
-            ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(categories) { category in
-                        CategoryRowView(category: category)
-                            .onTapGesture {
-                                presentationMode.wrappedValue.dismiss()
-                                // Navigate to category detail
-                            }
-                    }
-                }
-                .background(Color(UIColor.systemGray6))
-                .cornerRadius(12)
-                .padding(.horizontal)
-            }
-            
-            Spacer()
-        }
-        .padding(.top, 20)
-        .background(Color.white)
-        .edgesIgnoringSafeArea(.bottom)
-    }
-}
-
-// MARK: - Preview
-struct AddServiceView_Previews: PreviewProvider {
+struct AddToWalletView_Previews: PreviewProvider {
     static var previews: some View {
-        AddServiceView()
+        AddToWalletView()
     }
 }

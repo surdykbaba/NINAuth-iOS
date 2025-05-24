@@ -11,13 +11,13 @@ struct PassportDetailsView: View {
     var selectedID: String? = nil
     @Environment(\.presentationMode) var presentationMode
     @State private var navigateToConfirmation = false
-
+    @State private var isLoading = false
 
     var body: some View {
         VStack(spacing: 0) {
             
             ZStack(alignment: .topLeading) {
-                Image("eligibleImage")
+                Image("eligible card")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 240)
@@ -27,11 +27,13 @@ struct PassportDetailsView: View {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
-                        .customFont(.headline, fontSize: 17)
-                        .padding()
+                    Image("coat of arm icon")
+                        .resizable()
+                        .frame(width: 56)
+                        .frame(height: 48)
+                        .clipped()
                 }
+                .padding()
             }
 
             
@@ -80,16 +82,36 @@ struct PassportDetailsView: View {
                     isActive: $navigateToConfirmation
                 ) {
                     Button(action: {
-                        navigateToConfirmation = true
+                        guard !isLoading else { return }
+                        
+                        isLoading = true
+                        
+                        // Simulate loading for 10 seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                            isLoading = false
+                            navigateToConfirmation = true
+                        }
                     }) {
-                        Text("Check Eligibility")
-                            .customFont(.title, fontSize: 18)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(Color.button)
-                            .cornerRadius(4)
+                        HStack(spacing: 12) {
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .scaleEffect(1.2)
+                                Text("Checking Eligibility...")
+                                    .customFont(.title, fontSize: 18)
+                            } else {
+                                Text("Check Eligibility")
+                                    .customFont(.title, fontSize: 18)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(isLoading ? Color.button.opacity(0.7) : Color.button)
+                        .cornerRadius(4)
+                        .animation(.easeInOut(duration: 0.2), value: isLoading)
                     }
+                    .disabled(isLoading)
                 }
             }
             .padding(20)

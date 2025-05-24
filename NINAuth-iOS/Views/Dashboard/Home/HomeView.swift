@@ -37,7 +37,7 @@ struct HomeView: View {
             
             NavigationLink(destination: ConsentReviewView(consentRequest: viewModel.consentRequest, code: token.first?.requestCode ?? ""), isActive: $viewModel.isVerified) {}.isDetailLink(false)
             
-            NavigationLink(destination: MyWalletView(), isActive: $showWallet) {}.isDetailLink(false)
+            NavigationLink(destination: WalletView(), isActive: $showWallet) {}.isDetailLink(false)
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading, ) {
