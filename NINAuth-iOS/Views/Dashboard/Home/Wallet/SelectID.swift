@@ -41,14 +41,14 @@ struct AddToWalletView: View {
     ]
 
     let governmentServices: [DigitalService] = [
-        DigitalService(title: "Nigerian Passport", subtitle: "Government Services", imageName: "", iconName: "card4"),
-        DigitalService(title: "Voter's Card", subtitle: "Government Services", imageName: "voter_image", iconName: "state resident"),
-        DigitalService(title: "State Residence Permit", subtitle: "Government Services", imageName: "residence_image", iconName: "card2")
+        DigitalService(title: "Nigerian Passport", subtitle: "Government Services", imageName: "", iconName: "Immigration11"),
+        DigitalService(title: "Voter's Card", subtitle: "Government Services", imageName: "voter_image", iconName: "Inec"),
+        DigitalService(title: "State Residence Permit", subtitle: "Government Services", imageName: "residence_image", iconName: "StateCard")
     ]
 
     let drivingServices: [DigitalService] = [
-        DigitalService(title: "Travel Card", subtitle: "Transport Services", imageName: "travel_image", iconName: "card5"),
-        DigitalService(title: "Driver's License", subtitle: "Transport Services", imageName: "license_image", iconName: "Federal Road Safety"),
+        DigitalService(title: "Travel Card", subtitle: "Transport Services", imageName: "travel_image", iconName: "travel card"),
+        DigitalService(title: "Driver's License", subtitle: "Transport Services", imageName: "license_image", iconName: "Drive 1"),
         DigitalService(title: "Nigeria Railway Coporation", subtitle: "Transport Services", imageName: "train_image", iconName: "railway")
     ]
 

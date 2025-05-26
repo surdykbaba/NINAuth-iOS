@@ -87,7 +87,7 @@ struct PassportDetailsView: View {
                         isLoading = true
                         
                         // Simulate loading for 10 seconds
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                             isLoading = false
                             navigateToConfirmation = true
                         }

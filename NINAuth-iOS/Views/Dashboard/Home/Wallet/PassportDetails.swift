@@ -50,22 +50,22 @@ struct PassportConfirmationView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
 
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 5) {
                         Text("The following information will be extracted")
-                            .customFont(.title, fontSize: 16)
+                            .customFont(.headline, fontSize: 16)
                             .padding(.bottom, 8)
 
                         VStack(alignment: .leading, spacing: 25) {
                             ForEach([
-                                "Surname", "Given Names", "Date of Birth",
-                                "Sex", "ID Photo", "Date of Issue", "Date of Expiry"
+                                 "Given Names", "Date of Birth",
+                                "Gender", "Photograph", "Issue Date & Expiry"
                             ], id: \.self) { item in
                                 HStack(spacing: 12) {
                                     Image("checks")
                                         .resizable()
                                         .frame(width: 16, height: 16)
                                     Text(item)
-                                        .customFont(.body, fontSize: 16)
+                                        .customFont(.body, fontSize: 14)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                             }
