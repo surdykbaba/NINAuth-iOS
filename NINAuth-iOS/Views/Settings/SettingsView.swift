@@ -320,7 +320,7 @@ struct SettingsView: View {
             // Version display at bottom
             
             
-            Text("Version \(getAppVersion())")
+            Text("Version \(appState.getAppVersion())")
                 .customFont(.subheadline, fontSize: 14)
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -407,12 +407,12 @@ struct SettingsView: View {
         }
     }
     
-    // Get app version
-    func getAppVersion() -> String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
-        return "\(version) (\(build))"
-    }
+//    // Get app version
+//    func getAppVersion() -> String {
+//        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+//        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+//        return "\(version) (\(build))"
+//    }
 }
 
 #Preview {

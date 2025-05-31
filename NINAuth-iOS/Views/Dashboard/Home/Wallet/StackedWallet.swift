@@ -1,6 +1,14 @@
+
+//
+//  EmptyWallet.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 12/05/2025.
+
+
 import SwiftUI
 
-// MARK: - Main Wallet Screen
+
 struct WalletView: View {
     @State private var selectedCard: Int? = nil
     @State private var showCardDetails: Bool = false
@@ -48,19 +56,19 @@ struct WalletView: View {
                 }
             
         
-        // Keep navigation bar for WalletView
+        
         .navigationBarHidden(false)
         .sheet(isPresented: $showAddNewCard) {
             AddToWalletView()
         }
     }
     
-    // MARK: - Background View
+    //  Background View
     private var backgroundView: some View {
         Color(.systemBackground).ignoresSafeArea()
     }
     
-    // MARK: - Main Content View
+    //  Main Content View
     private var mainContentView: some View {
         VStack(alignment: .leading, spacing: 0) {
             headerSection
@@ -70,7 +78,7 @@ struct WalletView: View {
         }
     }
     
-    // MARK: - Header Section
+    // Header Section
     private var headerSection: some View {
         HStack {
             titleSection
@@ -105,7 +113,7 @@ struct WalletView: View {
         }
     }
     
-    // MARK: - Info Banner Section
+    //  Info Banner Section
     @ViewBuilder
     private var infoBannerSection: some View {
         if showInfoBanner {
@@ -152,7 +160,7 @@ struct WalletView: View {
     }
     
   
-    // MARK: - Cards Section
+    // Cards Section
     private var cardsSection: some View {
         ZStack(alignment: .center) { // Center alignment for the ZStack
             ForEach(cardOrder.indices, id: \.self) { position in
@@ -176,7 +184,7 @@ struct WalletView: View {
     }
 
     
-    // MARK: - Floating Add Button
+    //  Floating Add Button
     private var floatingAddButton: some View {
         VStack {
             Spacer()
@@ -199,7 +207,7 @@ struct WalletView: View {
         }
     }
     
-    // MARK: - Menu Overlay
+    //  Menu Overlay
     @ViewBuilder
     private var menuOverlay: some View {
         if showMenu {
@@ -260,7 +268,7 @@ struct WalletView: View {
             }
     }
     
-    // MARK: - QR Code Overlay (FULL SCREEN WITH HIDDEN NAVIGATION)
+    //  QR Code Overlay (FULL SCREEN WITH HIDDEN NAVIGATION)
     @ViewBuilder
     private var qrCodeOverlay: some View {
         if showQRView, let selectedCardIndex = selectedCard {
@@ -290,7 +298,7 @@ struct WalletView: View {
         }
     }
     
-    // MARK: - Helper Functions
+    // Helper Functions
     private func handleCardTap(cardIndex: Int) {
         withAnimation(.spring()) {
             selectedCard = cardOrder[cardIndex]
@@ -328,7 +336,7 @@ struct WalletView: View {
         }
     }
     
-    // MARK: - Remove ID Handler
+    // Remove ID Handler
     private func handleRemoveID(cardIndex: Int) {
         // Remove the card from the order array
         if let indexToRemove = cardOrder.firstIndex(of: cardIndex) {
@@ -345,7 +353,7 @@ struct WalletView: View {
         vibration.impactOccurred()
     }
 }
-// MARK: - Single Card Component (Updated for width alignment)
+// Single Card Component (Updated for width alignment)
 struct SingleCardView: View {
     let cardImageName: String
     let positionInStack: Int
@@ -624,7 +632,7 @@ struct SingleCardViewAlternative: View {
 }
 
 
-// MARK: - Preview
+//- Preview
 struct WalletView_Previews: PreviewProvider {
     static var previews: some View {
         WalletView()

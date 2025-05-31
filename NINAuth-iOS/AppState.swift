@@ -303,6 +303,16 @@ class AppState: ObservableObject {
         }
     }
     
+    
+    //App version
+    func getAppVersion() -> String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        return "\(version) (\(build))"
+    }
+
+
+    
     // Calculate check digit according to ICAO 9303 standard
     private func calculateCheckDigit(_ input: String) -> String {
         // Weight factors for check digit calculation

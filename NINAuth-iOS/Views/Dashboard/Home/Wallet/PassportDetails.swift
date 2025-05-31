@@ -23,7 +23,7 @@ struct PassportConfirmationView: View {
                             presentationMode.wrappedValue.dismiss()
                         }) {
                             Image(systemName: "xmark")
-                                .font(.title2)
+                                .customFont(.title, fontSize: 20)
                                 .foregroundColor(.black)
                         }
                     }

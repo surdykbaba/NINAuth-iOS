@@ -1,6 +1,13 @@
+
+//
+//  EmptyWallet.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 12/05/2025.
+
 import SwiftUI
 
-// MARK: - Models
+
 struct ServiceCategory: Identifiable {
     let id = UUID()
     let title: String

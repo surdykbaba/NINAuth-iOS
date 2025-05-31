@@ -367,13 +367,21 @@
 //
 //    func didSucceed(selfieImage: URL, livenessImages: [URL], apiResponse: SmartSelfieResponse?) {
 //        presentEnroll.toggle()
-//        
-//        // Prepare the request payload
+//
 //        var registerUserSelfieRequest = RegisterUserSelfieRequest()
 //        registerUserSelfieRequest.user_id = userID
 //        registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
 //        registerUserSelfieRequest.images = []
 //
+//        
+//        var mainSelfie = SelfieImage()
+//        mainSelfie.image_type = "image_type_1"
+//        if let selfieData = try? Data(contentsOf: selfieImage) {
+//            mainSelfie.image = selfieData.base64EncodedString()
+//            registerUserSelfieRequest.images?.append(mainSelfie)
+//        }
+//
+//        
 //        for img in livenessImages {
 //            var selfieImage = SelfieImage()
 //            selfieImage.image_type = "image_type_2"
@@ -384,34 +392,24 @@
 //            }
 //        }
 //
-//        // Send to backend and wait for response before navigation
+//       
 //        Task {
 //            do {
 //                await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
-//                
-//                // Wait for backend response and update UI accordingly
 //                await MainActor.run {
 //                    switch viewModel.state {
-//                    case .success:
-//                        showSuccess = true
-//                    case .failed:
-//                        showFailed = true
-//                    case .loading:
-//                        // Still loading, do nothing yet
-//                        break
-//                    default:
-//                        // Handle unexpected states
-//                        showFailed = true
+//                    case .success: showSuccess = true
+//                    case .failed: showFailed = true
+//                    case .loading: break
+//                    default: showFailed = true
 //                    }
 //                }
 //            } catch {
-//                // Handle any errors from the backend call
-//                await MainActor.run {
-//                    showFailed = true
-//                }
+//                await MainActor.run { showFailed = true }
 //            }
 //        }
 //    }
+//
 //
 //    func didError(error: any Error) {
 //        presentEnroll.toggle()
