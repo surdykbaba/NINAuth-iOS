@@ -1,7 +1,14 @@
+//
+//  WalletID.swift
+//  NINAuth-iOS
+//
+//  Created by Arogundade Qoyum on 20/05/2025.
+//
+
 import SwiftUI
 import PassKit
 
-// MARK: - Card Detail View (FULL SCREEN WITH NO NAVIGATION BAR)
+
 struct CardDetailView: View {
     let selectedCardIndex: Int
     let allCardNames: [String]
@@ -77,7 +84,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Apple Wallet Success Overlay
+    
     private var appleWalletSuccessOverlay: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -127,7 +134,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Apple Wallet Error Overlay
+   
     private var appleWalletErrorOverlay: some View {
         ZStack {
             // Semi-transparent background
@@ -202,7 +209,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Remove Confirmation Overlay
+    
     private var removeConfirmationOverlay: some View {
         ZStack {
             // Semi-transparent background
@@ -301,7 +308,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Remove Success Overlay
+    
     private var removeSuccessOverlay: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -351,7 +358,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Detail Header Section (REMOVED CLOSE BUTTON)
+   
     private func detailHeaderSection(geometry: GeometryProxy) -> some View {
         HStack {
             Spacer() // Center the menu button
@@ -364,7 +371,7 @@ struct CardDetailView: View {
         .zIndex(10)
     }
     
-    // MARK: - Detail Scroll Content
+   
     private var detailScrollContent: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 0) {
@@ -450,7 +457,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Updated details content section (move details up by 10)
+    
     private var detailsContent: some View {
         VStack(alignment: .center, spacing: 15) { // Reduced from 25 to 15
             VStack(alignment: .leading, spacing: 15) { // Reduced from 25 to 15
@@ -512,7 +519,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Apple Wallet Button Section - Simplified with Error
+   
     private var appleWalletButtonSection: some View {
         VStack(spacing: 10) {
             // Divider line
@@ -595,7 +602,7 @@ struct CardDetailView: View {
             .frame(height: 120)
     }
     
-    // MARK: - Detail Menu Overlay
+    
     @ViewBuilder
     private var detailMenuOverlay: some View {
         if showMenu {
@@ -642,7 +649,7 @@ struct CardDetailView: View {
             }
     }
     
-    // MARK: - Apple Wallet Integration - Modified to throw unauthorized error
+   
     private func addToAppleWallet() {
         guard !isAddingToWallet else { return }
         
@@ -694,7 +701,7 @@ struct CardDetailView: View {
         }
     }
     
-    // MARK: - Remove ID Handler
+   
     private func handleRemoveIDTap() {
         guard !isRemoving else { return }
         
@@ -708,7 +715,7 @@ struct CardDetailView: View {
         vibration.impactOccurred()
     }
     
-    // MARK: - Confirm Remove ID
+    
     private func confirmRemoveID() {
         guard !isRemoving else { return }
         
@@ -734,7 +741,7 @@ struct CardDetailView: View {
         onRemoveID(selectedCardIndex)
     }
     
-    // MARK: - Improved Drag to Close Gesture
+   
     private var improvedDragToCloseGesture: some Gesture {
         DragGesture()
             .updating($isDragging) { value, state, _ in
@@ -796,7 +803,7 @@ struct CardDetailView: View {
     }
 }
 
-// MARK: - Detail Row Component (with reduced spacing)
+
 struct DetailRow: View {
     let title: String
     let info: String

@@ -162,7 +162,7 @@ struct WalletView: View {
   
     // Cards Section
     private var cardsSection: some View {
-        ZStack(alignment: .center) { // Center alignment for the ZStack
+        ZStack(alignment: .center) {
             ForEach(cardOrder.indices, id: \.self) { position in
                 SingleCardView(
                     cardImageName: cardNames[cardOrder[position]],
@@ -174,7 +174,7 @@ struct WalletView: View {
                     },
                     whenDragEnds: { _, _ in } // Disable drag
                 )
-                .id("\(cardOrder[position])_\(position)_\(showQRView)") // Force refresh
+                .id("\(cardOrder[position])_\(position)_\(showQRView)") 
             }
         }
         .padding(.horizontal, 20)
