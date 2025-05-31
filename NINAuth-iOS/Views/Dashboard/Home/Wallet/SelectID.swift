@@ -31,7 +31,7 @@ struct BannerItem: Identifiable {
     let iconName: String
 }
 
-// MARK: - Main View
+
 struct AddToWalletView: View {
     @State private var searchText = ""
     @State private var showMoreServices = false
