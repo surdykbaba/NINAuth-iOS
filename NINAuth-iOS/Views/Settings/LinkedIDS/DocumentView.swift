@@ -49,7 +49,7 @@ struct DocumentPickerView: View {
                             .fill(Color.blue.opacity(0.1))
                             .frame(width: 70, height: 70)
                         
-                        Image("Camera") // Make sure this is in your Assets.xcassets
+                        Image("Camera")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 70, height: 70)
