@@ -126,6 +126,14 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                     }
                 })
             }
+            .onChange(of: viewModel.verifyStatus) { _ in
+                //if (viewModel.verifyStatus == "failed")
+                if (viewModel.verifyStatus == "passed") {
+                    showSuccess = true
+                }else {
+                    showFailed = true
+                }
+            }
 
             if case .loading = viewModel.state {
                 //TODO: Add your custom loding view here
@@ -141,28 +149,20 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
     {
         presentEnroll.toggle()
         var registerUserSelfieRequest = RegisterUserSelfieRequest()
-        registerUserSelfieRequest.user_id = userID
-        registerUserSelfieRequest.job_id = apiResponse?.jobId ?? ""
-        
-        registerUserSelfieRequest.images = []
+        registerUserSelfieRequest.liveliness_images = []
         
         for img in livenessImages {
             var selfieImage = SelfieImage()
-            selfieImage.image_type = "image_type_2"
             if let location = try? defaultDirectory.appendingPathComponent(img.absoluteString){
                 let stringImg = try? Data(contentsOf: location, options: .alwaysMapped)
                 selfieImage.image = stringImg?.base64EncodedString() ?? ""
-                registerUserSelfieRequest.images?.append(selfieImage)
+                registerUserSelfieRequest.liveliness_images?.append(selfieImage)
+                registerUserSelfieRequest.selfie_image = selfieImage
             }
         }
         
         Task {
            await viewModel.registerUserSelfie(registerUserSelfieRequest: registerUserSelfieRequest)
-       }
-        if(apiResponse?.status == .approved) {
-            showSuccess = true
-        }else {
-            showFailed = false
         }
     }
     

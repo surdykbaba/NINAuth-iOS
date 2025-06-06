@@ -35,13 +35,11 @@ struct DeviceMetadata: Codable {
 }
 
 struct RegisterUserSelfieRequest: Codable {
-    var user_id: String?
-    var job_id: String?
-    var images: [SelfieImage]?
+    var selfie_image: SelfieImage?
+    var liveliness_images: [SelfieImage]?
 }
 
 struct SelfieImage: Codable {
-    var image_type: String?
     var image: String?
 }
 
