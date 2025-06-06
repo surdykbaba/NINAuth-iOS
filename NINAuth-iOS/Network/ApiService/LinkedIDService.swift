@@ -35,4 +35,16 @@ struct LinkedIDService: LinkedIDProtocol {
             return .failure(networkResponse.getErrorBag())
         }
     }
+    
+    func sendDeviceToken(deviceToken: DeviceToken) async -> Result<Bool, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.DEVICE_TOKEN, params: deviceToken)
+        switch networkResponse.isSuccess() {
+            case true :
+            Log.info("Token sent successfully")
+            return .success(true)
+            default :
+            Log.info("Token sending failed")
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
 }

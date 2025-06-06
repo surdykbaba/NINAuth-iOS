@@ -10,4 +10,6 @@ protocol LinkedIDProtocol {
     func getLinkedIDs() async -> Result<[LinkedIDs], ErrorBag>
     
     func getScore(deviceID: String) async -> Result<Int, ErrorBag>
+    
+    func sendDeviceToken(deviceToken: DeviceToken) async -> Result<Bool, ErrorBag>
 }

@@ -193,7 +193,10 @@ extension AppDelegate: MessagingDelegate {
           object: nil,
           userInfo: tokenDict)
         if let token = fcmToken {
-            //TODO: do with token as you please
+            let linkedIDService = LinkedIDService()
+            Task {
+                await linkedIDService.sendDeviceToken(deviceToken: DeviceToken(token: token))
+            }
         }
     }
 }

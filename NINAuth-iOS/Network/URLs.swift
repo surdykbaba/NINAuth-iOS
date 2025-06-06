@@ -51,6 +51,7 @@ enum URLs {
     //MARK: LinkedID
     static let LINKEDID = "ids"
     static let GET_SCORE = "devices/"
+    static let DEVICE_TOKEN = "devices/token"
     
     
     
