@@ -28,4 +28,6 @@ protocol AuthProtocol {
     func validateOTP(validateOTP: ValidateOTP) async -> Result<Bool, ErrorBag>
     
     func resetDevice() async -> Result<Bool, ErrorBag>
+    
+    func updateAppVersion(appVersionNumber: AppVersionNumber) async -> Result<JSON, ErrorBag>
 }

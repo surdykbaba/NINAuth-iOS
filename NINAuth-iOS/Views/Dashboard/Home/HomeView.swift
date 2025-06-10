@@ -11,6 +11,7 @@ import RealmSwift
 struct HomeView: View {
     @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = ConsentViewModel()
+    @StateObject private var authViewModel = AuthViewModel()
     @State private var selected: PickerOptions = .digitalID
     @ObservedResults(User.self) var user
     @ObservedResults(Token.self) var token
@@ -52,7 +53,7 @@ struct HomeView: View {
 //                    .padding(.top)
 //            }
         }
-        .task {
+        .onAppear {
             if(!appState.initialRequestCode.isEmpty) {
                 var consentCode = ConsentCode()
                 consentCode.deviceId = appState.getDeviceID()
@@ -61,6 +62,9 @@ struct HomeView: View {
                     await viewModel.verifyConsent(consentCode: consentCode)
                 }
             }
+        }
+        .task {
+            await authViewModel.updateAppVersion(appVersionNumber: AppVersionNumber(version_number: Constants.appVersion))
         }
     }
 }

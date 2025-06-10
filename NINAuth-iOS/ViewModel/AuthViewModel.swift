@@ -227,6 +227,21 @@ class AuthViewModel: NSObject, ObservableObject  {
             state = .failed(failure)
         }
     }
+    
+    @MainActor
+    func updateAppVersion(appVersionNumber: AppVersionNumber) async -> Void {
+        guard state != .loading else {
+            return
+        }
+        state = .loading
+        let result = await authService.updateAppVersion(appVersionNumber: appVersionNumber)
+        switch result {
+        case .success(_):
+            state = .success
+        case .failure(let failure):
+            Log.info(failure.description)
+        }
+    }
 }
 
 extension AuthViewModel : CLLocationManagerDelegate {

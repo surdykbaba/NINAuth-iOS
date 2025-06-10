@@ -193,4 +193,14 @@ struct AuthService: AuthProtocol {
         }
     }
     
+    func updateAppVersion(appVersionNumber: AppVersionNumber) async -> Result<JSON, ErrorBag> {
+        let networkResponse = await Service.init().post(URLs.APP_VERSION_UPDATE, params: appVersionNumber)
+        switch networkResponse.isSuccess() {
+            case true :
+            return .success(networkResponse.getJson() ?? JSON())
+            default :
+            return .failure(networkResponse.getErrorBag())
+        }
+    }
+    
 }

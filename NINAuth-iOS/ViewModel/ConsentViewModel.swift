@@ -21,6 +21,7 @@ class ConsentViewModel: ObservableObject {
     
     init() {
         consentService = ConsentService()
+        NotificationService.sharedInstance.authorizeNotification()
     }
     
     func getAllConsents() async -> Void {

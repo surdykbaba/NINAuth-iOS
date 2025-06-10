@@ -84,6 +84,7 @@ extension UIApplication {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    private var trials = 0
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
@@ -133,14 +134,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         Log.info("didReceive response")
-       // let userInfo = response.notification.request.content.userInfo
+        let userInfo = response.notification.request.content.userInfo
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        completionHandler()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Log.info("The token on fresh launch \(deviceToken)")
         let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
         if !token.isEmpty {
-            //TODO: Do whatever you want to do with token
+            let mem = MemoryUtil()
+            mem.setValue(key: mem.apn_data, value: deviceToken)
         }
         Messaging.messaging().apnsToken = deviceToken
     }
@@ -193,9 +197,28 @@ extension AppDelegate: MessagingDelegate {
           object: nil,
           userInfo: tokenDict)
         if let token = fcmToken {
-            let linkedIDService = LinkedIDService()
-            Task {
-                await linkedIDService.sendDeviceToken(deviceToken: DeviceToken(token: token))
+            sendTokenToServer(token: token)
+        }
+    }
+    
+    private func sendTokenToServer(token: String) {
+        let mem = MemoryUtil()
+        let linkedIDService = LinkedIDService()
+        Task {
+            let res = await linkedIDService.sendDeviceToken(deviceToken: DeviceToken(token: token))
+            switch res {
+            case .success(let success):
+                mem.setValue(key: mem.notification_push_key, value: token)
+                Log.info("Sent ID succesful")
+            case .failure(let failure):
+                Log.error(failure.description)
+                mem.setValue(key: mem.notification_push_key, value: "")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 15) { [self] in
+                    if(trials < 7) {
+                        trials += 1
+                        sendTokenToServer(token: token)
+                    }
+                }
             }
         }
     }

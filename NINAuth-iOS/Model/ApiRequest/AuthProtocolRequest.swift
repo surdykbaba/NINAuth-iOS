@@ -80,6 +80,10 @@ struct StartSessionRequest: Codable {
     var note: String = "For account Opening"
 }
 
+struct AppVersionNumber: Codable {
+    var version_number: String?
+}
+
 struct EmptyRequest: Codable {
     
 }

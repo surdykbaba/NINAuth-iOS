@@ -11,6 +11,8 @@ struct MemoryUtil {
     
     let authentication_key = "Enable_Authentication"
     let lock_app = "LocKK_APPPP"
+    let notification_push_key = "Push_nin_auth_notification_fire_base_apn" // Notification device
+    let apn_data = "APn_nin_auth_data" // APN key
     
     func setValue(key: String, value: Any) {
         let defaults = UserDefaults.standard

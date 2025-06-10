@@ -30,6 +30,7 @@ enum URLs {
     static let OTP = "otp"
     static let OTP_VALIDATE = "otp/validate"
     static let RESET_DEVICE = "auth/account"
+    static let APP_VERSION_UPDATE = "auth/update-app-version"
     
     
     //MARK: Consent
