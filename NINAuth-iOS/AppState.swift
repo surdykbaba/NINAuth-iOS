@@ -27,7 +27,7 @@ class AppState: ObservableObject {
     private let context = CIContext()
     private let filter = CIFilter.qrCodeGenerator()
     var timer: Timer? = nil
-
+    
     init() {
         authService = AuthService()
         timer?.invalidate()
@@ -58,7 +58,7 @@ class AppState: ObservableObject {
     private func createUniqueID() -> String {
         let uuid: CFUUID = CFUUIDCreate(nil)
         let cfStr: CFString = CFUUIDCreateString(nil, uuid)
-
+        
         let swiftString: String = cfStr as String
         return swiftString
     }
@@ -110,13 +110,13 @@ class AppState: ObservableObject {
     func generateQRCode() -> UIImage {
         let random = getRandomBase64String(length: 24)
         filter.message = Data(random.utf8)
-
+        
         if let outputImage = filter.outputImage {
             if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
                 return UIImage(cgImage: cgImage)
             }
         }
-
+        
         return UIImage(systemName: "xmark.circle") ?? UIImage()
     }
     
@@ -125,7 +125,7 @@ class AppState: ObservableObject {
             guard let currentUser = user else {
                 return UIImage(systemName: "xmark.circle")!
             }
-
+            
             // Combine sensitive fields into one string
             let credentialData = [
                 currentUser.first_name ?? "",
@@ -135,53 +135,53 @@ class AppState: ObservableObject {
                 currentUser.nin ?? "",
                 currentUser.origin_state ?? "",
             ].joined(separator: "-")
-
+            
             let hashedCredentials = sha1(credentialData)
             let timestamp = Int(Date().timeIntervalSince1970 * 1000)
-
+            
             let payload: [String: Any] = [
                 "h": hashedCredentials,
                 "timestamp": timestamp
             ]
-
+            
             guard let jsonData = try? JSONSerialization.data(withJSONObject: payload),
                   let qrFilter = CIFilter(name: "CIQRCodeGenerator") else {
                 return UIImage(systemName: "xmark.circle")!
             }
-
+            
             qrFilter.setValue(jsonData, forKey: "inputMessage")
             qrFilter.setValue("H", forKey: "inputCorrectionLevel")
-
+            
             guard let outputImage = qrFilter.outputImage else {
                 return UIImage(systemName: "xmark.circle")!
             }
-
+            
             // Apply color filter to remove white background
             guard let colorFilter = CIFilter(name: "CIFalseColor") else {
                 return UIImage(systemName: "xmark.circle")!
             }
-
+            
             colorFilter.setDefaults()
             colorFilter.setValue(outputImage, forKey: kCIInputImageKey)
             colorFilter.setValue(CIColor(color: .black), forKey: "inputColor0") // QR code color
             colorFilter.setValue(CIColor.clear, forKey: "inputColor1")          // Background color (transparent)
-
+            
             guard let coloredImage = colorFilter.outputImage else {
                 return UIImage(systemName: "xmark.circle")!
             }
-
+            
             let scaledImage = coloredImage.transformed(by: CGAffineTransform(scaleX: 7, y: 7))
-
+            
             if let cgimg = context.createCGImage(scaledImage, from: scaledImage.extent) {
                 return UIImage(cgImage: cgimg)
             }
-
+            
             return UIImage(systemName: "xmark.circle")!
         }
-
+        
         return qrImage
     }
-
+    
     
     // SHA-1 hashing function
     private func sha1(_ input: String) -> String {
@@ -246,13 +246,13 @@ class AppState: ObservableObject {
         // Calculate composite check digit
         let documentNumber = formatMRZText(user.first?.nin?.prefix(9).uppercased() ?? "UNKNOWN", maxLength: 9)
         let compositeString = documentNumber + calculateCheckDigit(documentNumber) +
-                             formattedDOB + dobCheckDigit +
-                             formattedExpiry + expiryCheckDigit + optionalData
+        formattedDOB + dobCheckDigit +
+        formattedExpiry + expiryCheckDigit + optionalData
         let compositeCheckDigit = calculateCheckDigit(compositeString)
         
         // Combine all elements
         var line = formattedDOB + dobCheckDigit + validGender + formattedExpiry + expiryCheckDigit +
-                  nationality + optionalData + compositeCheckDigit
+        nationality + optionalData + compositeCheckDigit
         
         // Ensure line is exactly 30 characters
         line = line.padding(toLength: 30, withPad: "<", startingAt: 0)
@@ -265,7 +265,7 @@ class AppState: ObservableObject {
         // Format: surname<given names
         let surname = user.first?.last_name?.uppercased() ?? "UNKNOWN"
         let givenNames = (user.first?.first_name?.uppercased() ?? "") +
-                        (user.first?.middle_name != nil ? " " + user.first!.middle_name!.uppercased() : "")
+        (user.first?.middle_name != nil ? " " + user.first!.middle_name!.uppercased() : "")
         
         // Format names
         let formattedSurname = formatMRZText(surname, maxLength: 15)
@@ -323,4 +323,85 @@ class AppState: ObservableObject {
         // Return remainder of division by 10
         return String(sum % 10)
     }
+    
+    
+    func generateHashedAztecCode(user: User?) -> UIImage {
+        var aztecImage: UIImage {
+            guard let currentUser = user else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+            
+            // Combine sensitive fields into one string
+            let credentialData = [
+                currentUser.first_name ?? "",
+                currentUser.middle_name ?? "",
+                currentUser.gender ?? "",
+                currentUser.getDOB(),
+                currentUser.nin ?? "",
+                currentUser.origin_state ?? "",
+            ].joined(separator: "-")
+            
+            // Use a more secure hashing algorithm (SHA-256 instead of SHA-1)
+            let hashedCredentials = sha256(credentialData)
+            let timestamp = Int(Date().timeIntervalSince1970 * 1000)
+            
+            let payload: [String: Any] = [
+                "h": hashedCredentials,
+                "timestamp": timestamp
+            ]
+            
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: payload),
+                  let aztecFilter = CIFilter(name: "CIAztecCodeGenerator") else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+            
+            aztecFilter.setValue(jsonData, forKey: "inputMessage")
+            aztecFilter.setValue(0.0, forKey: "inputCompactStyle") // 0 = normal, 1 = compact
+            aztecFilter.setValue(23, forKey: "inputCorrectionLevel") // Value between 5-95%
+            
+            guard let outputImage = aztecFilter.outputImage else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+            
+            
+            // Apply color filter to create transparent background
+            guard let colorFilter = CIFilter(name: "CIFalseColor") else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+            
+            colorFilter.setDefaults()
+            colorFilter.setValue(outputImage, forKey: kCIInputImageKey)
+            colorFilter.setValue(CIColor(color: .black), forKey: "inputColor0") // Barcode color
+            colorFilter.setValue(CIColor.clear, forKey: "inputColor1")          // Background color (transparent)
+            
+            guard let coloredImage = colorFilter.outputImage else {
+                return UIImage(systemName: "xmark.circle")!
+            }
+            
+            // Scale the image
+            let scaledImage = coloredImage.transformed(by: CGAffineTransform(scaleX: 7, y: 7))
+            
+            // Create context if not already defined in your class
+            let context = CIContext()
+            
+            if let cgimg = context.createCGImage(scaledImage, from: scaledImage.extent) {
+                return UIImage(cgImage: cgimg)
+            }
+            
+            return UIImage(systemName: "xmark.circle")!
+        }
+        
+        return aztecImage
+    }
+    
+    // SHA-256 hashing function (more secure than SHA-1)
+    private func sha256(_ input: String) -> String {
+        let data = Data(input.utf8)
+        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+        data.withUnsafeBytes {
+            _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &digest)
+        }
+        return digest.map { String(format: "%02x", $0) }.joined()
+    }
+    
 }

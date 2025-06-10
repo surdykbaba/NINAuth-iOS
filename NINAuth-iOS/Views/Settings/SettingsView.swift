@@ -39,6 +39,9 @@ struct SettingsView: View {
                             Text("\(user.first?.first_name ?? "") \(user.first?.last_name ?? "")")
                                 .customFont(.title, fontSize: 24)
                             
+                            Text("NIN: \(user.first?.nin ?? "")")
+                                .customFont(.subheadline, fontSize: 16)
+                            
                             Text("Last login: \(user.first?.getLastLogin() ?? "")")
                                 .customFont(.subheadline, fontSize: 16)
                             
@@ -183,7 +186,7 @@ struct SettingsView: View {
             Divider()
 
             Group {
-                Link(destination: URL(string: "https://ninauth.com/privacy-policy")!) {
+                Link(destination: URL(string: "https://ninauth.nimc.gov.ng/legal/privacy-policy")!) {
                     SettingsRow(image: "lock", name: "privacy_policy".localized)
                 }
 

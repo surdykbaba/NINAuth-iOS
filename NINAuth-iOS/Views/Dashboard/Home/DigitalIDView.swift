@@ -30,7 +30,7 @@ struct DigitalIDView: View {
     let bannerData = [
         (title: "Tap Card", subtitle: "Tap card to view back of card and QR", icon: "touch", url: ""),
         (title: "Safeguard your digital identity", subtitle: "Click here to learn how to keep your identity safe.", icon: "Shield", url: "https://ninauth.com/privacy-policy"),
-        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb", url: "https://ninauth.com/privacy-policy")
+        (title: "Verify your ID securely", subtitle: "Ensure your credentials are verified safely.", icon: "bulb", url: "https://ninauth.nimc.gov.ng/legal/privacy-policy")
     ]
 
     var body: some View {
