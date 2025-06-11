@@ -61,7 +61,8 @@ struct DigitalIDView: View {
                                     Spacer()
                                 }
                                 .padding()
-                                .frame(width: 358, height: 81)
+                                .frame(height: 81)
+                                .frame(maxWidth: .infinity)
                                 .background(Color.white)
                                 .cornerRadius(14)
                                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)

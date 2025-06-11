@@ -165,7 +165,7 @@ struct LoginView: View {
             }message: {
                 Text("Incorrect NIN")
             }
-
+            
             if case .loading = viewModel.state {
                 ProgressView()
                     .scaleEffect(2)
