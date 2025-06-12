@@ -114,7 +114,17 @@ struct VerifyIdentityView: View, SmartSelfieResultDelegate {
                 .padding()
                 .sheet(isPresented: $presentEnroll, content: {
                     NavigationView {
-                        OrchestratedEnhancedSelfieCaptureScreen(userId: userID, isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
+                        OrchestratedEnhancedSelfieCaptureScreen(
+                                userId: userID,
+                                isEnroll: false,
+                                allowNewEnroll: false,
+                                showAttribution: false,
+                                showInstructions: true,
+                                skipApiSubmission: true,
+                                extraPartnerParams: [:],
+                                onResult: self
+                        )
+                    //    OrchestratedEnhancedSelfieCaptureScreen(userId: "user-\(nin ?? "")", isEnroll: false, allowNewEnroll: false, showAttribution: false, showInstructions: true, skipApiSubmission: true, extraPartnerParams: [:], onResult: self)
                     }
                 })
             }
